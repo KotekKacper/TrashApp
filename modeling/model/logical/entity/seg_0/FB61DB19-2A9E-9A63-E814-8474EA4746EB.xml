@@ -1,0 +1,111 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="FB61DB19-2A9E-9A63-E814-8474EA4746EB" name="Worker">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 17:46:42 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="fullname" id="E7B6282F-2C0A-71BF-2A0D-71DE998BBE2A">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 17:46:53 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="birthdate" id="4FAB99ED-BEB1-7C5D-E26E-DD800794C6CC">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 17:48:38 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="job_start_time" id="4C86C96E-B5C2-F39E-035D-A7543D4B5FC6">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 17:49:06 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT014</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="job_end_time" id="541734BE-B17F-A192-5C2A-C76BBC550BF2">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 17:51:41 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT014</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="NIP" id="5E11CC39-CC12-DDD5-54B0-E0E297A27A83">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 18:37:11 UTC</createdTime>
+<generatorID>CFD12B47-F0BB-D339-F883-ACFA80EE0744</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<referedAttribute>D7938E3D-5E53-DF60-B6B6-8F8D7ADBA477</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT025</logicalDatatype>
+<dataTypeSize>10 CHAR</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ID" id="2325C4C7-0607-1043-55C1-A0DE1647F299">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 18:38:15 UTC</createdTime>
+<generatorID>1F726838-D385-3D24-35B5-E125BC151BA4</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<referedAttribute>9C732A3E-5D94-31AE-A314-E8390730AFA3</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="F9222D56-A7C5-DC4B-A08C-960DDB8B332F" name="Worker PK">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 17:48:35 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>E7B6282F-2C0A-71BF-2A0D-71DE998BBE2A</attributeRef>
+<attributeRef>4FAB99ED-BEB1-7C5D-E26E-DD800794C6CC</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

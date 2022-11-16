@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="CrewToTrash" directorySegmentName="seg_0" id="965B44E8-5F95-EF4A-0807-DDBC7C5694BC">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 18:47:05 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<sourcePk>0816210C-29DA-ABD6-7020-A534CC952CF3</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>9CC7F37C-FD2F-E65C-CC12-FDAD826B62A1</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>590B1BA9-831E-0179-4492-9553276581E0</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

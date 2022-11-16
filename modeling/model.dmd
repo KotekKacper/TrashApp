@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="model" id="178398A9-EFBD-78B0-B364-6EEC864BB8F0" version="3.5">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 16:09:02 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>178398A9-EFBD-78B0-B364-6EEC864BB8F0</designId>
+</OSDM_Design>

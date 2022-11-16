@@ -1,0 +1,10 @@
+System do zgłaszania śmieci, znajdujących się na ulicach miast.
+Użytkownik może zrobić zdjęcie, podać lokalizację i zgłosić do systemu miejsce, w którym zobaczy zalegające śmieci.
+Stan miasta i osobnych dzielnic można zobaczyć na mapie.
+Archiwalne dane są przechowywane w celu przeprowadzania statystyk.
+Sprzątaniem zajmują się zarówno profesjonalne firmy jak i wolontariusze korzystający z aplikacji.
+Każdy użytkownik może posprzątać zabrudzone miejsce i otrzymać za nagrodę od systemu.
+Oprócz tego, są grupy wolontariatu, mogące dyskutować i planować wspólne sprzątanie.
+Użytkownicy mogą obserwować obecny stan i akcję wozów sprzątających.
+Wozy przynależą do firm sprzątających i mają przypisanych pracowników.
+Informacje o obecnym stanie miasta można przekazać do Rady miasta.

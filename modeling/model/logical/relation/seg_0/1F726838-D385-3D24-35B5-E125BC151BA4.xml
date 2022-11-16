@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="VehicleToWorker" directorySegmentName="seg_0" id="1F726838-D385-3D24-35B5-E125BC151BA4">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 18:37:59 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<sourcePk>630830A4-0056-2450-0DE2-A4A10DD5DD3B</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>3DE341EB-39EE-C547-52AE-1790332D5E73</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>FB61DB19-2A9E-9A63-E814-8474EA4746EB</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

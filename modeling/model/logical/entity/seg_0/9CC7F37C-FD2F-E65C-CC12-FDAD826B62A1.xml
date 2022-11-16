@@ -1,0 +1,86 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="9CC7F37C-FD2F-E65C-CC12-FDAD826B62A1" name="CleaningCrew">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 18:01:33 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="name" id="A16FC9A3-0B37-1167-DBB0-4DD67C51F70F">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 18:01:59 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="date" id="25D1058C-274E-930D-EC3E-9DF12B072171">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 18:03:45 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="login" id="2E2A92E8-000C-D12F-FC1B-30E577B9B3A8">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 18:05:09 UTC</createdTime>
+<generatorID>136064CC-0309-9D33-332B-1EDC7B8460B1</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<referedAttribute>216ECE2E-FCB0-2BFA-6BFD-B65B069F2C97</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="meeting_localization" id="584B472D-8423-B791-4F0F-A9474C5EDFD3">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 18:06:32 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="0816210C-29DA-ABD6-7020-A534CC952CF3" name="CleaningCrew PK">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 18:03:41 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>A16FC9A3-0B37-1167-DBB0-4DD67C51F70F</attributeRef>
+<attributeRef>25D1058C-274E-930D-EC3E-9DF12B072171</attributeRef>
+<attributeRef>2E2A92E8-000C-D12F-FC1B-30E577B9B3A8</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

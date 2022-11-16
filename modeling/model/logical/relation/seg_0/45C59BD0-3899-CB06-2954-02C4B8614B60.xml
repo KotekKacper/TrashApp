@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="UserToRole" directorySegmentName="seg_0" id="45C59BD0-3899-CB06-2954-02C4B8614B60">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 18:34:57 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<sourcePk>06CD62D5-5D72-4FAE-B85C-ED335209F7A3</sourcePk>
+<targetPk>8456EBC8-882A-46DF-B794-B8689C795D17</targetPk>
+<identifying>false</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>*</sourceCardinality>
+<sourceEntity>84310B33-EB30-749F-96D7-596961414420</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>1E7435C2-A5E4-7E0B-3A34-7FE54ED9A273</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

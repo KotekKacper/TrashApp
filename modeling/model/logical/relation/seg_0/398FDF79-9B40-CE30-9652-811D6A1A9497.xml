@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="ArchiveToType" directorySegmentName="seg_0" id="398FDF79-9B40-CE30-9652-811D6A1A9497">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 18:41:52 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<sourcePk>C65D5B88-BB5F-7DE5-40D5-6577F7806384</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>FAE4853E-2998-9711-B580-878EB0C0AFFD</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>769E31C9-29BF-6A3A-CC6A-1B19A17A197C</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

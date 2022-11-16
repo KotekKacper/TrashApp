@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="CompanyToWorker" directorySegmentName="seg_0" id="CFD12B47-F0BB-D339-F883-ACFA80EE0744">
+<createdBy>kacpe</createdBy>
+<createdTime>2022-11-16 18:37:11 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<sourcePk>099E6F0E-4F3D-F92D-CCE2-3AF52780E9F0</sourcePk>
+<targetPk>F9222D56-A7C5-DC4B-A08C-960DDB8B332F</targetPk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>18A9E635-F6CA-54CF-BF1B-8EF723788DC5</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>FB61DB19-2A9E-9A63-E814-8474EA4746EB</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>
