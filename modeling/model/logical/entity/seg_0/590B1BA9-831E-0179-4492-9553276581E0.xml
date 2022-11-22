@@ -64,36 +64,6 @@
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="date" id="44286FDC-CF9E-391A-621D-0F076362A8CD">
-<createdBy>kacpe</createdBy>
-<createdTime>2022-11-16 18:47:05 UTC</createdTime>
-<generatorID>965B44E8-5F95-EF4A-0807-DDBC7C5694BC</generatorID>
-<ownerDesignName>model</ownerDesignName>
-<engineerTo>
-<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<referedAttribute>25D1058C-274E-930D-EC3E-9DF12B072171</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT008</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="login" id="D45DFCD4-9377-2A78-5C1C-D8AC2A9A5BCD">
-<createdBy>kacpe</createdBy>
-<createdTime>2022-11-16 18:47:05 UTC</createdTime>
-<generatorID>965B44E8-5F95-EF4A-0807-DDBC7C5694BC</generatorID>
-<ownerDesignName>model</ownerDesignName>
-<engineerTo>
-<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<referedAttribute>2E2A92E8-000C-D12F-FC1B-30E577B9B3A8</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="ID1" id="6E32FE7D-BBD1-FA71-D036-942D6E941908">
 <createdBy>kacpe</createdBy>
 <createdTime>2022-11-16 18:48:00 UTC</createdTime>

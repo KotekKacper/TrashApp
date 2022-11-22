@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="9CC7F37C-FD2F-E65C-CC12-FDAD826B62A1" name="CleaningCrew">
-<createdBy>kacpe</createdBy>
-<createdTime>2022-11-16 18:01:33 UTC</createdTime>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="0AD05300-38D5-D8D5-D37D-1E244EA03E41" name="Image">
+<createdBy>Ivan</createdBy>
+<createdTime>2022-11-22 22:22:41 UTC</createdTime>
 <ownerDesignName>model</ownerDesignName>
 <engineerTo>
 <item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
@@ -15,9 +15,9 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="ID" id="AEB224CC-D72C-F87C-383A-A393A3F96EE3">
+<Attribute name="ID" id="577913AF-AF8E-63AE-244A-66A243077650">
 <createdBy>Ivan</createdBy>
-<createdTime>2022-11-22 20:56:27 UTC</createdTime>
+<createdTime>2022-11-22 22:22:57 UTC</createdTime>
 <ownerDesignName>model</ownerDesignName>
 <engineerTo>
 <item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
@@ -27,9 +27,9 @@
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="name" id="A16FC9A3-0B37-1167-DBB0-4DD67C51F70F">
-<createdBy>kacpe</createdBy>
-<createdTime>2022-11-16 18:01:59 UTC</createdTime>
+<Attribute name="mime_type" id="8C4996A4-8C1B-C260-C55C-CE97B940C819">
+<createdBy>Ivan</createdBy>
+<createdTime>2022-11-22 22:23:06 UTC</createdTime>
 <ownerDesignName>model</ownerDesignName>
 <engineerTo>
 <item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
@@ -37,46 +37,47 @@
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>100,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="date" id="25D1058C-274E-930D-EC3E-9DF12B072171">
-<createdBy>kacpe</createdBy>
-<createdTime>2022-11-16 18:03:45 UTC</createdTime>
+<Attribute name="content" id="AFBAC227-03DA-54CB-20ED-8ADE5495AAFE">
+<createdBy>Ivan</createdBy>
+<createdTime>2022-11-22 22:23:30 UTC</createdTime>
 <ownerDesignName>model</ownerDesignName>
 <engineerTo>
 <item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
-<logicalDatatype>LOGDT008</logicalDatatype>
+<logicalDatatype>LOGDT029</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="meeting_localization" id="584B472D-8423-B791-4F0F-A9474C5EDFD3">
-<createdBy>kacpe</createdBy>
-<createdTime>2022-11-16 18:06:32 UTC</createdTime>
+<Attribute name="ID1" id="9C6C3292-7E8A-FF96-0BA2-230689234C70">
+<createdBy>Ivan</createdBy>
+<createdTime>2022-11-22 22:29:39 UTC</createdTime>
+<generatorID>EFAEC500-839E-7836-6DA8-D1B9D27B0564</generatorID>
 <ownerDesignName>model</ownerDesignName>
 <engineerTo>
 <item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
+<referedAttribute>DE17C355-6DEB-5C76-FA28-9D0205B921A4</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
+<logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
-<identifier id="0816210C-29DA-ABD6-7020-A534CC952CF3" name="CleaningCrew PK">
-<createdBy>kacpe</createdBy>
-<createdTime>2022-11-16 18:03:41 UTC</createdTime>
+<identifier id="BED38810-9607-7F07-62C1-E215F7DED702" name="Image PK">
+<createdBy>Ivan</createdBy>
+<createdTime>2022-11-22 22:23:05 UTC</createdTime>
 <ownerDesignName>model</ownerDesignName>
 <engineerTo>
 <item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>
-<attributeRef>AEB224CC-D72C-F87C-383A-A393A3F96EE3</attributeRef>
+<attributeRef>577913AF-AF8E-63AE-244A-66A243077650</attributeRef>
 </usedAttributes>
 </identifier>
 </identifiers>
