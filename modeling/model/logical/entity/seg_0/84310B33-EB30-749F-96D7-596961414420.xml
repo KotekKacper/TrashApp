@@ -76,20 +76,89 @@
 <logicalDatatype>LOGDT024</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="ID" id="D76D3417-E82D-9F8C-C2AB-F17D8F4EF55A">
-<createdBy>kacpe</createdBy>
-<createdTime>2022-11-16 18:28:58 UTC</createdTime>
-<generatorID>A51DFD3E-C138-4901-59C6-3FB41E70C93C</generatorID>
+<Attribute name="country" id="E2FF5AFA-74E6-7A99-0DC9-1CA1F46BF478">
+<createdBy>Ivan</createdBy>
+<createdTime>2022-11-22 21:37:00 UTC</createdTime>
 <ownerDesignName>model</ownerDesignName>
 <engineerTo>
 <item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
-<referedAttribute>890E673F-05DA-9D4D-098B-519E93810BD0</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>50,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="city" id="B11E6FE4-0C74-5A3E-7D31-D2AC53668ADC">
+<createdBy>Ivan</createdBy>
+<createdTime>2022-11-22 21:37:29 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>50,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="district" id="99FFFA59-FD8F-04BC-A108-551A7C776526">
+<createdBy>Ivan</createdBy>
+<createdTime>2022-11-22 21:37:42 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>50,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="street" id="39BC1CF6-706A-50E6-E898-B95ECA54B62B">
+<createdBy>Ivan</createdBy>
+<createdTime>2022-11-22 21:38:00 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>50,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="flat_number" id="1D0472AA-4AD4-7DF8-259C-2D214DCE100F">
+<createdBy>Ivan</createdBy>
+<createdTime>2022-11-22 21:38:38 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20</dataTypeSize>
+<ownDataTypeParameters>20,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="post_code" id="31C9C8EF-67C1-EE37-6235-F9534FC2C3FB">
+<createdBy>Ivan</createdBy>
+<createdTime>2022-11-22 21:38:55 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20</dataTypeSize>
+<ownDataTypeParameters>20,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">

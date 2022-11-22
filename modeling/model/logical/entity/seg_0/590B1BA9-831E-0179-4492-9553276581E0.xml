@@ -64,21 +64,6 @@
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="name" id="3DB49B46-E8F2-F017-C6D7-19BA917F13F7">
-<createdBy>kacpe</createdBy>
-<createdTime>2022-11-16 18:47:05 UTC</createdTime>
-<generatorID>965B44E8-5F95-EF4A-0807-DDBC7C5694BC</generatorID>
-<ownerDesignName>model</ownerDesignName>
-<engineerTo>
-<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<referedAttribute>A16FC9A3-0B37-1167-DBB0-4DD67C51F70F</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="date" id="44286FDC-CF9E-391A-621D-0F076362A8CD">
 <createdBy>kacpe</createdBy>
 <createdTime>2022-11-16 18:47:05 UTC</createdTime>
@@ -137,6 +122,47 @@
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ID2" id="420A0E50-B7B5-7307-2479-B8D2D39E19A8">
+<createdBy>Ivan</createdBy>
+<createdTime>2022-11-22 20:56:36 UTC</createdTime>
+<generatorID>965B44E8-5F95-EF4A-0807-DDBC7C5694BC</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>AEB224CC-D72C-F87C-383A-A393A3F96EE3</referedAttribute>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="login2" id="E5323D26-0D75-E200-2D48-739F24D1B9E7">
+<createdBy>Ivan</createdBy>
+<createdTime>2022-11-22 21:24:06 UTC</createdTime>
+<generatorID>22CC6CD8-4276-F3EC-3E36-187806661EDD</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<referedAttribute>216ECE2E-FCB0-2BFA-6BFD-B65B069F2C97</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="collection_date" id="BA393F7F-FECF-3487-6F35-CB47BF9C5673">
+<createdBy>Ivan</createdBy>
+<createdTime>2022-11-22 21:32:19 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>

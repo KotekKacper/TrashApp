@@ -7,8 +7,9 @@
 <item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
 </engineerTo>
 <sourcePk>099E6F0E-4F3D-F92D-CCE2-3AF52780E9F0</sourcePk>
-<targetPk>F9222D56-A7C5-DC4B-A08C-960DDB8B332F</targetPk>
 <identifying>false</identifying>
+<nameOnSource>zatrudnia</nameOnSource>
+<nameOnTarget>pracuje w</nameOnTarget>
 <optionalSource>true</optionalSource>
 <optionalTarget>false</optionalTarget>
 <sourceCardinality>1</sourceCardinality>

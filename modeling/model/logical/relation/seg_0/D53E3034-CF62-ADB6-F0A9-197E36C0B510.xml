@@ -7,8 +7,10 @@
 <item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
 </engineerTo>
 <sourcePk>06CD62D5-5D72-4FAE-B85C-ED335209F7A3</sourcePk>
-<targetPk>7B3C4AEB-D3A7-33D6-3C79-287ACFC75EBC</targetPk>
+<arc>46524AE7-275A-C4BA-9183-57B6D4454ADA</arc>
 <identifying>false</identifying>
+<nameOnSource>sprząta</nameOnSource>
+<nameOnTarget>jest sprzątane przez</nameOnTarget>
 <optionalSource>true</optionalSource>
 <optionalTarget>true</optionalTarget>
 <sourceCardinality>1</sourceCardinality>

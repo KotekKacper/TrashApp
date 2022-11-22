@@ -15,6 +15,18 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="ID" id="AEB224CC-D72C-F87C-383A-A393A3F96EE3">
+<createdBy>Ivan</createdBy>
+<createdTime>2022-11-22 20:56:27 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="name" id="A16FC9A3-0B37-1167-DBB0-4DD67C51F70F">
 <createdBy>kacpe</createdBy>
 <createdTime>2022-11-16 18:01:59 UTC</createdTime>
@@ -77,9 +89,9 @@
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>
-<attributeRef>A16FC9A3-0B37-1167-DBB0-4DD67C51F70F</attributeRef>
 <attributeRef>25D1058C-274E-930D-EC3E-9DF12B072171</attributeRef>
 <attributeRef>2E2A92E8-000C-D12F-FC1B-30E577B9B3A8</attributeRef>
+<attributeRef>AEB224CC-D72C-F87C-383A-A393A3F96EE3</attributeRef>
 </usedAttributes>
 </identifier>
 </identifiers>

@@ -1,21 +1,21 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="TrashToTrashType" directorySegmentName="seg_0" id="1F342CF8-75D6-52B5-83E4-8CD130E43C89">
-<createdBy>kacpe</createdBy>
-<createdTime>2022-11-16 18:23:47 UTC</createdTime>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="TrashToCollectionPoint" directorySegmentName="seg_0" id="19B49B50-339B-5EF0-CB7F-02992D2EB45E">
+<createdBy>Ivan</createdBy>
+<createdTime>2022-11-22 21:33:38 UTC</createdTime>
 <ownerDesignName>model</ownerDesignName>
 <engineerTo>
 <item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
 </engineerTo>
 <sourcePk>7B3C4AEB-D3A7-33D6-3C79-287ACFC75EBC</sourcePk>
 <identifying>false</identifying>
-<nameOnSource>należy do typu</nameOnSource>
-<nameOnTarget>jest przypisane do</nameOnTarget>
-<optionalSource>false</optionalSource>
-<optionalTarget>false</optionalTarget>
+<nameOnSource>jest dostarczane do</nameOnSource>
+<nameOnTarget>przyjmuje</nameOnTarget>
+<optionalSource>true</optionalSource>
+<optionalTarget>true</optionalTarget>
 <sourceCardinality>1</sourceCardinality>
 <sourceEntity>590B1BA9-831E-0179-4492-9553276581E0</sourceEntity>
 <targetCardinalityString>*</targetCardinalityString>
-<targetEntity>769E31C9-29BF-6A3A-CC6A-1B19A17A197C</targetEntity>
+<targetEntity>597F90E3-B977-CA3A-8581-3CCF543897FF</targetEntity>
 <transferable>true</transferable>
 <deleteRule>NO ACTION</deleteRule>
 </Relation>
