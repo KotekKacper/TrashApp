@@ -1,0 +1,75 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="B43BFFA6-DA3D-8AF7-AB23-9168B557DDD9" name="UserToRole">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="User_login" id="E5F0CBAC-10D1-7773-1AE1-83BA0E033807">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="A7EBDE33-4F3A-0487-A94F-472934A474E9" referredColumn="54050FAA-0487-903E-DB16-EC92D6C30734"/>
+</associations>
+</Column>
+<Column name="Role_ID" id="17A6B1A9-4625-0126-A34F-A8CC20C1749B">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="A8DBC90E-C1EA-9616-982A-E9EBEA8EE2C8" referredColumn="4C1EDFEC-D704-0739-E1D0-12AA5037599B"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="CF7B21DF-A4E6-05FD-EB9E-F86BE38275B7" name="UserToRole_PK">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E5F0CBAC-10D1-7773-1AE1-83BA0E033807"/>
+<colUsage columnID="17A6B1A9-4625-0126-A34F-A8CC20C1749B"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C22C7F4A-E8E1-9C04-9287-6FFC39AC78FB" name="UserToRole_User_FK">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>45C59BD0-3899-CB06-2954-02C4B8614B60</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E5F0CBAC-10D1-7773-1AE1-83BA0E033807"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="4DF65181-C56C-FB91-6307-565527853099" name="UserToRole_Role_FK">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>45C59BD0-3899-CB06-2954-02C4B8614B60</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="17A6B1A9-4625-0126-A34F-A8CC20C1749B"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

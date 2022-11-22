@@ -1,0 +1,120 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="EAB2BA99-8AC5-B599-0276-E64235BE3FD1" name="TrashArchive">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>FAE4853E-2998-9711-B580-878EB0C0AFFD</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ID" id="F1759ED3-6CAF-B2AA-94C0-9440BBE53C61">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>D812A435-7ABF-6B5D-0C3B-B6EDDC1C8216</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="localization" id="48BA46AC-774A-34F1-3837-B039298F5963">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>48A7054E-52D1-29ED-5CAC-AFC05AE806B4</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="creation_date" id="699FA54B-E18A-3981-C157-5F33CD62D31F">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>31C675A3-324A-41E1-A620-589C9E23A2AD</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="size" id="224DC3AD-238E-6EB3-1437-F265F3067C5E">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>30ACC647-C0BC-76A9-1AD2-E696A5E35FFB</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="collection_date" id="FF5025DA-E4B4-3225-7C16-DEDA02501222">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>50CD6A9E-918D-3C01-8349-C7DE56D06B13</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="TrashCollectingPoint_localization" id="10D654C3-8140-1232-4344-808C7EAD8EC9">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>9AEAB946-EE67-7F80-0D68-0FEA68D2ED42</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="BE35698A-9142-CC9D-E36A-F05C3387BB32" referredColumn="23C9514E-02D1-C4FF-B38D-209B6C13E56D"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="24784519-BAEE-0F54-1E26-2751C05EB5E1" name="TrashArchive_PK">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>C65D5B88-BB5F-7DE5-40D5-6577F7806384</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F1759ED3-6CAF-B2AA-94C0-9440BBE53C61"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="74CB318F-8633-7772-59F5-DE4C853262D9" name="TrashArchive__IDX">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<relationGeneratorID>940AB559-6B62-DE62-A5A7-1B80070861BF</relationGeneratorID>
+<indexColumnUsage>
+<colUsage columnID="10D654C3-8140-1232-4344-808C7EAD8EC9"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="13A33322-95CB-B4F1-162D-B3D84329B7F2" name="TrashArchive_TrashCollectingPoint_FK">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>940AB559-6B62-DE62-A5A7-1B80070861BF</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="10D654C3-8140-1232-4344-808C7EAD8EC9"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

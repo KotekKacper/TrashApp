@@ -1,0 +1,88 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="285FA2AD-D8D0-AD82-BAEC-296827B0D878" name="CleaningCrew">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>9CC7F37C-FD2F-E65C-CC12-FDAD826B62A1</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="name" id="FEFB7BB3-8C85-00F6-EE59-AA55FE792BD8">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>A16FC9A3-0B37-1167-DBB0-4DD67C51F70F</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="date" id="81A5A644-F2CE-0E03-4C1D-AF37B85A5661">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>25D1058C-274E-930D-EC3E-9DF12B072171</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="User_login" id="5D99E87A-2BA8-17DB-47F0-C55DA2CFECE3">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>2E2A92E8-000C-D12F-FC1B-30E577B9B3A8</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="9A6B5492-C5CD-62CA-AA19-EFE653ABBE27" referredColumn="54050FAA-0487-903E-DB16-EC92D6C30734"/>
+</associations>
+</Column>
+<Column name="meeting_localization" id="F5BD2C1A-7138-BC81-E4DF-48EE4356602C">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>584B472D-8423-B791-4F0F-A9474C5EDFD3</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="4F920A88-7953-16B9-3D0B-D6FD3D1B3873" name="CleaningCrew_PK">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>0816210C-29DA-ABD6-7020-A534CC952CF3</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="FEFB7BB3-8C85-00F6-EE59-AA55FE792BD8"/>
+<colUsage columnID="81A5A644-F2CE-0E03-4C1D-AF37B85A5661"/>
+<colUsage columnID="5D99E87A-2BA8-17DB-47F0-C55DA2CFECE3"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="F05B7111-3BFF-3C78-1DF1-A4D0FA554987" name="CleaningCrew_User_FK">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>136064CC-0309-9D33-332B-1EDC7B8460B1</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="5D99E87A-2BA8-17DB-47F0-C55DA2CFECE3"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

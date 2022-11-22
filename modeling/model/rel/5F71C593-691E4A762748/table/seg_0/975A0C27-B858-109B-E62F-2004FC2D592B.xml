@@ -1,0 +1,124 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="975A0C27-B858-109B-E62F-2004FC2D592B" name="Worker">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>FB61DB19-2A9E-9A63-E814-8474EA4746EB</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="fullname" id="BC51259A-F391-A563-BD24-3C2E6A5A807D">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>E7B6282F-2C0A-71BF-2A0D-71DE998BBE2A</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="birthdate" id="4AA59190-DC42-D056-6887-DFC601B3D8B2">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>4FAB99ED-BEB1-7C5D-E26E-DD800794C6CC</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="job_start_time" id="07F49FDB-4053-3412-D272-67415E71991B">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>4C86C96E-B5C2-F39E-035D-A7543D4B5FC6</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT014</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="job_end_time" id="8CDB4BC4-539F-3AC6-6E85-FABA89CB278C">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>541734BE-B17F-A192-5C2A-C76BBC550BF2</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT014</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CleaningCompany_NIP" id="F9614E1A-1B41-3826-AE03-0CEDD4E187C7">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>5E11CC39-CC12-DDD5-54B0-E0E297A27A83</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT025</logicalDatatype>
+<dataTypeSize>10 CHAR</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="EB2009D8-C9E0-4CB0-7762-64F7DF201624" referredColumn="39C14C67-DA8D-A152-E613-CB73E510B43D"/>
+</associations>
+</Column>
+<Column name="Vehicle_ID" id="9BF48B07-4954-C1CA-23DC-74B1EC586546">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>2325C4C7-0607-1043-55C1-A0DE1647F299</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="6CF167EA-BB85-C09F-1BAB-3197FAC20657" referredColumn="9F908581-1687-8459-62AA-D0D04AFD63A6"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="8D08E2F0-B135-ED2C-6DFA-98AB553E88F7" name="Worker_PK">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>F9222D56-A7C5-DC4B-A08C-960DDB8B332F</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BC51259A-F391-A563-BD24-3C2E6A5A807D"/>
+<colUsage columnID="4AA59190-DC42-D056-6887-DFC601B3D8B2"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="6DD73FC0-9EF2-5DE1-A9F9-A44714B04A41" name="Worker_CleaningCompany_FK">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>CFD12B47-F0BB-D339-F883-ACFA80EE0744</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F9614E1A-1B41-3826-AE03-0CEDD4E187C7"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="04B03E5B-B1ED-6371-858A-F6FA190DDA21" name="Worker_Vehicle_FK">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>1F726838-D385-3D24-35B5-E125BC151BA4</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="9BF48B07-4954-C1CA-23DC-74B1EC586546"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

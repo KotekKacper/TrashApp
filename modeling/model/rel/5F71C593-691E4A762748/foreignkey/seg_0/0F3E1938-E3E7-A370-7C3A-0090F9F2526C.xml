@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="0F3E1938-E3E7-A370-7C3A-0090F9F2526C" containerWithKeyObject="914FF54B-A1B9-8E25-7F04-356E5C6C8355" localFKIndex="9514F635-7386-E30D-DC8F-1635FEE5AD83" name="TrashType_TrashCollectingPoint_FK">
+<createdBy>kg</createdBy>
+<createdTime>2022-11-20 18:15:41 UTC</createdTime>
+<generatorID>3A5A344F-81D1-644B-CA4E-FAC8A2183E6F</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<referredTableLongName>TrashCollectingPoint</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>9EF56F14-E511-2B87-E2C7-93B925FD24B6</referredTableID>
+<keyObject>F42E2352-1090-F894-8483-682058163297</keyObject>
+<referredKeyID>F42E2352-1090-F894-8483-682058163297</referredKeyID>
+<mandatory>false</mandatory>
+<refColNames>localization</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>
