@@ -12,7 +12,7 @@
 <nameOnTarget>jest przypisane do</nameOnTarget>
 <optionalSource>false</optionalSource>
 <optionalTarget>false</optionalTarget>
-<sourceCardinality>1</sourceCardinality>
+<sourceCardinality>*</sourceCardinality>
 <sourceEntity>590B1BA9-831E-0179-4492-9553276581E0</sourceEntity>
 <targetCardinalityString>*</targetCardinalityString>
 <targetEntity>769E31C9-29BF-6A3A-CC6A-1B19A17A197C</targetEntity>

@@ -27,20 +27,6 @@
 <logicalDatatype>LOGDT024</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="ID1" id="ED331574-C49D-F60F-DF37-57FF9CD746A7">
-<createdBy>kacpe</createdBy>
-<createdTime>2022-11-16 18:25:03 UTC</createdTime>
-<generatorID>1F342CF8-75D6-52B5-83E4-8CD130E43C89</generatorID>
-<ownerDesignName>model</ownerDesignName>
-<engineerTo>
-<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
-</engineerTo>
-<referedAttribute>DE17C355-6DEB-5C76-FA28-9D0205B921A4</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="C082AADE-BE8E-F750-EF0E-B27AAB4FC6A0" name="TrashType PK">

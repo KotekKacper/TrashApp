@@ -104,6 +104,7 @@
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
 <referedAttribute>AEB224CC-D72C-F87C-383A-A393A3F96EE3</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
