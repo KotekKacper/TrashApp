@@ -72,7 +72,6 @@
 <engineerTo>
 <item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <referedAttribute>9C732A3E-5D94-31AE-A314-E8390730AFA3</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -87,7 +86,6 @@
 <engineerTo>
 <item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <referedAttribute>216ECE2E-FCB0-2BFA-6BFD-B65B069F2C97</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -102,7 +100,6 @@
 <engineerTo>
 <item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <referedAttribute>AEB224CC-D72C-F87C-383A-A393A3F96EE3</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>

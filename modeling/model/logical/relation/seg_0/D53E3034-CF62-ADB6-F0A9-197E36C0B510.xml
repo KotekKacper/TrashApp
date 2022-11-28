@@ -12,7 +12,7 @@
 <nameOnSource>sprząta</nameOnSource>
 <nameOnTarget>jest sprzątane przez</nameOnTarget>
 <optionalSource>true</optionalSource>
-<optionalTarget>true</optionalTarget>
+<optionalTarget>false</optionalTarget>
 <sourceCardinality>1</sourceCardinality>
 <sourceEntity>84310B33-EB30-749F-96D7-596961414420</sourceEntity>
 <targetCardinalityString>*</targetCardinalityString>
