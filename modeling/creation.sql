@@ -28,31 +28,26 @@ CREATE TABLE user (
 
 
 CREATE TABLE role (
-    id          INTEGER PRIMARY KEY,
-    role_name   VARCHAR2 NOT NULL
+    role_name   VARCHAR2 PRIMARY KEY
 );
 
 
 CREATE TABLE usertorole (
     user_login VARCHAR2  NOT NULL REFERENCES user(login),
-    role_id    INTEGER NOT NULL REFERENCES role(id)
+    role_name   INTEGER NOT NULL REFERENCES role(role_name)
 );
 
 ALTER TABLE usertorole ADD CONSTRAINT usertorole_pk PRIMARY KEY ( user_login,
-                                                                  role_id );
+                                                                  role_name );
 
 
 CREATE TABLE cleaningcrew (
+	id                 	 INTEGER PRIMARY KEY,
     crew_name            VARCHAR2 NOT NULL,
     meet_date            DATE NOT NULL,
     user_login           VARCHAR2 NOT NULL REFERENCES user(login),
     meeting_localization VARCHAR2 
 );
-
-ALTER TABLE cleaningcrew
-    ADD CONSTRAINT cleaningcrew_pk PRIMARY KEY ( crew_name,
-                                                 meet_date,
-                                                 user_login );
 
 
 CREATE TABLE trash (
@@ -68,12 +63,8 @@ CREATE TABLE trash (
 );
 
 ALTER TABLE trash
-    ADD CONSTRAINT trash_cleaningcrew_fk FOREIGN KEY ( cleaningcrew_name,
-                                                       cleaningcrew_date,
-                                                       cleaningcrew_login )
-        REFERENCES cleaningcrew ( crew_name,
-                                  "date",
-                                  user_login );
+    ADD CONSTRAINT trash_cleaningcrew_fk FOREIGN KEY ( cleaningcrew_id )
+        REFERENCES cleaningcrew ( id );
 
 
 CREATE TABLE trasharchive (
@@ -94,8 +85,7 @@ CREATE TABLE trashcollectingpoint (
 
 
 CREATE TABLE trashtype (
-    id                                INTEGER PRIMARY KEY,
-    typename                          VARCHAR2 NOT NULL,
+    typename                          VARCHAR2 PRIMARY KEY,
     trash_id                          INTEGER REFERENCES trash(id),
     trasharchive_id                   INTEGER REFERENCES trash_archive(id),
     collectingpoint_loc               VARCHAR2 REFERENCES trashcollectingpoint(localization)

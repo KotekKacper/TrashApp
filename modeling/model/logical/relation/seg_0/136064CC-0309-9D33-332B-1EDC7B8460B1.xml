@@ -7,11 +7,12 @@
 <item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
 </engineerTo>
 <sourcePk>06CD62D5-5D72-4FAE-B85C-ED335209F7A3</sourcePk>
-<targetPk>0816210C-29DA-ABD6-7020-A534CC952CF3</targetPk>
-<identifying>true</identifying>
+<identifying>false</identifying>
+<nameOnSource>należy do </nameOnSource>
+<nameOnTarget>składa się z</nameOnTarget>
 <optionalSource>true</optionalSource>
 <optionalTarget>false</optionalTarget>
-<sourceCardinality>1</sourceCardinality>
+<sourceCardinality>*</sourceCardinality>
 <sourceEntity>84310B33-EB30-749F-96D7-596961414420</sourceEntity>
 <targetCardinalityString>*</targetCardinalityString>
 <targetEntity>9CC7F37C-FD2F-E65C-CC12-FDAD826B62A1</targetEntity>

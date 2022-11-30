@@ -8,6 +8,8 @@
 </engineerTo>
 <sourcePk>630830A4-0056-2450-0DE2-A4A10DD5DD3B</sourcePk>
 <identifying>false</identifying>
+<nameOnSource>jest przypisany do</nameOnSource>
+<nameOnTarget>pracuje z</nameOnTarget>
 <optionalSource>true</optionalSource>
 <optionalTarget>false</optionalTarget>
 <sourceCardinality>1</sourceCardinality>

@@ -1,21 +1,21 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="TrashToTrashType" directorySegmentName="seg_0" id="1F342CF8-75D6-52B5-83E4-8CD130E43C89">
-<createdBy>kacpe</createdBy>
-<createdTime>2022-11-16 18:23:47 UTC</createdTime>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="ImageTrash" directorySegmentName="seg_0" id="EFAEC500-839E-7836-6DA8-D1B9D27B0564">
+<createdBy>Ivan</createdBy>
+<createdTime>2022-11-22 22:29:39 UTC</createdTime>
 <ownerDesignName>model</ownerDesignName>
 <engineerTo>
 <item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
 </engineerTo>
 <sourcePk>7B3C4AEB-D3A7-33D6-3C79-287ACFC75EBC</sourcePk>
 <identifying>false</identifying>
-<nameOnSource>należy do typu</nameOnSource>
-<nameOnTarget>jest przypisane do</nameOnTarget>
-<optionalSource>false</optionalSource>
+<nameOnSource>ma zdjęcie</nameOnSource>
+<nameOnTarget>pokazuje</nameOnTarget>
+<optionalSource>true</optionalSource>
 <optionalTarget>false</optionalTarget>
-<sourceCardinality>*</sourceCardinality>
+<sourceCardinality>1</sourceCardinality>
 <sourceEntity>590B1BA9-831E-0179-4492-9553276581E0</sourceEntity>
 <targetCardinalityString>*</targetCardinalityString>
-<targetEntity>769E31C9-29BF-6A3A-CC6A-1B19A17A197C</targetEntity>
+<targetEntity>0AD05300-38D5-D8D5-D37D-1E244EA03E41</targetEntity>
 <transferable>true</transferable>
 <deleteRule>NO ACTION</deleteRule>
 </Relation>

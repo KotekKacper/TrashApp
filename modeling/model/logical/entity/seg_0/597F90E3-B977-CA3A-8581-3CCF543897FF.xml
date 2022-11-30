@@ -52,6 +52,21 @@
 <logicalDatatype>LOGDT024</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="ID" id="5A2B7B29-50C3-F5E4-03D0-BA08C25F692A">
+<createdBy>Ivan</createdBy>
+<createdTime>2022-11-22 21:33:38 UTC</createdTime>
+<generatorID>19B49B50-339B-5EF0-CB7F-02992D2EB45E</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>DE17C355-6DEB-5C76-FA28-9D0205B921A4</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="1A7D1AC5-6D96-5802-96A7-C370EBBF75DA" name="TrashCollectingPoint PK">
