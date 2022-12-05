@@ -15,18 +15,6 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="ID" id="A46480A9-B0D3-2A96-0730-5CECD2B42229">
-<createdBy>kacpe</createdBy>
-<createdTime>2022-11-16 17:55:32 UTC</createdTime>
-<ownerDesignName>model</ownerDesignName>
-<engineerTo>
-<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
-</engineerTo>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="name" id="C9AD3E98-5D3C-9127-4A4E-759DF8D0BDAB">
 <createdBy>kacpe</createdBy>
 <createdTime>2022-11-16 17:55:55 UTC</createdTime>
@@ -34,51 +22,6 @@
 <engineerTo>
 <item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
 </engineerTo>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="ID1" id="ED331574-C49D-F60F-DF37-57FF9CD746A7">
-<createdBy>kacpe</createdBy>
-<createdTime>2022-11-16 18:25:03 UTC</createdTime>
-<generatorID>1F342CF8-75D6-52B5-83E4-8CD130E43C89</generatorID>
-<ownerDesignName>model</ownerDesignName>
-<engineerTo>
-<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<referedAttribute>DE17C355-6DEB-5C76-FA28-9D0205B921A4</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="ID2" id="BF0AC61D-EBE3-DE10-6E94-A127041E3892">
-<createdBy>kacpe</createdBy>
-<createdTime>2022-11-16 18:41:52 UTC</createdTime>
-<generatorID>398FDF79-9B40-CE30-9652-811D6A1A9497</generatorID>
-<ownerDesignName>model</ownerDesignName>
-<engineerTo>
-<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<referedAttribute>D812A435-7ABF-6B5D-0C3B-B6EDDC1C8216</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="localization" id="9264E323-0968-2951-5446-6029DE98CC31">
-<createdBy>kacpe</createdBy>
-<createdTime>2022-11-16 18:43:11 UTC</createdTime>
-<generatorID>3A5A344F-81D1-644B-CA4E-FAC8A2183E6F</generatorID>
-<ownerDesignName>model</ownerDesignName>
-<engineerTo>
-<item key="5F71C593-A233-1D15-8D27-691E4A762748" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<referedAttribute>6A581B5F-902D-4DC0-DE46-FE088D63E9BA</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -95,7 +38,7 @@
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>
-<attributeRef>A46480A9-B0D3-2A96-0730-5CECD2B42229</attributeRef>
+<attributeRef>C9AD3E98-5D3C-9127-4A4E-759DF8D0BDAB</attributeRef>
 </usedAttributes>
 </identifier>
 </identifiers>
