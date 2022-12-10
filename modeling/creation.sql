@@ -1,19 +1,13 @@
-CREATE TABLE address (
-    id          INTEGER PRIMARY KEY,
-    country     VARCHAR2 NOT NULL,
-    city        VARCHAR2 NOT NULL,
-    district    VARCHAR2 NOT NULL,
-    street      VARCHAR2,
-    flat_number VARCHAR2,
-    post_code   VARCHAR2 NOT NULL
-);
-
-
 CREATE TABLE cleaningcompany (
     nip        CHAR(10 CHAR) PRIMARY KEY,
     email      VARCHAR2 NOT NULL,
     phone      INTEGER NOT NULL,
-    address_id INTEGER NOT NULL REFERENCES address(id)
+    country     VARCHAR2,
+    city        VARCHAR2,
+    district    VARCHAR2,
+    street      VARCHAR2,
+    flat_number VARCHAR2,
+    post_code   VARCHAR2
 );
 
 
@@ -23,7 +17,12 @@ CREATE TABLE user (
     email      VARCHAR2 NOT NULL,
     phone      VARCHAR2,
     fullname   VARCHAR2 NOT NULL,
-    address_id INTEGER REFERENCES address(id)
+    country     VARCHAR2,
+    city        VARCHAR2,
+    district    VARCHAR2,
+    street      VARCHAR2,
+    flat_number VARCHAR2,
+    post_code   VARCHAR2
 );
 
 
@@ -45,8 +44,13 @@ CREATE TABLE cleaningcrew (
 	id                 	 INTEGER PRIMARY KEY,
     crew_name            VARCHAR2 NOT NULL,
     meet_date            DATE NOT NULL,
-    user_login           VARCHAR2 NOT NULL REFERENCES user(login),
     meeting_localization VARCHAR2 
+);
+
+
+CREATE TABLE usergroup (
+    user_login VARCHAR2  NOT NULL REFERENCES user(login),
+    cleaningcrew_id INTEGER NOT NULL REFERENCES cleaningcrew(id)
 );
 
 
@@ -55,40 +59,44 @@ CREATE TABLE trash (
     localization       VARCHAR2 NOT NULL,
     creation_date      DATE NOT NULL,
     size               INTEGER,
-    crew_name          VARCHAR2,
-    cleaningcrew_date  DATE,
-    cleaningcrew_login VARCHAR2,
     vehicle_id         INTEGER REFERENCES vehicle(id),
-    user_login         VARCHAR2 REFERENCES user(login)
+    user_login_report  VARCHAR2 REFERENCES user(login)
+    cleaningcrew_id    INTEGER REFERENCES cleaningcrew(id),
+    user_login         VARCHAR2 REFERENCES user(login),
+    collection_date    DATE
 );
 
-ALTER TABLE trash
-    ADD CONSTRAINT trash_cleaningcrew_fk FOREIGN KEY ( cleaningcrew_id )
-        REFERENCES cleaningcrew ( id );
 
-
-CREATE TABLE trasharchive (
-    id                                INTEGER PRIMARY KEY,
-    localization                      VARCHAR2 NOT NULL,
-    creation_date                     DATE NOT NULL,
-    size                              INTEGER,
-    collection_date                   DATE,
-    collectingpoint_loc               VARCHAR2 NOT NULL REFERENCES trashcollectingpoint(localization)
+CREATE TABLE image (
+    id              INTEGER PRIMARY KEY,
+    mime_type       VARCHAR2(100) NOT NULL,
+    content         BLOB NOT NULL,
+    trash_id        INTEGER REFERENCES trash(id)
 );
 
 
 CREATE TABLE trashcollectingpoint (
     localization    VARCHAR2 PRIMARY KEY,
     bus_empty       CHAR(1) NOT NULL,
-    processing_type VARCHAR2 NOT NULL
+    processing_type VARCHAR2 NOT NULL,
+    trash_id        INTEGER REFERENCES trash(id)
 );
 
 
 CREATE TABLE trashtype (
-    typename                          VARCHAR2 PRIMARY KEY,
-    trash_id                          INTEGER REFERENCES trash(id),
-    trasharchive_id                   INTEGER REFERENCES trash_archive(id),
-    collectingpoint_loc               VARCHAR2 REFERENCES trashcollectingpoint(localization)
+    typename     VARCHAR2 PRIMARY KEY,
+);
+
+
+CREATE TABLE trashtotrashtype (
+    trash_id INTEGER NOT NULL REFERENCES trash(id),
+    trashtype_name VARCHAR2 NOT NULL REFERENCES trashtype(typename)
+);
+
+
+CREATE TABLE collectingpointtotrashtype (
+    trashcollectingpoint_localization VARCHAR2 NOT NULL REFERENCES trashcollectingpoint(localization),
+    trashtype_name VARCHAR2 NOT NULL REFERENCES trashtype(typename)
 );
 
 
@@ -105,7 +113,7 @@ CREATE TABLE worker (
     birthdate           DATE NOT NULL,
     job_start_time      DATE NOT NULL,
     job_end_time        DATE NOT NULL,
-    company_nip CHAR(10 CHAR) NOT NULL REFERENCES cleaningcompany(nip),
+    company_nip         CHAR(10 CHAR) NOT NULL REFERENCES cleaningcompany(nip),
     vehicle_id          INTEGER NOT NULL REFERENCES vehicle(id)
 );
 
