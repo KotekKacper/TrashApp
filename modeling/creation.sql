@@ -43,7 +43,7 @@ ALTER TABLE usertorole ADD CONSTRAINT usertorole_pk PRIMARY KEY ( user_login,
 CREATE TABLE cleaningcrew (
 	id                 	 INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     crew_name            VARCHAR2(50) NOT NULL,
-    meet_date            DATE NOT NULL,
+    meet_date            TIMESTAMP NOT NULL,
     meeting_localization VARCHAR2(50) 
 );
 
@@ -118,8 +118,8 @@ CREATE TABLE collectingpointtotrashtype (
 CREATE TABLE worker (
     fullname            VARCHAR2(50) NOT NULL,
     birthdate           DATE NOT NULL,
-    job_start_time      DATE NOT NULL,
-    job_end_time        DATE NOT NULL,
+    job_start_time      VARCHAR(10) NOT NULL,
+    job_end_time        VARCHAR(10) NOT NULL,
     company_nip         CHAR(10 CHAR) NOT NULL REFERENCES cleaningcompany(nip),
     vehicle_id          INTEGER NOT NULL REFERENCES vehicle(id)
 );
@@ -130,8 +130,6 @@ ALTER TABLE worker ADD CONSTRAINT worker_pk PRIMARY KEY ( fullname,
 
 
 -- Procedury i funkcje
-
-
 
 CREATE OR REPLACE PROCEDURE NewTrash(
     l_localization IN trash.localization%TYPE,
@@ -144,27 +142,3 @@ BEGIN
     (l_localization, CURRENT_TIMESTAMP, l_user_report, l_size);
 END NewTrash;
 
-
-
-
--- For testing
-
-insert into users (login, password, email, fullname) values ('KG', '1234', 'kg@kg.pl', 'Kacper Garncarek');
-exec NewTrash('Poznan2', 'KG');
-select * from trash;
-
-
-DROP TABLE worker;
-DROP TABLE collectingpointtotrashtype;
-DROP TABLE trashtotrashtype;
-DROP TABLE trashtype;
-DROP TABLE trashcollectingpoint;
-DROP TABLE image;
-DROP TABLE trash;
-DROP TABLE vehicle;
-DROP TABLE usergroup;
-DROP TABLE cleaningcrew;
-DROP TABLE usertorole;
-DROP TABLE role;
-DROP TABLE users;
-DROP TABLE cleaningcompany;
