@@ -80,6 +80,18 @@ CREATE TABLE trash (
     collection_date    TIMESTAMP
 );
 
+-- XOR dla user_login, vehicle_id i cleaningcrew_id
+ALTER TABLE trash
+    ADD CONSTRAINT reporttrasharc CHECK ( ( ( vehicle_id IS NOT NULL )
+                                            AND ( user_login IS NULL )
+                                            AND ( cleaningcrew_id IS NULL ) )
+                                          OR ( ( user_login IS NOT NULL )
+                                               AND ( vehicle_id IS NULL )
+                                               AND ( cleaningcrew_id IS NULL ) )
+                                          OR ( ( cleaningcrew_id IS NOT NULL )
+                                               AND ( vehicle_id IS NULL )
+                                               AND ( user_login IS NULL ) ) );
+
 
 CREATE TABLE image (
     id              INTEGER  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -131,6 +143,8 @@ ALTER TABLE worker ADD CONSTRAINT worker_pk PRIMARY KEY ( fullname,
 
 -- Procedury i funkcje
 
+
+
 CREATE OR REPLACE PROCEDURE NewTrash(
     l_localization IN trash.localization%TYPE,
     l_user_report IN trash.user_login_report%TYPE,
@@ -142,3 +156,41 @@ BEGIN
     (l_localization, CURRENT_TIMESTAMP, l_user_report, l_size);
 END NewTrash;
 
+
+
+CREATE OR REPLACE FUNCTION CurrentTrash(
+) RETURN record
+IS
+    wynik record;
+BEGIN
+    
+    SELECT t.id, t.localization,
+           t.creation_date, t.trash_size,
+           t.vehicle_id, t.user_login_report,
+           t.cleaningcrew_id, t.user_login,
+           t.collection_date, 
+    INTO wynik
+    FROM trash t join image i on t.id = i.trash_id
+    WHERE id = l_trash_id;
+    
+    RETURN wynik;
+END CurrentTrash;
+
+CREATE OR REPLACE FUNCTION ArchiveTrash(
+    l_trash_id IN trahs.id%TYPE
+) RETURN record
+IS
+    wynik record;
+BEGIN
+    
+    SELECT t.id, t.localization,
+           t.creation_date, t.trash_size,
+           t.vehicle_id, t.user_login_report,
+           t.cleaningcrew_id, t.user_login,
+           t.collection_date, 
+    INTO wynik
+    FROM trash t join image i on t.id = i.trash_id
+    WHERE id = l_trash_id;
+    
+    RETURN wynik;
+END ArchiveTrash;
