@@ -41,7 +41,7 @@ ALTER TABLE usertorole ADD CONSTRAINT usertorole_pk PRIMARY KEY ( user_login,
 
 
 CREATE TABLE cleaningcrew (
-	id                 	 INTEGER PRIMARY KEY,
+	id                 	 INTEGER GENERATED ALWAYS AS IDENTITY,
     crew_name            VARCHAR2(50) NOT NULL,
     meet_date            DATE NOT NULL,
     meeting_localization VARCHAR2(50) 
@@ -55,7 +55,7 @@ CREATE TABLE usergroup (
 
 
 CREATE TABLE trash (
-    id                 INTEGER PRIMARY KEY,
+    id                 INTEGER  GENERATED ALWAYS AS IDENTITY,
     localization       VARCHAR2(50) NOT NULL,
     creation_date      DATE NOT NULL,
     size               INTEGER,
@@ -68,7 +68,7 @@ CREATE TABLE trash (
 
 
 CREATE TABLE image (
-    id              INTEGER PRIMARY KEY,
+    id              INTEGER  GENERATED ALWAYS AS IDENTITY,
     mime_type       VARCHAR2(50)(100) NOT NULL,
     content         BLOB NOT NULL,
     trash_id        INTEGER REFERENCES trash(id)
@@ -101,7 +101,7 @@ CREATE TABLE collectingpointtotrashtype (
 
 
 CREATE TABLE vehicle (
-    id           INTEGER PRIMARY KEY,
+    id           INTEGER GENERATED ALWAYS AS IDENTITY,
     in_use       CHAR(1) NOT NULL,
     localization VARCHAR2(50),
     filling      FLOAT NOT NULL
