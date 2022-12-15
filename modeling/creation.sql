@@ -32,8 +32,8 @@ CREATE TABLE role (
 
 
 CREATE TABLE usertorole (
-    user_login VARCHAR2(50)  NOT NULL REFERENCES user(login),
-    role_name   INTEGER NOT NULL REFERENCES role(role_name)
+    user_login VARCHAR2(50)  NOT NULL REFERENCES users(login),
+    role_name VARCHAR2(50) NOT NULL REFERENCES role(role_name)
 );
 
 ALTER TABLE usertorole ADD CONSTRAINT usertorole_pk PRIMARY KEY ( user_login,
@@ -41,7 +41,7 @@ ALTER TABLE usertorole ADD CONSTRAINT usertorole_pk PRIMARY KEY ( user_login,
 
 
 CREATE TABLE cleaningcrew (
-	id                 	 INTEGER GENERATED ALWAYS AS IDENTITY,
+	id                 	 INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     crew_name            VARCHAR2(50) NOT NULL,
     meet_date            DATE NOT NULL,
     meeting_localization VARCHAR2(50) 
@@ -49,27 +49,41 @@ CREATE TABLE cleaningcrew (
 
 
 CREATE TABLE usergroup (
-    user_login VARCHAR2(50)  NOT NULL REFERENCES user(login),
+    user_login VARCHAR2(50)  NOT NULL REFERENCES users(login),
     cleaningcrew_id INTEGER NOT NULL REFERENCES cleaningcrew(id)
 );
 
 
+ALTER TABLE usergroup ADD CONSTRAINT usergroup_pk PRIMARY KEY ( user_login,
+                                                                  cleaningcrew_id);
+
+
+
+
+CREATE TABLE vehicle (
+    id           INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    in_use       CHAR(1) NOT NULL,
+    localization VARCHAR2(50),
+    filling      FLOAT NOT NULL
+);
+
+
 CREATE TABLE trash (
-    id                 INTEGER  GENERATED ALWAYS AS IDENTITY,
+    id                 INTEGER  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     localization       VARCHAR2(50) NOT NULL,
-    creation_date      DATE NOT NULL,
-    size               INTEGER,
+    creation_date      TIMESTAMP NOT NULL,
+    trash_size         INTEGER,
     vehicle_id         INTEGER REFERENCES vehicle(id),
-    user_login_report  VARCHAR2(50) REFERENCES user(login)
+    user_login_report  VARCHAR2(50) REFERENCES users(login),
     cleaningcrew_id    INTEGER REFERENCES cleaningcrew(id),
-    user_login         VARCHAR2(50) REFERENCES user(login),
-    collection_date    DATE
+    user_login         VARCHAR2(50) REFERENCES users(login),
+    collection_date    TIMESTAMP
 );
 
 
 CREATE TABLE image (
-    id              INTEGER  GENERATED ALWAYS AS IDENTITY,
-    mime_type       VARCHAR2(50)(100) NOT NULL,
+    id              INTEGER  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    mime_type       VARCHAR2(50) NOT NULL,
     content         BLOB NOT NULL,
     trash_id        INTEGER REFERENCES trash(id)
 );
@@ -84,7 +98,7 @@ CREATE TABLE trashcollectingpoint (
 
 
 CREATE TABLE trashtype (
-    typename     VARCHAR2(50) PRIMARY KEY,
+    typename     VARCHAR2(50) PRIMARY KEY
 );
 
 
@@ -100,13 +114,6 @@ CREATE TABLE collectingpointtotrashtype (
 );
 
 
-CREATE TABLE vehicle (
-    id           INTEGER GENERATED ALWAYS AS IDENTITY,
-    in_use       CHAR(1) NOT NULL,
-    localization VARCHAR2(50),
-    filling      FLOAT NOT NULL
-);
-
 
 CREATE TABLE worker (
     fullname            VARCHAR2(50) NOT NULL,
@@ -119,3 +126,45 @@ CREATE TABLE worker (
 
 ALTER TABLE worker ADD CONSTRAINT worker_pk PRIMARY KEY ( fullname,
                                                           birthdate );
+
+
+
+-- Procedury i funkcje
+
+
+
+CREATE OR REPLACE PROCEDURE NewTrash(
+    l_localization IN trash.localization%TYPE,
+    l_user_report IN trash.user_login_report%TYPE,
+    l_size IN trash.trash_size%TYPE := 0
+) IS
+BEGIN
+    INSERT INTO trash (localization, creation_date,
+                        user_login_report, trash_size) VALUES
+    (l_localization, CURRENT_TIMESTAMP, l_user_report, l_size);
+END NewTrash;
+
+
+
+
+-- For testing
+
+insert into users (login, password, email, fullname) values ('KG', '1234', 'kg@kg.pl', 'Kacper Garncarek');
+exec NewTrash('Poznan2', 'KG');
+select * from trash;
+
+
+DROP TABLE worker;
+DROP TABLE collectingpointtotrashtype;
+DROP TABLE trashtotrashtype;
+DROP TABLE trashtype;
+DROP TABLE trashcollectingpoint;
+DROP TABLE image;
+DROP TABLE trash;
+DROP TABLE vehicle;
+DROP TABLE usergroup;
+DROP TABLE cleaningcrew;
+DROP TABLE usertorole;
+DROP TABLE role;
+DROP TABLE users;
+DROP TABLE cleaningcompany;
