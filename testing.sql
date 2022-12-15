@@ -1,6 +1,15 @@
+-- For testing
+
 insert into users (login, password, email, fullname) values ('KG', '1234', 'kg@kg.pl', 'Kacper Garncarek');
 exec NewTrash('Poznan2', 'KG');
 select * from trash;
+insert into cleaningcrew (crew_name, meet_date) values ('g1', TIMESTAMP '1997-01-31 09:26:50.12');
+insert into cleaningcrew (crew_name, meet_date) values ('g2', TIMESTAMP '1997-01-31 09:26:50.12');
+select * from cleaningcrew;
+insert into usergroup (user_login, cleaningcrew_id) values ('KG', 1);
+insert into usergroup (user_login, cleaningcrew_id) values ('KG', 2);
+select archivetrashcount from dual;
+select currenttrashcount from dual;
 
 
 DROP TABLE worker;
@@ -17,7 +26,6 @@ DROP TABLE usertorole;
 DROP TABLE role;
 DROP TABLE users;
 DROP TABLE cleaningcompany;
-
 
 
 CREATE OR REPLACE FUNCTION ShowGroups(

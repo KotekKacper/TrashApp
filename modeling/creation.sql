@@ -156,3 +156,33 @@ BEGIN
     (l_localization, CURRENT_TIMESTAMP, l_user_report, l_size);
 END NewTrash;
 
+
+CREATE OR REPLACE FUNCTION CurrentTrashCount
+ RETURN INTEGER
+IS
+    wynik INTEGER;
+BEGIN
+    
+    SELECT count(*)
+    INTO wynik
+    FROM trash
+    WHERE collection_date IS NULL;
+    
+    RETURN wynik;
+END CurrentTrashCount;
+
+
+CREATE OR REPLACE FUNCTION ArchiveTrashCount
+ RETURN INTEGER
+IS
+    wynik INTEGER;
+BEGIN
+    
+    SELECT count(*)
+    INTO wynik
+    FROM trash
+    WHERE collection_date IS NOT NULL;
+    
+    RETURN wynik;
+END ArchiveTrashCount;
+
