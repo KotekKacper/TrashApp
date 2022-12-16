@@ -186,3 +186,38 @@ BEGIN
     RETURN wynik;
 END ArchiveTrashCount;
 
+CREATE INDEX users_login_idx ON users(login);
+CREATE INDEX users_pwd_idx ON users(password);
+CREATE INDEX role_idx ON role(role_name);
+
+CREATE INDEX usertorole_us_login_idx ON usertorole(user_login);
+CREATE INDEX usertorole_role_idx ON usertorole(role_name);
+
+CREATE INDEX cleaningcrew_idx ON cleaningcrew(meet_date);
+
+CREATE INDEX usergroup_us_login_idx ON usergroup(user_login);
+CREATE INDEX usergroup_cc_id_idx ON usergroup(cleaningcrew_id);
+
+CREATE INDEX vehicle_fill_idx ON vehicle(filling);
+CREATE INDEX vehicle_use_idx ON vehicle(in_use);
+
+CREATE INDEX trash_create_date_idx ON trash(creation_date);
+CREATE INDEX trash_veh_id_idx ON trash(vehicle_id);
+CREATE INDEX trash_us_log_rep_idx ON trash(user_login_report);
+CREATE INDEX trash_clean_id_idx ON trash(cleaningcrew_id);
+CREATE INDEX trash_us_log_idx ON trash(user_login);
+CREATE INDEX trash_collect_date_idx ON trash(collection_date);
+
+CREATE INDEX image_trash_id_idx ON image(trash_id);
+
+CREATE INDEX trashtotrashtype_trash_id_idx ON trashtotrashtype(trash_id);
+CREATE INDEX trashtotrashtype_trash_type_name_idx ON trashtotrashtype(trashtype_name);
+
+CREATE INDEX collectpointtotrashtype_tr_col_local_idx ON collectingpointtotrashtype(trashcollectingpoint_localization);
+CREATE INDEX collectpointtotrashtype_tr_col_local__typename_idx ON collectingpointtotrashtype(trashtype_name);
+
+CREATE INDEX worker_start_job_idx ON worker(job_start_time);
+CREATE INDEX worker_end_job_idx ON worker(job_end_time);
+CREATE INDEX worker_company_nip_idx ON worker(company_nip);
+CREATE INDEX worker_veh_id_idx ON worker(vehicle_id);
+
