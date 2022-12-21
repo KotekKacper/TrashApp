@@ -6,15 +6,36 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_map"
             android:title="@string/menu_home" />
         <item
+            android:id="@+id/nav_reports"
+            android:icon="@drawable/ic_menu_reports"
+            android:title="All reports" />
+        <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_gallery" />
+            android:icon="@drawable/ic_menu_group"
+            android:title="All groups" />
+        <item
+            android:id="@+id/nav_collecting_points"
+            android:icon="@drawable/ic_menu_trash"
+            android:title="@string/menu_collecting_points" />
+        <item
+            android:id="@+id/nav_1"
+            android:icon="@drawable/ic_menu_group"
+            android:title="All users" />
+        <item
+            android:id="@+id/nav_2"
+            android:icon="@drawable/ic_menu_business"
+            android:title="All cleaning companies" />
+        <item
+            android:id="@+id/nav_3"
+            android:icon="@drawable/ic_menu_vehicle"
+            android:title="All cleaning vehicles" />
+
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_manage_account"
             android:title="@string/menu_slideshow" />
     </group>
 </menu>
