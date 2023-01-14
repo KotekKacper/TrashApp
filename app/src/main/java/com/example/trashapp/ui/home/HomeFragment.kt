@@ -3,6 +3,7 @@ package com.example.trashapp.ui.home
 import android.graphics.Color
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,10 +53,9 @@ class HomeFragment : Fragment() {
         map.setTileSource(TileSourceFactory.MAPNIK)
 
         // Add icons to map
-        var items = ArrayList<OverlayItem>()
-        items.add(OverlayItem("Trash", "Desc1", GeoPoint(52.40339, 16.95057)))
-        items.add(OverlayItem("Trash2", "Desc2", GeoPoint(52.40349, 16.95057)))
-        addIconsToMap(items)
+        var items = getAllActiveFromDB()
+        var collectedItems = ArrayList<String>()
+        addIconsToMap(items, collectedItems)
 
         // Enable pinch to zoom
         map.setMultiTouchControls(true)
@@ -85,17 +85,32 @@ class HomeFragment : Fragment() {
         map.overlays.add(rotationGestureOverlay)
     }
 
-    private fun addIconsToMap(items: ArrayList<OverlayItem>) {
+    private fun addIconsToMap(items: ArrayList<OverlayItem>, collectedItems: ArrayList<String>) {
         var overlay = ItemizedOverlayWithFocus<OverlayItem>(
             items,
             object : ItemizedIconOverlay.OnItemGestureListener<OverlayItem> {
                 override fun onItemSingleTapUp(index: Int, item: OverlayItem): Boolean {
-                    Toast.makeText(context, "Hold to collect", Toast.LENGTH_SHORT).show()
-                    return true
+                    return if (collectedItems.indexOf(item.uid) == -1){
+                        Toast.makeText(context, "Hold to collect", Toast.LENGTH_SHORT).show()
+                        true
+                    } else{
+                        Toast.makeText(context, "Trash already collected", Toast.LENGTH_SHORT).show()
+                        false
+                    }
+
                 }
 
                 override fun onItemLongPress(index: Int, item: OverlayItem): Boolean {
-                    item.setMarker(resources.getDrawable(R.drawable.ic_menu_trash))
+                    if (collectedItems.indexOf(item.uid) == -1){
+                        item.setMarker(resources.getDrawable(R.drawable.ic_menu_trash))
+                        delFromDB(item);
+                        collectedItems.add(item.uid)
+                        Toast.makeText(context, "Item marked as collected", Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+                        Toast.makeText(context, "Trash already collected", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                     return false
                 }
             }, context
@@ -103,6 +118,18 @@ class HomeFragment : Fragment() {
         overlay.setFocusItemsOnTap(true);
         overlay.setMarkerBackgroundColor(Color.CYAN)
         map.overlays.add(overlay);
+    }
+
+    private fun getAllActiveFromDB(): ArrayList<OverlayItem>{
+        //TODO - get all active trash elements from DB
+        var items = ArrayList<OverlayItem>()
+        items.add(OverlayItem("1", "Trash", "Desc1", GeoPoint(52.40339, 16.95057)))
+        items.add(OverlayItem("2", "Trash2", "Desc2", GeoPoint(52.40349, 16.95057)))
+        return items
+    }
+
+    private fun delFromDB(item: OverlayItem){
+        //TODO - delete the chosen element from DB
     }
 
     override fun onResume() {
