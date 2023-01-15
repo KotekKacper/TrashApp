@@ -1,5 +1,6 @@
 package com.example.trashapp
 
+import android.net.Uri
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.OverlayItem
 
@@ -12,8 +13,9 @@ object DBUtils {
         return items
     }
 
-    fun addToDB(pos: GeoPoint, ){
-
+    fun addToDB(pos: GeoPoint, chosen_imgs : ArrayList<Uri>){
+        //TODO - add element to DB
+        val position: String = pos.toDoubleString()
     }
 
     fun delFromDB(item: OverlayItem){

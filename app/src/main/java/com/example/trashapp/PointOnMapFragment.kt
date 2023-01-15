@@ -36,7 +36,7 @@ class PointOnMapFragment : Fragment() {
         map = binding.root.findViewById(R.id.map)
         map.setTileSource(TileSourceFactory.MAPNIK)
 
-        map.controller.setZoom(17)
+        map.controller.setZoom(18)
         map.setExpectedCenter(GeoPoint(startPosition[0].toDouble(), startPosition[1].toDouble()))
 
 

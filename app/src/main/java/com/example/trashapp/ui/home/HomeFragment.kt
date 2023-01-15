@@ -67,8 +67,8 @@ class HomeFragment : Fragment() {
         map.setMultiTouchControls(true)
 
         // Starting position setup
-        map.controller.setZoom(17)
-        map.setExpectedCenter(GeoPoint(52.40458, 16.94948))
+        map.controller.setZoom(18)
+        map.setExpectedCenter(GeoPoint(52.40440, 16.94950))
 
 //        // Enable map rotation
 //        enableMapRotation()
