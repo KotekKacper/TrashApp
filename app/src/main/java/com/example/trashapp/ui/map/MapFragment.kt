@@ -1,4 +1,4 @@
-package com.example.trashapp.ui.home
+package com.example.trashapp.ui.map
 
 import android.content.Intent
 import android.graphics.Color
@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.trashapp.R
-import com.example.trashapp.databinding.FragmentHomeBinding
+import com.example.trashapp.databinding.FragmentMapBinding
 import org.osmdroid.config.Configuration.*
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -22,13 +22,13 @@ import org.osmdroid.views.overlay.OverlayItem
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
-import com.example.trashapp.AddTrashActivity
+import com.example.trashapp.ui.map.add.AddTrashActivity
 import com.example.trashapp.DBUtils
 
 
-class HomeFragment : Fragment() {
+class MapFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var map : MapView
@@ -42,8 +42,8 @@ class HomeFragment : Fragment() {
     ): View {
         // Fragment setup
         val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+            ViewModelProvider(this).get(MapViewModel::class.java)
+        _binding = FragmentMapBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         // Map setup

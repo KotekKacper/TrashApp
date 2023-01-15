@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetailTrashFragment">
+    tools:context=".ui.map.add.DetailTrashFragment">
 
     <TextView
         android:id="@+id/textview_location_title"

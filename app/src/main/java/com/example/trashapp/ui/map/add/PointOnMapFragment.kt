@@ -1,4 +1,4 @@
-package com.example.trashapp
+package com.example.trashapp.ui.map.add
 
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.trashapp.R
 import com.example.trashapp.databinding.FragmentPointOnMapBinding
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory

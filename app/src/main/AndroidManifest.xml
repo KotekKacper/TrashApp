@@ -18,17 +18,10 @@
         android:theme="@style/Theme.TrashApp"
         tools:targetApi="31">
         <activity
-            android:name=".AddTrashActivity"
+            android:name=".ui.map.add.AddTrashActivity"
             android:exported="false"
             android:label="@string/title_activity_point_on_map"
             android:theme="@style/Theme.TrashApp.NoActionBar">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".AdminActivity"
-            android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

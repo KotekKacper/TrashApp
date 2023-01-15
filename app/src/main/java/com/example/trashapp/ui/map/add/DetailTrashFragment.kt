@@ -1,4 +1,4 @@
-package com.example.trashapp
+package com.example.trashapp.ui.map.add
 
 import android.app.Activity.RESULT_OK
 import android.content.ClipData
@@ -11,8 +11,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
+import com.example.trashapp.DBUtils
+import com.example.trashapp.MainActivity
 import com.example.trashapp.databinding.FragmentDetailTrashBinding
 import org.osmdroid.util.GeoPoint
 
@@ -63,9 +64,11 @@ class DetailTrashFragment : Fragment() {
         }
 
         binding.buttonConfirm.setOnClickListener {
-            DBUtils.addToDB(GeoPoint(givenPosition[0].toDouble(), givenPosition[1].toDouble()),
-                            chosen_imgs,
-                            binding.dropdownSize.selectedItem.toString())
+            DBUtils.addToDB(
+                GeoPoint(givenPosition[0].toDouble(), givenPosition[1].toDouble()),
+                chosen_imgs,
+                binding.dropdownSize.selectedItem.toString()
+            )
             Toast.makeText(context, "Trash reported", Toast.LENGTH_SHORT).show()
             startActivity(Intent(context, MainActivity::class.java))
         }

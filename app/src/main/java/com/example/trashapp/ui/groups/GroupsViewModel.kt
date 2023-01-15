@@ -1,13 +1,13 @@
-package com.example.trashapp.ui.slideshow
+package com.example.trashapp.ui.groups
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class SlideshowViewModel : ViewModel() {
+class GroupsViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is slideshow Fragment"
+        value = "This is groups Fragment"
     }
     val text: LiveData<String> = _text
 }

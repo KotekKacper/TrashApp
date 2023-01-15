@@ -5,37 +5,37 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_home"
+            android:id="@+id/nav_map"
             android:icon="@drawable/ic_menu_map"
-            android:title="@string/menu_home" />
+            android:title="@string/menu_map" />
         <item
             android:id="@+id/nav_reports"
             android:icon="@drawable/ic_menu_reports"
-            android:title="All reports" />
+            android:title="@string/menu_reports" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_groups"
             android:icon="@drawable/ic_menu_group"
-            android:title="All groups" />
+            android:title="@string/menu_groups" />
         <item
             android:id="@+id/nav_collecting_points"
             android:icon="@drawable/ic_menu_trash"
             android:title="@string/menu_collecting_points" />
         <item
-            android:id="@+id/nav_1"
+            android:id="@+id/nav_users"
             android:icon="@drawable/ic_menu_group"
-            android:title="All users" />
+            android:title="@string/menu_users" />
         <item
-            android:id="@+id/nav_2"
+            android:id="@+id/nav_companies"
             android:icon="@drawable/ic_menu_business"
-            android:title="All cleaning companies" />
+            android:title="@string/menu_companies" />
         <item
-            android:id="@+id/nav_3"
+            android:id="@+id/nav_vehicles"
             android:icon="@drawable/ic_menu_vehicle"
-            android:title="All cleaning vehicles" />
+            android:title="@string/menu_vehicles" />
 
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_account"
             android:icon="@drawable/ic_menu_manage_account"
-            android:title="@string/menu_slideshow" />
+            android:title="@string/menu_account" />
     </group>
 </menu>
