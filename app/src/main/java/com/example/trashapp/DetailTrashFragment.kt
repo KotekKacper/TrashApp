@@ -1,6 +1,5 @@
 package com.example.trashapp
 
-import android.R.attr
 import android.app.Activity.RESULT_OK
 import android.content.ClipData
 import android.content.Intent
@@ -10,9 +9,10 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import com.example.trashapp.databinding.FragmentDetailTrashBinding
 import org.osmdroid.util.GeoPoint
 
@@ -47,6 +47,14 @@ class DetailTrashFragment : Fragment() {
         val act: AddTrashActivity? = activity as AddTrashActivity?
         val givenPosition: List<String> = act!!.getStartPosition().split(",")
 
+        binding.textviewLocation.text = givenPosition[0]+", "+givenPosition[1]
+
+        val sizes = arrayOf("small", "medium", "big")
+        binding.dropdownSize.adapter = context?.let {
+            ArrayAdapter<String>(
+                it, androidx.transition.R.layout.support_simple_spinner_dropdown_item, sizes)
+        }
+
         binding.buttonLoadImg.setOnClickListener {
             chosen_imgs.clear()
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -54,8 +62,10 @@ class DetailTrashFragment : Fragment() {
             startActivityForResult(intent, PICK_IMG)
         }
 
-        binding.buttonSecond.setOnClickListener {
-            DBUtils.addToDB(GeoPoint(givenPosition[0].toDouble(), givenPosition[1].toDouble()), chosen_imgs)
+        binding.buttonConfirm.setOnClickListener {
+            DBUtils.addToDB(GeoPoint(givenPosition[0].toDouble(), givenPosition[1].toDouble()),
+                            chosen_imgs,
+                            binding.dropdownSize.selectedItem.toString())
             Toast.makeText(context, "Trash reported", Toast.LENGTH_SHORT).show()
             startActivity(Intent(context, MainActivity::class.java))
         }
@@ -64,30 +74,34 @@ class DetailTrashFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == RESULT_OK && requestCode == PICK_IMG) {
-            val imageUri: Uri? = data?.getData()
-            binding.buttonLoadImg.setText(imageUri.toString())
-        }
-
         if (requestCode === PICK_IMG && resultCode === RESULT_OK && null != data) {
-            // Get the Image from data
-            if (data.getClipData() != null) {
-                val mClipData: ClipData = data.getClipData()!!
-                val cout: Int = data.getClipData()!!.getItemCount()
-                for (i in 0 until cout) {
-                    // adding imageuri in array
-                    val imageurl: Uri = data.getClipData()!!.getItemAt(i).getUri()
-                    chosen_imgs.add(imageurl)
-                    binding.buttonLoadImg.setText("Photos chosen")
-                }
-            } else {
-                val imageurl: Uri = data.getData()!!
-                chosen_imgs.add(imageurl)
-            }
+            // Get the Images from data
+            getImagesFromData(data)
         } else {
             // show this if no image is selected
             Toast.makeText(context, "You haven't picked any image", Toast.LENGTH_LONG).show()
             binding.buttonLoadImg.setText("IMAGE FROM FILES")
+        }
+    }
+
+    private fun getImagesFromData(data: Intent) {
+        if (data.getClipData() != null) {
+            val mClipData: ClipData = data.getClipData()!!
+            val cout: Int = data.getClipData()!!.getItemCount()
+            for (i in 0 until cout) {
+                // adding imageuri in array
+                val imageurl: Uri = data.getClipData()!!.getItemAt(i).getUri()
+                chosen_imgs.add(imageurl)
+                if (chosen_imgs.size == 1){
+                    binding.buttonLoadImg.setText(chosen_imgs.size.toString()+" image chosen")
+                }
+                else{
+                    binding.buttonLoadImg.setText(chosen_imgs.size.toString()+" images chosen")
+                }
+            }
+        } else {
+            val imageurl: Uri = data.getData()!!
+            chosen_imgs.add(imageurl)
         }
     }
 

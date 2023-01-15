@@ -13,7 +13,7 @@ object DBUtils {
         return items
     }
 
-    fun addToDB(pos: GeoPoint, chosen_imgs : ArrayList<Uri>){
+    fun addToDB(pos: GeoPoint, chosen_imgs : ArrayList<Uri>, size: String){
         //TODO - add element to DB
         val position: String = pos.toDoubleString()
     }
