@@ -1,13 +1,12 @@
-package com.example.trashapp.ui.account
+package com.example.trashapp.ui.companies
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class AccountViewModel : ViewModel() {
-
+class CompaniesViewModel : ViewModel() {
     private val _text = MutableLiveData<String>().apply {
-        value = "This is account Fragment"
+        value = "This is companies Fragment"
     }
     val text: LiveData<String> = _text
 }

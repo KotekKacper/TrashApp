@@ -15,13 +15,31 @@
         android:id="@+id/nav_reports"
         android:name="com.example.trashapp.ui.reports.ReportsFragment"
         android:label="@string/menu_reports"
-        tools:layout="@layout/fragment_groups" />
+        tools:layout="@layout/fragment_reports" />
 
     <fragment
         android:id="@+id/nav_groups"
         android:name="com.example.trashapp.ui.groups.GroupsFragment"
         android:label="@string/menu_groups"
         tools:layout="@layout/fragment_groups" />
+
+    <fragment
+        android:id="@+id/nav_collecting_points"
+        android:name="com.example.trashapp.ui.collectingpoints.CollectingPointsFragment"
+        android:label="@string/menu_collecting_points"
+        tools:layout="@layout/fragment_collecting_points" />
+
+    <fragment
+        android:id="@+id/nav_users"
+        android:name="com.example.trashapp.ui.users.UsersFragment"
+        android:label="@string/menu_users"
+        tools:layout="@layout/fragment_users" />
+
+    <fragment
+        android:id="@+id/nav_companies"
+        android:name="com.example.trashapp.ui.companies.CompaniesFragment"
+        android:label="@string/menu_companies"
+        tools:layout="@layout/fragment_companies" />
 
     <fragment
         android:id="@+id/nav_account"

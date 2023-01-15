@@ -28,7 +28,7 @@ class GroupsFragment : Fragment() {
         _binding = FragmentGroupsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textGallery
+        val textView: TextView = binding.textGroups
         galleryViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }

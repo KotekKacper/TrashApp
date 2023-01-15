@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.trashapp.databinding.FragmentAccountBinding
+import com.example.trashapp.databinding.FragmentReportsBinding
 
 class ReportsFragment : Fragment() {
 
-    private var _binding: FragmentAccountBinding? = null
+    private var _binding: FragmentReportsBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -25,10 +25,10 @@ class ReportsFragment : Fragment() {
         val slideshowViewModel =
             ViewModelProvider(this).get(ReportsViewModel::class.java)
 
-        _binding = FragmentAccountBinding.inflate(inflater, container, false)
+        _binding = FragmentReportsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textSlideshow
+        val textView: TextView = binding.textReports
         slideshowViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }

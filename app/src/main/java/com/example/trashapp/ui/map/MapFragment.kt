@@ -92,6 +92,9 @@ class MapFragment : Fragment() {
     }
 
     private fun addIconsToMap(items: ArrayList<OverlayItem>, collectedItems: ArrayList<String>) {
+        for (item in items) {
+            item.setMarker(resources.getDrawable(R.drawable.red_marker_v2))
+        }
         var overlay = ItemizedOverlayWithFocus<OverlayItem>(
             items,
             object : ItemizedIconOverlay.OnItemGestureListener<OverlayItem> {
@@ -108,7 +111,7 @@ class MapFragment : Fragment() {
 
                 override fun onItemLongPress(index: Int, item: OverlayItem): Boolean {
                     if (collectedItems.indexOf(item.uid) == -1){
-                        item.setMarker(resources.getDrawable(R.drawable.ic_menu_trash))
+                        item.setMarker(resources.getDrawable(R.drawable.green_marker_v2))
                         DBUtils.delFromDB(item);
                         collectedItems.add(item.uid)
                         Toast.makeText(context, "Item marked as collected", Toast.LENGTH_SHORT).show()

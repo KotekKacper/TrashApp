@@ -1,17 +1,18 @@
-package com.example.trashapp.ui.account
+package com.example.trashapp.ui.companies
 
+import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.trashapp.databinding.FragmentAccountBinding
+import com.example.trashapp.R
+import com.example.trashapp.databinding.FragmentCompaniesBinding
 
-class AccountFragment : Fragment() {
+class CompaniesFragment : Fragment() {
 
-    private var _binding: FragmentAccountBinding? = null
+    private var _binding: FragmentCompaniesBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -23,12 +24,12 @@ class AccountFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val slideshowViewModel =
-            ViewModelProvider(this).get(AccountViewModel::class.java)
+            ViewModelProvider(this).get(CompaniesViewModel::class.java)
 
-        _binding = FragmentAccountBinding.inflate(inflater, container, false)
+        _binding = FragmentCompaniesBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textAccount
+        val textView: TextView = binding.textCompanies
         slideshowViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
@@ -39,4 +40,5 @@ class AccountFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
 }
