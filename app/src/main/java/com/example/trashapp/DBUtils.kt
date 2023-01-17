@@ -18,11 +18,10 @@ object DBUtils {
         var connection: Connection? = null
         val connectionString = "jdbc:oracle:thin:@//admlab2.cs.put.poznan.pl:1521/dblab02_students.cs.put.poznan.pl"
         val connectionProps = Properties()
-        connectionProps.put("user", "inf148114")
-        connectionProps.put("password", "inf148114")
+        connectionProps["user"] = "inf148114"
+        connectionProps["password"] = "inf148114"
 
         try {
-            Class.forName("oracle.jdbc.driver.OracleDriver")
             connection = DriverManager.getConnection(connectionString, "inf148114","inf148114")
             println("Połączono z bazą danych")
 
