@@ -24,6 +24,7 @@ import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import com.example.trashapp.ui.map.add.AddTrashActivity
 import com.example.trashapp.DBUtils
+import com.example.trashapp.DatabaseHelper
 
 
 class MapFragment : Fragment() {
@@ -59,7 +60,8 @@ class MapFragment : Fragment() {
         }
 
         // Add icons to map
-        var items = DBUtils.getAllActiveFromDB()
+        val dbHelper = context?.let { it1 -> DatabaseHelper(it1) }
+        var items = DBUtils.getAllActiveTrashFromDB(dbHelper!!.writableDatabase)
         var collectedItems = ArrayList<String>()
         addIconsToMap(items, collectedItems)
 
@@ -112,7 +114,8 @@ class MapFragment : Fragment() {
                 override fun onItemLongPress(index: Int, item: OverlayItem): Boolean {
                     if (collectedItems.indexOf(item.uid) == -1){
                         item.setMarker(resources.getDrawable(R.drawable.green_marker_v2))
-                        DBUtils.delFromDB(item);
+                        val dbHelper = context?.let { it1 -> DatabaseHelper(it1) }
+                        DBUtils.delTrashFromDB(dbHelper!!.writableDatabase, item);
                         collectedItems.add(item.uid)
                         Toast.makeText(context, "Item marked as collected", Toast.LENGTH_SHORT).show()
                     }

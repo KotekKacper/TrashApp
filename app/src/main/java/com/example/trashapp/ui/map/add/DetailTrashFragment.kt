@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.trashapp.DBUtils
+import com.example.trashapp.DatabaseHelper
 import com.example.trashapp.MainActivity
 import com.example.trashapp.databinding.FragmentDetailTrashBinding
 import org.osmdroid.util.GeoPoint
@@ -64,7 +65,9 @@ class DetailTrashFragment : Fragment() {
         }
 
         binding.buttonConfirm.setOnClickListener {
-            DBUtils.addToDB(
+            val dbHelper = context?.let { it1 -> DatabaseHelper(it1) }
+            DBUtils.addTrashToDB(
+                dbHelper!!.writableDatabase,
                 GeoPoint(givenPosition[0].toDouble(), givenPosition[1].toDouble()),
                 chosen_imgs,
                 binding.dropdownSize.selectedItem.toString()
