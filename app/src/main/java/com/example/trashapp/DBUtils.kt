@@ -1,13 +1,15 @@
 package com.example.trashapp
 
+import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.util.Log
 import com.example.trashapp.classes.Tab
+import com.example.trashapp.classes.Trash
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.OverlayItem
+import java.time.Instant
 import java.util.*
-import kotlin.collections.ArrayList
 
 object DBUtils {
 
@@ -70,5 +72,17 @@ object DBUtils {
 
     fun delTrashFromDB(db: SQLiteDatabase, item: OverlayItem){
         //TODO - delete the chosen element from DB
+    }
+
+    fun getReports(context: Context, username: String): ArrayList<Trash> {
+        //TODO - return trash and images connected to it
+        return arrayListOf(
+            Trash(
+                creationDate = Instant.now(),
+                localization = "Teatralna 3",
+                id = 1,
+                trashSize = 1
+            )
+        )
     }
 }
