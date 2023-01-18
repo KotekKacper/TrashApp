@@ -6,9 +6,10 @@ import android.database.sqlite.SQLiteOpenHelper
 
 val DATABASE_VERSION: Int = 1
 
-class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "TrashAppDatabase", null, DATABASE_VERSION) {
+class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "TrashAppDB", null, DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase?) {
+        create(db);
         // Create indexes
         db?.execSQL("CREATE INDEX users_login_idx ON users(login);")
         db?.execSQL("CREATE INDEX users_pwd_idx ON users(password);")
@@ -96,24 +97,21 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "TrashAppData
                 "     filling REAL NOT NULL \n" +
                 " );")
         db?.execSQL("CREATE TABLE trash (\n" +
-                "     id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
-                "     localization TEXT NOT NULL,\n" +
-                "     creation_date TIMESTAMP NOT NULL,\n" +
-                "     trash_size INTEGER,\n" +
-                "     vehicle_id INTEGER REFERENCES vehicle(id),\n" +
-                "     user_login_report TEXT REFERENCES users(login),\n" +
-                "     cleaningcrew_id INTEGER REFERENCES cleaningcrew(id),\n" +
-                "     user_login TEXT REFERENCES users(login),\n" +
-                "     collection_date TIMESTAMP,\n" +
-                "     CHECK (((vehicle_id IS NOT NULL)\n" +
-                "                 AND (user_login IS NULL)\n" +
-                "                 AND (cleaningcrew_id IS NULL))\n" +
-                "                OR ((user_login IS NOT NULL)\n" +
-                "                    AND (vehicle_id IS NULL)\n" +
-                "                    AND (cleaningcrew_id IS NULL))\n" +
-                "                OR ((cleaningcrew_id IS NOT NULL)\n" +
-                "                    AND (vehicle_id IS NULL)\n" +
-                "                    AND (user_login IS NULL)))\n" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "localization TEXT NOT NULL,\n" +
+                "creation_date TIMESTAMP NOT NULL,\n" +
+                "trash_size INTEGER,\n" +
+                "vehicle_id INTEGER REFERENCES vehicle(id),\n" +
+                "user_login_report TEXT REFERENCES users(login),\n" +
+                "cleaningcrew_id INTEGER REFERENCES cleaningcrew(id),\n" +
+                "user_login TEXT REFERENCES users(login),\n" +
+                "collection_date TIMESTAMP,\n" +
+                "CHECK (\n" +
+                "(vehicle_id IS NOT NULL AND user_login IS NULL AND cleaningcrew_id IS NULL) OR\n" +
+                "(user_login IS NOT NULL AND vehicle_id IS NULL AND cleaningcrew_id IS NULL) OR\n" +
+                "(cleaningcrew_id IS NOT NULL AND vehicle_id IS NULL AND user_login IS NULL) OR\n" +
+                "(vehicle_id IS NULL AND user_login IS NULL AND cleaningcrew_id IS NULL)\n" +
+                ")\n" +
                 ");")
         db?.execSQL("CREATE TABLE image ( \n" +
                 "     id INTEGER PRIMARY KEY AUTOINCREMENT, \n" +
@@ -154,19 +152,21 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "TrashAppData
     }
 
     fun clear(db: SQLiteDatabase?){
-        db?.execSQL("DROP TABLE IF EXISTS cleaningcompany")
-        db?.execSQL("DROP TABLE IF EXISTS users")
-        db?.execSQL("DROP TABLE IF EXISTS role")
-        db?.execSQL("DROP TABLE IF EXISTS usertorole")
-        db?.execSQL("DROP TABLE IF EXISTS cleaningcrew")
-        db?.execSQL("DROP TABLE IF EXISTS usergroup")
-        db?.execSQL("DROP TABLE IF EXISTS vehicle")
-        db?.execSQL("DROP TABLE IF EXISTS trash")
-        db?.execSQL("DROP TABLE IF EXISTS image")
-        db?.execSQL("DROP TABLE IF EXISTS trashcollectingpoint")
-        db?.execSQL("DROP TABLE IF EXISTS trashtype")
-        db?.execSQL("DROP TABLE IF EXISTS trashtotrashtype")
-        db?.execSQL("DROP TABLE IF EXISTS collectingpointtotrashtype")
         db?.execSQL("DROP TABLE IF EXISTS worker")
+        db?.execSQL("DROP TABLE IF EXISTS collectingpointtotrashtype")
+        db?.execSQL("DROP TABLE IF EXISTS trashtotrashtype")
+        db?.execSQL("DROP TABLE IF EXISTS trashtype")
+        db?.execSQL("DROP TABLE IF EXISTS trashcollectingpoint")
+        db?.execSQL("DROP TABLE IF EXISTS image")
+        db?.execSQL("DROP TABLE IF EXISTS trash")
+        db?.execSQL("DROP TABLE IF EXISTS vehicle")
+        db?.execSQL("DROP TABLE IF EXISTS usergroup")
+        db?.execSQL("DROP TABLE IF EXISTS cleaningcrew")
+        db?.execSQL("DROP TABLE IF EXISTS usertorole")
+        db?.execSQL("DROP TABLE IF EXISTS role")
+        db?.execSQL("DROP TABLE IF EXISTS users")
+        db?.execSQL("DROP TABLE IF EXISTS cleaningcompany")
+
+        create(db)
     }
 }

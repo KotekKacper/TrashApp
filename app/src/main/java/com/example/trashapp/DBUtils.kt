@@ -42,7 +42,7 @@ object DBUtils {
         val elements = ArrayList<String>()
         elements.add("id");elements.add("localization");elements.add("trash_size")
         val qResult = useSelect(db, elements, Tab.TRASH)
-
+        Log.i("SQLiteCustom", qResult.toString())
         var items = ArrayList<OverlayItem>()
         if (qResult["id"] != null){
             for (i in qResult["id"]!!.indices){
@@ -60,8 +60,10 @@ object DBUtils {
     fun addTrashToDB(db: SQLiteDatabase, pos: GeoPoint, chosen_imgs : ArrayList<Uri>, size: String){
         //TODO - add element to DB
         val position: String = pos.toDoubleString()
-        db.rawQuery("INSERT INTO ${Tab.TRASH} (localization, creation_date, trash_size)" +
-                "VALUES ('${position}', datetime(), 1)", null)
+        val sqlString: String = "INSERT INTO ${Tab.TRASH} (localization, creation_date, trash_size, user_login_report) " +
+                                "VALUES ('${position}', datetime(), 1, 'kacper')"
+        Log.i("SQLiteCustom : addTrash : sqlStringGenr", sqlString)
+        db.execSQL(sqlString)
         db.close()
         Log.i("SQLiteCustom", "Trash added")
     }
