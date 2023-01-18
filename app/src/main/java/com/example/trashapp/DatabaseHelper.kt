@@ -9,6 +9,42 @@ val DATABASE_VERSION: Int = 1
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "TrashAppDatabase", null, DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase?) {
+        // Create indexes
+        db?.execSQL("CREATE INDEX users_login_idx ON users(login);")
+        db?.execSQL("CREATE INDEX users_pwd_idx ON users(password);")
+        db?.execSQL("CREATE INDEX role_idx ON role(role_name);")
+        db?.execSQL("CREATE INDEX usertorole_us_login_idx ON usertorole(user_login);")
+        db?.execSQL("CREATE INDEX usertorole_role_idx ON usertorole(role_name);")
+        db?.execSQL("CREATE INDEX cleaningcrew_idx ON cleaningcrew(meet_date);")
+        db?.execSQL("CREATE INDEX usergroup_us_login_idx ON usergroup(user_login);")
+        db?.execSQL("CREATE INDEX usergroup_cc_id_idx ON usergroup(cleaningcrew_id);")
+        db?.execSQL("CREATE INDEX vehicle_fill_idx ON vehicle(filling);")
+        db?.execSQL("CREATE INDEX vehicle_use_idx ON vehicle(in_use);")
+        db?.execSQL("CREATE INDEX trash_create_date_idx ON trash(creation_date);")
+        db?.execSQL("CREATE INDEX trash_veh_id_idx ON trash(vehicle_id);")
+        db?.execSQL("CREATE INDEX trash_us_log_rep_idx ON trash(user_login_report);")
+        db?.execSQL("CREATE INDEX trash_clean_id_idx ON trash(cleaningcrew_id);")
+        db?.execSQL("CREATE INDEX trash_us_log_idx ON trash(user_login);")
+        db?.execSQL("CREATE INDEX trash_collect_date_idx ON trash(collection_date);")
+        db?.execSQL("CREATE INDEX image_trash_id_idx ON image(trash_id);")
+        db?.execSQL("CREATE INDEX trashtotrashtype_trash_id_idx ON trashtotrashtype(trash_id);")
+        db?.execSQL("CREATE INDEX trashtotrashtype_trash_type_name_idx ON trashtotrashtype(trashtype_name);")
+        db?.execSQL("CREATE INDEX collectpointtotrashtype_tr_col_local_idx ON collectingpointtotrashtype(trashcollectingpoint_localization);")
+        db?.execSQL("CREATE INDEX collectpointtotrashtype_tr_col_local__typename_idx ON collectingpointtotrashtype(trashtype_name);")
+        db?.execSQL("CREATE INDEX worker_start_job_idx ON worker(job_start_time);")
+        db?.execSQL("CREATE INDEX worker_end_job_idx ON worker(job_end_time);")
+        db?.execSQL("CREATE INDEX worker_company_nip_idx ON worker(company_nip);")
+        db?.execSQL("CREATE INDEX worker_veh_id_idx ON worker(vehicle_id);")
+
+        // Create procedures and functions
+
+    }
+
+    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
+        // Handle database upgrades here
+    }
+
+    fun create(db: SQLiteDatabase?){
         // Create tables here
         db?.execSQL("CREATE TABLE cleaningcompany ( \n" +
                 "     nip CHAR(10) PRIMARY KEY, \n" +
@@ -111,40 +147,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "TrashAppData
                 "     vehicle_id INTEGER NOT NULL REFERENCES vehicle(id),\n" +
                 "     PRIMARY KEY (fullname, birthdate)\n" +
                 " );")
-
-        // Create indexes
-        db?.execSQL("CREATE INDEX users_login_idx ON users(login);")
-        db?.execSQL("CREATE INDEX users_pwd_idx ON users(password);")
-        db?.execSQL("CREATE INDEX role_idx ON role(role_name);")
-        db?.execSQL("CREATE INDEX usertorole_us_login_idx ON usertorole(user_login);")
-        db?.execSQL("CREATE INDEX usertorole_role_idx ON usertorole(role_name);")
-        db?.execSQL("CREATE INDEX cleaningcrew_idx ON cleaningcrew(meet_date);")
-        db?.execSQL("CREATE INDEX usergroup_us_login_idx ON usergroup(user_login);")
-        db?.execSQL("CREATE INDEX usergroup_cc_id_idx ON usergroup(cleaningcrew_id);")
-        db?.execSQL("CREATE INDEX vehicle_fill_idx ON vehicle(filling);")
-        db?.execSQL("CREATE INDEX vehicle_use_idx ON vehicle(in_use);")
-        db?.execSQL("CREATE INDEX trash_create_date_idx ON trash(creation_date);")
-        db?.execSQL("CREATE INDEX trash_veh_id_idx ON trash(vehicle_id);")
-        db?.execSQL("CREATE INDEX trash_us_log_rep_idx ON trash(user_login_report);")
-        db?.execSQL("CREATE INDEX trash_clean_id_idx ON trash(cleaningcrew_id);")
-        db?.execSQL("CREATE INDEX trash_us_log_idx ON trash(user_login);")
-        db?.execSQL("CREATE INDEX trash_collect_date_idx ON trash(collection_date);")
-        db?.execSQL("CREATE INDEX image_trash_id_idx ON image(trash_id);")
-        db?.execSQL("CREATE INDEX trashtotrashtype_trash_id_idx ON trashtotrashtype(trash_id);")
-        db?.execSQL("CREATE INDEX trashtotrashtype_trash_type_name_idx ON trashtotrashtype(trashtype_name);")
-        db?.execSQL("CREATE INDEX collectpointtotrashtype_tr_col_local_idx ON collectingpointtotrashtype(trashcollectingpoint_localization);")
-        db?.execSQL("CREATE INDEX collectpointtotrashtype_tr_col_local__typename_idx ON collectingpointtotrashtype(trashtype_name);")
-        db?.execSQL("CREATE INDEX worker_start_job_idx ON worker(job_start_time);")
-        db?.execSQL("CREATE INDEX worker_end_job_idx ON worker(job_end_time);")
-        db?.execSQL("CREATE INDEX worker_company_nip_idx ON worker(company_nip);")
-        db?.execSQL("CREATE INDEX worker_veh_id_idx ON worker(vehicle_id);")
-
-        // Create procedures and functions
-
-    }
-
-    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        // Handle database upgrades here
     }
 
     fun fill(db: SQLiteDatabase?){

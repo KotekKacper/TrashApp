@@ -3,37 +3,67 @@ package com.example.trashapp
 import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.util.Log
+import com.example.trashapp.classes.Tab
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.OverlayItem
 import java.util.*
+import kotlin.collections.ArrayList
 
 object DBUtils {
 
-    fun getAllActiveTrashFromDB(db: SQLiteDatabase): ArrayList<OverlayItem>{
-        //TODO - get all active trash elements from DB
-        val cursor = db?.rawQuery("SELECT * FROM Trash", null)
-        Log.i("SQLiteCustom", cursor!!.getColumnName(1))
-        Log.i("SQLiteCustom", cursor!!.getColumnName(2))
-        Log.i("SQLiteCustom", cursor!!.getColumnName(3))
-        Log.i("SQLiteCustom", cursor!!.getColumnName(4))
-        Log.i("SQLiteCustom", cursor!!.getColumnName(5))
+    fun useSelect(db: SQLiteDatabase, elements: ArrayList<String>,
+                  tabName: String, whereString: String = "")
+    : HashMap<String, ArrayList<String>>{
+        val elementsString = elements.joinToString(separator = ", ")
+        val sqlString = "SELECT ${elementsString} FROM ${tabName} ${whereString};"
+        Log.i("SQLiteCustom : useSelect : sqlString", sqlString)
+
+        var output = HashMap<String, ArrayList<String>>();
+        val cursor = db?.rawQuery(sqlString, null)
         cursor.use {
             while(it!!.moveToNext()){
-                val loc = it.getString(it.getColumnIndexOrThrow("localization"))
-                Log.i("SQLiteCustom", "Localization: $loc")
+                for (element: String in elements){
+                    val rowResult = it.getString(it.getColumnIndexOrThrow(element))
+                    Log.i("SQLiteCustom", "${element}: ${rowResult}")
+                    if(output.containsKey(element)){
+                        output[element]?.add(rowResult)
+                    }else{
+                        output[element] = arrayListOf(rowResult)
+                    }
+                }
             }
         }
+        db.close()
+        return output;
+    }
+
+    fun getAllActiveTrashFromDB(db: SQLiteDatabase): ArrayList<OverlayItem>{
+        //TODO - get all active trash elements from DB
+        val elements = ArrayList<String>()
+        elements.add("id");elements.add("localization");elements.add("trash_size")
+        val qResult = useSelect(db, elements, Tab.TRASH)
 
         var items = ArrayList<OverlayItem>()
-        items.add(OverlayItem("1", "Trash", "Desc1", GeoPoint(52.40339, 16.95057)))
-        items.add(OverlayItem("2", "Trash2", "Desc2", GeoPoint(52.40349, 16.95057)))
+        if (qResult["id"] != null){
+            for (i in qResult["id"]!!.indices){
+                val p = qResult["localization"]?.get(i)?.split(",")
+                items.add(OverlayItem(qResult["id"]!![i],
+                    qResult["localization"]!![i],
+                    qResult["trash_size"].toString(),
+                    GeoPoint(p!![0].toDouble(), p[1].toDouble())))
+                Log.i("SQLiteCustom : useSelect : localization", p!![0]+", "+p[1])
+            }
+        }
         return items
     }
 
     fun addTrashToDB(db: SQLiteDatabase, pos: GeoPoint, chosen_imgs : ArrayList<Uri>, size: String){
         //TODO - add element to DB
         val position: String = pos.toDoubleString()
-
+        db.rawQuery("INSERT INTO ${Tab.TRASH} (localization, creation_date, trash_size)" +
+                "VALUES ('${position}', datetime(), 1)", null)
+        db.close()
+        Log.i("SQLiteCustom", "Trash added")
     }
 
     fun delTrashFromDB(db: SQLiteDatabase, item: OverlayItem){
