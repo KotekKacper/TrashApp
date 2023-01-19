@@ -74,6 +74,7 @@ class DetailTrashFragment : Fragment() {
             )
             Toast.makeText(context, "Trash reported", Toast.LENGTH_SHORT).show()
             startActivity(Intent(context, MainActivity::class.java))
+            activity?.finishAffinity()
         }
     }
 
