@@ -7,6 +7,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.trashapp.DBUtils
+import com.example.trashapp.R
+import com.example.trashapp.adapters.GroupItemAdapter
+import com.example.trashapp.adapters.ReportItemAdapter
 import com.example.trashapp.databinding.FragmentGroupsBinding
 
 class GroupsFragment : Fragment() {
@@ -28,10 +34,12 @@ class GroupsFragment : Fragment() {
         _binding = FragmentGroupsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textGroups
-        galleryViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+        val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewGroups)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        val groupsArray = context?.let { DBUtils.getGroups(it, "admin") }
+        val adapter = GroupItemAdapter(groupsArray)
+        recyclerView.adapter = adapter
+
         return root
     }
 

@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Log
 import com.example.trashapp.classes.Tab
 import com.example.trashapp.classes.Trash
+import com.example.trashapp.classes.Group
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.OverlayItem
 import java.time.Instant
@@ -79,9 +80,20 @@ object DBUtils {
         return arrayListOf(
             Trash(
                 creationDate = Instant.now(),
-                localization = "Teatralna 3",
+                localization = "52.40427145950248,16.94963942393314,0.0",
                 id = 1,
                 trashSize = 1
+            )
+        )
+    }
+
+    fun getGroups(context: Context, username: String): ArrayList<Group> {
+        //TODO - return groups that the given user is connected to
+        return arrayListOf(
+            Group(
+                name = "Sprzątacze crew",
+                meetingDate = Instant.now(),
+                meetingLoc = "52.40427145950248,16.94963942393314,0.0"
             )
         )
     }
