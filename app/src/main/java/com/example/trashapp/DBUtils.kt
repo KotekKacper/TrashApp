@@ -4,10 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.util.Log
-import com.example.trashapp.classes.Tab
-import com.example.trashapp.classes.Trash
-import com.example.trashapp.classes.Group
-import com.example.trashapp.classes.TrashCollectingPoint
+import com.example.trashapp.classes.*
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.OverlayItem
 import java.time.Instant
@@ -99,11 +96,22 @@ object DBUtils {
         )
     }
 
-    fun getCollectingPoints(context: Context, username: String): ArrayList<TrashCollectingPoint> {
-        //TODO - return groups that the given user is connected to
+    fun getCollectingPoints(context: Context, location: String): ArrayList<TrashCollectingPoint> {
+        //TODO - return collecting points that are nearby (location still not given correctly!!!)
         return arrayListOf(
             TrashCollectingPoint(
                 localization = "52.40427145950248,16.94963942393314,0.0"
+            )
+        )
+    }
+
+    fun getUsers(context: Context, username: String): ArrayList<User> {
+        //TODO - return groups that the given user is connected to
+        return arrayListOf(
+            User(
+                login = "login",
+                password = "",
+                email = ""
             )
         )
     }
