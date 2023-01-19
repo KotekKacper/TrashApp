@@ -6,8 +6,8 @@ data class CleaningCompany(
     var phone: Int,
     var country: String,
     var city: String,
-    var district: String,
+    var district: String? = null,
     var street: String,
-    var flatNumber: String,
-    var postCode: String,
+    var flatNumber: String? = null,
+    var postCode: String? = null,
 )

@@ -115,4 +115,18 @@ object DBUtils {
             )
         )
     }
+
+    fun getCompanies(context: Context, username: String): ArrayList<CleaningCompany> {
+        //TODO - return groups that the given user is connected to
+        return arrayListOf(
+            CleaningCompany(
+                email = "contact@company.com",
+                NIP = "",
+                phone = 0,
+                country = "",
+                city = "",
+                street = ""
+            )
+        )
+    }
 }
