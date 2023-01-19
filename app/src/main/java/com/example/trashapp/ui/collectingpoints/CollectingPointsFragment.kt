@@ -7,6 +7,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.trashapp.DBUtils
+import com.example.trashapp.R
+import com.example.trashapp.adapters.CollectingPointItemAdapter
+import com.example.trashapp.adapters.GroupItemAdapter
 import com.example.trashapp.databinding.FragmentCollectingPointsBinding
 
 class CollectingPointsFragment : Fragment() {
@@ -28,10 +34,12 @@ class CollectingPointsFragment : Fragment() {
         _binding = FragmentCollectingPointsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textCollectingPoints
-        slideshowViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+        val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewCollectingPoints)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        val pointsArray = context?.let { DBUtils.getCollectingPoints(it, "admin") }
+        val adapter = CollectingPointItemAdapter(pointsArray)
+        recyclerView.adapter = adapter
+
         return root
     }
 

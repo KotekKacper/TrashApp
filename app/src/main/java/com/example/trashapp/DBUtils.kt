@@ -7,6 +7,7 @@ import android.util.Log
 import com.example.trashapp.classes.Tab
 import com.example.trashapp.classes.Trash
 import com.example.trashapp.classes.Group
+import com.example.trashapp.classes.TrashCollectingPoint
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.OverlayItem
 import java.time.Instant
@@ -94,6 +95,15 @@ object DBUtils {
                 name = "Sprzątacze crew",
                 meetingDate = Instant.now(),
                 meetingLoc = "52.40427145950248,16.94963942393314,0.0"
+            )
+        )
+    }
+
+    fun getCollectingPoints(context: Context, username: String): ArrayList<TrashCollectingPoint> {
+        //TODO - return groups that the given user is connected to
+        return arrayListOf(
+            TrashCollectingPoint(
+                localization = "52.40427145950248,16.94963942393314,0.0"
             )
         )
     }
