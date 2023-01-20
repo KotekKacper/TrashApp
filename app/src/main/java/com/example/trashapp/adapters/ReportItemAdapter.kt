@@ -8,12 +8,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.trashapp.LocalizationToAddress
+import com.example.trashapp.NominatimApiService
 import com.example.trashapp.R
 import com.example.trashapp.classes.Trash
-import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.URL
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
 
 
 class ReportItemAdapter(private val mData: ArrayList<Trash>?) :
@@ -31,18 +34,28 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?) :
         }
         holder.textView1.text = item.creationDate.toString().subSequence(0,10)
         Log.i("Localization", item.localization)
-//        val loc = item.localization.split(",")
-//        val url = URL("https://nominatim.openstreetmap.org/reverse?lat=${loc[0]}&lon=${loc[1]}&format=json")
-//        val urlConn = url.openConnection()
-//        val bufferedReader = BufferedReader(InputStreamReader(urlConn.getInputStream()))
-//
-//        val stringBuffer = StringBuffer()
-//        var line: String?
-//        while (bufferedReader.readLine().also { line = it } != null) {
-//            stringBuffer.append(line)
-//        }
-//        val locJson = JSONObject(stringBuffer.toString())
-        holder.textView2.text = item.localization // TODO - replace with the result from nominatim API
+        val loc = item.localization.split(",")
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://nominatim.openstreetmap.org/")
+            .build()
+        val service = retrofit.create(NominatimApiService::class.java)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getReverseJson(loc[0], loc[1], "json")
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    val addrString = LocalizationToAddress.getAddress(json)
+                    holder.textView2.text = addrString
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    // handle error
+                    Log.e("Localization", e.toString())
+                }
+            }
+        }
+
         if (item.collectionDate == null){
             holder.textView3.text = "Not collected"
             holder.textView3.setTextColor(Color.RED)
