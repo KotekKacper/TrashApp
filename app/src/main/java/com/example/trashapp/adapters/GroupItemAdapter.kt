@@ -8,8 +8,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.trashapp.LocalizationToAddress
+import com.example.trashapp.NominatimApiService
 import com.example.trashapp.R
 import com.example.trashapp.classes.Group
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
 
 class GroupItemAdapter(private val mData: ArrayList<Group>?) :
     RecyclerView.Adapter<GroupItemAdapter.ViewHolder>() {
@@ -22,7 +29,28 @@ class GroupItemAdapter(private val mData: ArrayList<Group>?) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mData?.get(position)
         holder.textView1.text = item!!.name
-        holder.textView2.text = item.meetingLoc // TODO - replace with the result from nominatim API
+
+        val loc = item.meetingLoc.split(",")
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://nominatim.openstreetmap.org/")
+            .build()
+        val service = retrofit.create(NominatimApiService::class.java)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getReverseJson(loc[0], loc[1], "json")
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    val addrString = LocalizationToAddress.getAddress(json)
+                    holder.textView2.text = addrString
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    // handle error
+                    Log.e("Localization", e.toString())
+                }
+            }
+        }
+
         holder.textView3.text = item.meetingDate.toString().subSequence(0, 10)
     }
 
