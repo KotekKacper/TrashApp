@@ -1,5 +1,6 @@
 package com.example.trashapp.ui.reports
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,7 +35,8 @@ class ReportsFragment : Fragment() {
 
         val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewReports)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        val reportsArray = context?.let { DBUtils.getReports(it, "admin") }
+        val reportsArray = context?.let { DBUtils.getReports(it,
+            activity!!.getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "")!!) }
         val adapter = ReportItemAdapter(reportsArray)
         recyclerView.adapter = adapter
 

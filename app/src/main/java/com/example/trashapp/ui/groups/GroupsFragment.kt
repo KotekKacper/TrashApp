@@ -1,5 +1,6 @@
 package com.example.trashapp.ui.groups
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -36,7 +37,8 @@ class GroupsFragment : Fragment() {
 
         val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewGroups)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        val groupsArray = context?.let { DBUtils.getGroups(it, "admin") }
+        val groupsArray = context?.let { DBUtils.getGroups(it,
+            activity!!.getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "")!!) }
         val adapter = GroupItemAdapter(groupsArray)
         recyclerView.adapter = adapter
 

@@ -2,6 +2,7 @@ package com.example.trashapp.ui.map.add
 
 import android.app.Activity.RESULT_OK
 import android.content.ClipData
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -71,7 +72,7 @@ class DetailTrashFragment : Fragment() {
                     GeoPoint(givenPosition[0].toDouble(), givenPosition[1].toDouble()),
                     chosen_imgs,
                     binding.dropdownSize.selectedItem.toString(),
-                    "admin"
+                    activity!!.getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "")!!
                 )
             }
             Toast.makeText(context, "Trash reported", Toast.LENGTH_SHORT).show()
