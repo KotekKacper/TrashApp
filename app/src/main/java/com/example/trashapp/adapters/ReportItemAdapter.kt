@@ -33,9 +33,8 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?) :
             holder.imageView.setImageDrawable(item.images!![0])
         }
         holder.textView1.text = item.creationDate.toString().subSequence(0,10)
-        Log.i("Localization", item.localization)
-        val loc = item.localization.split(",")
 
+        val loc = item.localization.split(",")
         val retrofit = Retrofit.Builder()
             .baseUrl("https://nominatim.openstreetmap.org/")
             .build()

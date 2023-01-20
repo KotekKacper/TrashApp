@@ -8,8 +8,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.trashapp.LocalizationToAddress
+import com.example.trashapp.NominatimApiService
 import com.example.trashapp.R
 import com.example.trashapp.classes.TrashCollectingPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
 
 class CollectingPointItemAdapter(private val mData: ArrayList<TrashCollectingPoint>?) :
     RecyclerView.Adapter<CollectingPointItemAdapter.ViewHolder>() {
@@ -21,7 +28,26 @@ class CollectingPointItemAdapter(private val mData: ArrayList<TrashCollectingPoi
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mData?.get(position)
-        holder.textView1.text = item!!.localization
+        val loc = item!!.localization.split(",")
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://nominatim.openstreetmap.org/")
+            .build()
+        val service = retrofit.create(NominatimApiService::class.java)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getReverseJson(loc[0], loc[1], "json")
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    val addrString = LocalizationToAddress.getAddress(json)
+                    holder.textView1.text = addrString
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    // handle error
+                    Log.e("Localization", e.toString())
+                }
+            }
+        }
     }
 
     override fun getItemCount(): Int {
