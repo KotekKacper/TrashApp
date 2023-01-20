@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
+import com.example.trashapp.classes.User
 
 class RegistrationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,7 +14,12 @@ class RegistrationActivity : AppCompatActivity() {
 
         val registerButton = findViewById<Button>(R.id.buttonRegister)
         registerButton.setOnClickListener{
-            // TODO - add the user to DB
+            val user = User(
+                login = findViewById<EditText>(R.id.editTextTextLogin).text.toString(),
+                password = findViewById<EditText>(R.id.editTextTextPassword).text.toString(),
+                email = findViewById<EditText>(R.id.editTextTextEmailAddress).text.toString()
+            )
+            DBUtils.addUser(this, user)
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }

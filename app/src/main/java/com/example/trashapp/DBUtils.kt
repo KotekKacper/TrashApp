@@ -167,4 +167,24 @@ object DBUtils {
             )
         )
     }
+
+    fun addUser(context: Context, user: User): Boolean{
+        val dbHelper = DatabaseHelper(context)
+        val db = dbHelper.writableDatabase
+
+        //TODO - insert user into database (return true - added, return false - not added)
+
+        db.close()
+        return true
+    }
+
+    fun checkLogin(context: Context, username: String, password: String): Boolean{
+        val dbHelper = DatabaseHelper(context)
+        val db = dbHelper.writableDatabase
+
+        // TODO - check if login and password are correct
+
+        db.close()
+        return true
+    }
 }
