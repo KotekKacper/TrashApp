@@ -36,7 +36,7 @@ class CompaniesFragment : Fragment() {
 
         val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewCompanies)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        val companiesArray = context?.let { DBUtils.getCompanies(it, "admin") }
+        val companiesArray = context?.let { DBUtils.getCompanies(it) }
         val adapter = CompanyItemAdapter(companiesArray)
         recyclerView.adapter = adapter
 

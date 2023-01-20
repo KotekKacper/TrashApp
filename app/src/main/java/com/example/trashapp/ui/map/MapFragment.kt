@@ -35,6 +35,8 @@ class MapFragment : Fragment() {
     private lateinit var map : MapView
     private lateinit var mLocationOverlay : MyLocationNewOverlay
 
+    private lateinit var items: ArrayList<OverlayItem>
+    private lateinit var collectedItems: ArrayList<String>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,9 +62,8 @@ class MapFragment : Fragment() {
         }
 
         // Add icons to map
-        val dbHelper = context?.let { it1 -> DatabaseHelper(it1) }
-        var items = DBUtils.getAllActiveTrashFromDB(dbHelper!!.writableDatabase)
-        var collectedItems = ArrayList<String>()
+        items = context?.let { DBUtils.getAllActiveTrash(it) }!!
+        collectedItems = ArrayList<String>()
         addIconsToMap(items, collectedItems)
 
         // Enable pinch to zoom
@@ -114,8 +115,7 @@ class MapFragment : Fragment() {
                 override fun onItemLongPress(index: Int, item: OverlayItem): Boolean {
                     if (collectedItems.indexOf(item.uid) == -1){
                         item.setMarker(resources.getDrawable(R.drawable.green_marker_v2))
-                        val dbHelper = context?.let { it1 -> DatabaseHelper(it1) }
-                        DBUtils.delTrashFromDB(dbHelper!!.writableDatabase, item);
+                        context?.let { DBUtils.collectTrash(it, item) };
                         collectedItems.add(item.uid)
                         Toast.makeText(context, "Item marked as collected", Toast.LENGTH_SHORT).show()
                     }

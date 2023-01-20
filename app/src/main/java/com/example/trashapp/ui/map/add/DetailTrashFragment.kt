@@ -65,13 +65,15 @@ class DetailTrashFragment : Fragment() {
         }
 
         binding.buttonConfirm.setOnClickListener {
-            val dbHelper = context?.let { it1 -> DatabaseHelper(it1) }
-            DBUtils.addTrashToDB(
-                dbHelper!!.writableDatabase,
-                GeoPoint(givenPosition[0].toDouble(), givenPosition[1].toDouble()),
-                chosen_imgs,
-                binding.dropdownSize.selectedItem.toString()
-            )
+            context?.let { it1 ->
+                DBUtils.addTrash(
+                    it1,
+                    GeoPoint(givenPosition[0].toDouble(), givenPosition[1].toDouble()),
+                    chosen_imgs,
+                    binding.dropdownSize.selectedItem.toString(),
+                    "admin"
+                )
+            }
             Toast.makeText(context, "Trash reported", Toast.LENGTH_SHORT).show()
             startActivity(Intent(context, MainActivity::class.java))
             activity?.finishAffinity()
