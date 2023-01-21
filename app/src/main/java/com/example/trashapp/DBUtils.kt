@@ -19,11 +19,8 @@ object DBUtils {
                   tabName: String, whereString: String = "")
     : HashMap<String, ArrayList<String>>{
         // TODO - change to prevent sql injection
-        var whereStringComplete = whereString
-        if(!whereString.equals(""))
-        {
-            whereStringComplete = "WHERE ".plus(whereString)
-        }
+        var whereStringComplete = if(whereString.equals("")) whereString else "WHERE ".plus(whereString)
+
         val elementsString = elements.joinToString(separator = ", ")
         val sqlString = "SELECT ${elementsString} FROM ${tabName} ${whereStringComplete};"
         Log.i("SQLiteCustom : useSelect : sqlString", sqlString)
@@ -77,7 +74,7 @@ object DBUtils {
         }
         catch(ex: Exception)
         {
-            Log.w("Exception",ex.message.toString())
+            Log.w("getAllActiveTrash : Exception : ",ex.message.toString())
         }
         finally{
         db.close()
@@ -104,7 +101,7 @@ object DBUtils {
         }
         catch (ex: Exception)
         {
-            Log.w("Exception : ",ex.message.toString())
+            Log.w("addTrash : Exception : ",ex.message.toString())
         }
         finally{
             db.close()
@@ -187,7 +184,7 @@ object DBUtils {
         }
         catch(ex:Exception)
         {
-            Log.w("Exception: ", ex.message.toString())
+            Log.w("getCollectingPoints : Exception: ", ex.message.toString())
         }
         finally{
             db.close()
@@ -201,17 +198,47 @@ object DBUtils {
     fun getUsers(context: Context): ArrayList<User> {
         val dbHelper = DatabaseHelper(context)
         val db = dbHelper.writableDatabase
-
+        var items = kotlin.collections.ArrayList<User>()
         //TODO - return all users
+        try {
+            val elements = ArrayList<String>()
+            elements.add("login");elements.add("password");elements.add("email");elements.add("phone");
+            elements.add("fullname");elements.add("country");elements.add("city");elements.add("district");
+            elements.add("street");elements.add("flat_number");elements.add("post_code")
 
-        db.close()
-        return arrayListOf(
-            User(
-                login = "login",
-                password = "",
-                email = ""
-            )
-        )
+            val whereString = ""
+
+            val qResult = useSelect(db, elements, Tab.USER, whereString)
+            Log.i("SQLiteCustom", qResult.toString())
+
+            if (qResult["login"] != null) {
+                for (i in qResult["login"]!!.indices) {
+                    items.add(
+                        User(
+                            qResult["login"]!![i],
+                            qResult["password"]!![i],
+                            qResult["email"]!![i],
+                            qResult["phone"]!![i],
+                            qResult["fullname"]!![i],
+                            qResult["country"]!![i],
+                            qResult["city"]!![i],
+                            qResult["district"]!![i],
+                            qResult["street"]!![i],
+                            qResult["flat_number"]!![i],
+                            qResult["post_code"]!![i]
+                        )
+                    )
+                }
+            }
+        }
+        catch(ex:Exception)
+        {
+            Log.w("getUsers : Exception : ", ex.message.toString())
+        }
+        finally{
+            db.close()
+        }
+        return items
     }
 
     fun getCompanies(context: Context): ArrayList<CleaningCompany> {
