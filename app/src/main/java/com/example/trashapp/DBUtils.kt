@@ -3,7 +3,6 @@ package com.example.trashapp
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
-import android.text.format.DateUtils
 import android.util.Log
 import android.util.Log.ERROR
 import com.example.trashapp.classes.*
@@ -11,6 +10,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.OverlayItem
 import java.time.Instant
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 object DBUtils {
@@ -19,9 +19,13 @@ object DBUtils {
                   tabName: String, whereString: String = "")
     : HashMap<String, ArrayList<String>>{
         // TODO - change to prevent sql injection
-
+        var whereStringComplete = whereString
+        if(!whereString.equals(""))
+        {
+            whereStringComplete = "WHERE ".plus(whereString)
+        }
         val elementsString = elements.joinToString(separator = ", ")
-        val sqlString = "SELECT ${elementsString} FROM ${tabName} WHERE ${whereString};"
+        val sqlString = "SELECT ${elementsString} FROM ${tabName} ${whereStringComplete};"
         Log.i("SQLiteCustom : useSelect : sqlString", sqlString)
 
         val output = HashMap<String, ArrayList<String>>();
@@ -51,7 +55,7 @@ object DBUtils {
             //TODO - change to prevent sql injection
             val elements = ArrayList<String>()
             elements.add("id");elements.add("localization");elements.add("trash_size")
-            val whereString = "collection_date IS NULL"
+            var whereString = "collection_date IS NULL"
 
             val qResult = useSelect(db, elements, Tab.TRASH, whereString)
             Log.i("SQLiteCustom", qResult.toString())
@@ -112,6 +116,7 @@ object DBUtils {
         val db = dbHelper.writableDatabase
 
         //TODO - delete the chosen element from DB
+        //TODO - Update: add collection_date - not delete.
 
         db.close()
     }
@@ -150,27 +155,47 @@ object DBUtils {
     }
 
     fun getCollectingPoints(context: Context): ArrayList<TrashCollectingPoint> {
+        //TODO - return all collecting points
+
         val dbHelper = DatabaseHelper(context)
         val db = dbHelper.writableDatabase
-        try
-        {
+        val items = ArrayList<TrashCollectingPoint>()
+        try{
+            val elements = ArrayList<String>()
+            elements.add("localization")
+            //;elements.add("bus_empty");elements.add("processing_type")
+            val whereString = ""
 
+            val qResult = useSelect(db, elements, Tab.TRASH_COLLECT_POINT, whereString)
+            Log.i("SQLiteCustom", qResult.toString())
+
+            if (qResult["localization"] != null) {
+                for (i in qResult["localization"]!!.indices) {
+                    val p = qResult["localization"]?.get(i)?.split(",")
+                    //TODO - add to items trashType for this collecting point from DB.
+                    items.add(
+                        TrashCollectingPoint(
+                            qResult["localization"]!![i])
+                            //,
+                            //qResult["bus_empty"]!![i].toBoolean(),
+                            //qResult["processing_type"]!![i])
+                        )
+
+
+                }
+            }
         }
         catch(ex:Exception)
         {
-
+            Log.w("Exception: ", ex.message.toString())
         }
         finally{
             db.close()
         }
-        //TODO - return all collecting points
 
 
-        return arrayListOf(
-            TrashCollectingPoint(
-                localization = "52.40427145950248,16.94963942393314,0.0"
-            )
-        )
+
+        return items
     }
 
     fun getUsers(context: Context): ArrayList<User> {
