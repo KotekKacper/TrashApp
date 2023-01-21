@@ -4,13 +4,14 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.trashapp.R
+import com.example.trashapp.*
 import com.example.trashapp.databinding.FragmentMapBinding
 import org.osmdroid.config.Configuration.*
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -23,8 +24,11 @@ import org.osmdroid.views.overlay.gestures.RotationGestureOverlay
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import com.example.trashapp.ui.map.add.AddTrashActivity
-import com.example.trashapp.DBUtils
-import com.example.trashapp.DatabaseHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
 
 
 class MapFragment : Fragment() {
@@ -78,6 +82,7 @@ class MapFragment : Fragment() {
 
 //        // Get current user loaction (not working)
 //        getUserCurrentLocation()
+
 
         return root
     }

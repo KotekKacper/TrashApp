@@ -4,16 +4,29 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.util.Log
-import android.util.Log.ERROR
+import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
+import com.example.trashapp.ConvertResponse.convertCompanies
+import com.example.trashapp.adapters.CompanyItemAdapter
 import com.example.trashapp.classes.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.OverlayItem
+import retrofit2.Retrofit
 import java.time.Instant
 import java.util.*
 import kotlin.collections.ArrayList
 
 
 object DBUtils {
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl("http://10.0.2.2:8080/")
+        .build()
+    private val service = retrofit.create(ServerApiService::class.java)
 
     private fun useSelect(db: SQLiteDatabase, elements: ArrayList<String>,
                   tabName: String, whereString: String = "")
@@ -241,24 +254,30 @@ object DBUtils {
         return items
     }
 
-    fun getCompanies(context: Context): ArrayList<CleaningCompany> {
-        val dbHelper = DatabaseHelper(context)
-        val db = dbHelper.writableDatabase
+    fun getCompanies(context: Context, recyclerView: RecyclerView){
+        val funSend = "getCompanies"
 
-        //TODO - return all companies
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson("data_sent", funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
 
-        db.close()
-        return arrayListOf(
-            CleaningCompany(
-                email = "contact@company.com",
-                NIP = "",
-                phone = 0,
-                country = "",
-                city = "",
-                street = ""
-            )
-        )
+                    val companiesArray = json?.let { convertCompanies(it) }
+                    val adapter = CompanyItemAdapter(companiesArray)
+                    recyclerView.adapter = adapter
+
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
     }
+
+
 
     fun addUser(context: Context, user: User): Boolean{
         val dbHelper = DatabaseHelper(context)
