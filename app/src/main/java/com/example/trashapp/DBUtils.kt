@@ -3,12 +3,15 @@ package com.example.trashapp
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
+import android.text.format.DateUtils
 import android.util.Log
+import android.util.Log.ERROR
 import com.example.trashapp.classes.*
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.OverlayItem
 import java.time.Instant
 import java.util.*
+
 
 object DBUtils {
 
@@ -16,8 +19,9 @@ object DBUtils {
                   tabName: String, whereString: String = "")
     : HashMap<String, ArrayList<String>>{
         // TODO - change to prevent sql injection
+
         val elementsString = elements.joinToString(separator = ", ")
-        val sqlString = "SELECT ${elementsString} FROM ${tabName} ${whereString};"
+        val sqlString = "SELECT ${elementsString} FROM ${tabName} WHERE ${whereString};"
         Log.i("SQLiteCustom : useSelect : sqlString", sqlString)
 
         val output = HashMap<String, ArrayList<String>>();
@@ -42,39 +46,65 @@ object DBUtils {
     fun getAllActiveTrash(context: Context): ArrayList<OverlayItem>{
         val dbHelper = DatabaseHelper(context)
         val db = dbHelper.writableDatabase
-
-        //TODO - change to prevent sql injection
-        val elements = ArrayList<String>()
-        elements.add("id");elements.add("localization");elements.add("trash_size")
-        val qResult = useSelect(db, elements, Tab.TRASH)
-        Log.i("SQLiteCustom", qResult.toString())
         val items = ArrayList<OverlayItem>()
-        if (qResult["id"] != null){
-            for (i in qResult["id"]!!.indices){
-                val p = qResult["localization"]?.get(i)?.split(",")
-                items.add(OverlayItem(qResult["id"]!![i],
-                    qResult["localization"]!![i],
-                    qResult["trash_size"].toString(),
-                    GeoPoint(p!![0].toDouble(), p[1].toDouble())))
-                Log.i("SQLiteCustom : useSelect : localization", p[0]+", "+p[1])
+        try {
+            //TODO - change to prevent sql injection
+            val elements = ArrayList<String>()
+            elements.add("id");elements.add("localization");elements.add("trash_size")
+            val whereString = "collection_date IS NULL"
+
+            val qResult = useSelect(db, elements, Tab.TRASH, whereString)
+            Log.i("SQLiteCustom", qResult.toString())
+
+            if (qResult["id"] != null) {
+                for (i in qResult["id"]!!.indices) {
+                    val p = qResult["localization"]?.get(i)?.split(",")
+                    items.add(
+                        OverlayItem(
+                            qResult["id"]!![i],
+                            qResult["localization"]!![i],
+                            qResult["trash_size"].toString(),
+                            GeoPoint(p!![0].toDouble(), p[1].toDouble())
+                        )
+                    )
+                    Log.i("SQLiteCustom : useSelect : localization", p[0] + ", " + p[1])
+                }
             }
         }
-
+        catch(ex: Exception)
+        {
+            Log.w("Exception",ex.message.toString())
+        }
+        finally{
         db.close()
+        }
         return items
     }
 
-    fun addTrash(context: Context, pos: GeoPoint, chosen_imgs : ArrayList<Uri>, size: String, username: String){
+    fun addTrash(context: Context, pos: GeoPoint, chosen_imgs : ArrayList<Uri>, size: String, user_login_report: String? = null, vehicle_id: Int? = null, user_login: String? = null, crew_id:Int? = null){
         val dbHelper = DatabaseHelper(context)
         val db = dbHelper.writableDatabase
+        try {
+            //TODO - improve to add element with all given properties and to prevent sql injection
+            val position: String = pos.toDoubleString()
+            val sqlString: String =
+                "INSERT INTO ${Tab.TRASH} (localization, creation_date, trash_size, user_login_report, vehicle_id, user_login,cleaningcrew_id, collection_date) " +
+                        "VALUES (?, datetime(), ?, ?,  ${vehicle_id}, '${user_login}', ${crew_id}, NULL)"
+            val statement = db.compileStatement(sqlString)
+            statement.bindString(1, position)
+            statement.bindLong(2, TrashSize.valueOf(size.uppercase()).intValue!!.toLong())
+            statement.bindString(3,user_login_report)
+            statement.executeInsert()
 
-        //TODO - improve to add element with all given properties and to prevent sql injection
-        val position: String = pos.toDoubleString()
-        val sqlString: String = "INSERT INTO ${Tab.TRASH} (localization, creation_date, trash_size, user_login_report) " +
-                                "VALUES ('${position}', datetime(), 1, 'kacper')"
-        db.execSQL(sqlString)
-
-        db.close()
+            //db.execSQL(sqlString)
+        }
+        catch (ex: Exception)
+        {
+            Log.w("Exception : ",ex.message.toString())
+        }
+        finally{
+            db.close()
+        }
     }
 
     fun collectTrash(context: Context, item: OverlayItem){
@@ -122,10 +152,20 @@ object DBUtils {
     fun getCollectingPoints(context: Context): ArrayList<TrashCollectingPoint> {
         val dbHelper = DatabaseHelper(context)
         val db = dbHelper.writableDatabase
+        try
+        {
 
+        }
+        catch(ex:Exception)
+        {
+
+        }
+        finally{
+            db.close()
+        }
         //TODO - return all collecting points
 
-        db.close()
+
         return arrayListOf(
             TrashCollectingPoint(
                 localization = "52.40427145950248,16.94963942393314,0.0"
