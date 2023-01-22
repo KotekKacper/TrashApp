@@ -37,11 +37,11 @@ class RegistrationActivity : AppCompatActivity() {
 
         val registerButton = findViewById<Button>(R.id.buttonRegister)
         registerButton.setOnClickListener{
-            if (loginEditText.error == null &&
-                passwordEditText.error == null &&
-                repeatPasswordEditText.error == null &&
-                emailEditText.error == null &&
-                repeatEmailEditText.error == null) {
+            if (loginEditText.error == null && loginEditText.text.toString() != "" &&
+                passwordEditText.error == null && passwordEditText.text.toString() != "" &&
+                repeatPasswordEditText.error == null && repeatPasswordEditText.text.toString() != "" &&
+                emailEditText.error == null && emailEditText.text.toString() != "" &&
+                repeatEmailEditText.error == null &&  repeatEmailEditText.text.toString() != "") {
                 val user = User(
                     login = findViewById<EditText>(R.id.editTextTextLogin).text.toString(),
                     password = findViewById<EditText>(R.id.editTextTextPassword).text.toString(),
