@@ -125,7 +125,6 @@ object DBUtils {
         val dbHelper = DatabaseHelper(context)
         val db = dbHelper.writableDatabase
 
-        //TODO - delete the chosen element from DB
         //TODO - Update: add collection_date - not delete.
 
         db.close()
