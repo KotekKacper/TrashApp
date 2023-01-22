@@ -10,9 +10,9 @@ class RepeatEmailWatcher(private val repeatEmailEditText: EditText,
     override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
     override fun afterTextChanged(editable: Editable) {
         val check = editable.toString()
-        if (!check.contains("@")) {
+        if (check.count { it == '@' } != 1) {
             //show an error message
-            repeatEmailEditText.error = "Email must contain @"
+            emailEditText.error = "Email must contain exactly one @ sign"
         } else if (check.contains(";") ||
             check.contains("\n") ||
             check.contains("\"") ||
