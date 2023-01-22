@@ -1,6 +1,7 @@
 package com.example.trashapp
 
 import android.content.Context
+import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.text.Editable
@@ -10,8 +11,10 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.ConvertResponse.convertCompanies
 import com.example.trashapp.adapters.CompanyItemAdapter
+import com.example.trashapp.adapters.ReportItemAdapter
 import com.example.trashapp.classes.*
 import com.example.trashapp.databinding.FragmentAccountBinding
+import com.example.trashapp.ui.reports.AddReportActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -133,21 +136,49 @@ object DBUtils {
         db.close()
     }
 
-    fun getReports(context: Context, username: String): ArrayList<Trash> {
-        val dbHelper = DatabaseHelper(context)
-        val db = dbHelper.writableDatabase
-
+    fun getReports(context: Context, recyclerView: RecyclerView, username: String){
+        val funSend = "getReports"
         //TODO - return trash reported by the user and images connected to it
-
-        db.close()
-        return arrayListOf(
+        val reportsArray = arrayListOf(
             Trash(
                 creationDate = Instant.now(),
                 localization = "52.40427145950248,16.94963942393314,0.0",
                 id = 1,
                 trashSize = 1
+            ),
+            Trash(
+                creationDate = Instant.now(),
+                localization = "52.40427145950248,16.94963942393314,0.0",
+                id = 2,
+                trashSize = 2,
+                collectionDate = Instant.now()
             )
         )
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+//                val response = service.getJson(username, funSend)
+                withContext(Dispatchers.Main) {
+//                    val json = response.body()?.string()
+//                    Log.i("ServerSQL", json.toString())
+//
+//                    val companiesArray = json?.let { convertReports(json.toString()) }
+                    val adapter = ReportItemAdapter(reportsArray, object : OnItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            val intent = Intent(context, AddReportActivity::class.java)
+                            intent.putExtra("id", reportsArray[position].id)
+                            context.startActivity(intent)
+                        }
+                    })
+                    recyclerView.adapter = adapter
+
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
     }
 
     fun getGroups(context: Context, username: String): ArrayList<Group> {

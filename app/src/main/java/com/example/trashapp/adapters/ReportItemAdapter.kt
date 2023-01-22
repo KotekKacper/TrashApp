@@ -12,6 +12,7 @@ import com.example.trashapp.LocalizationToAddress
 import com.example.trashapp.NominatimApiService
 import com.example.trashapp.R
 import com.example.trashapp.classes.Trash
+import com.example.trashapp.OnItemClickListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,7 +20,9 @@ import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 
 
-class ReportItemAdapter(private val mData: ArrayList<Trash>?) :
+class ReportItemAdapter(private val mData: ArrayList<Trash>?,
+                        private val listener: OnItemClickListener
+) :
     RecyclerView.Adapter<ReportItemAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context)
@@ -32,6 +35,11 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?) :
         if (item!!.images != null){
             holder.imageView.setImageDrawable(item.images!![0])
         }
+
+        holder.itemView.setOnClickListener {
+            listener.onItemClick(position)
+        }
+
         holder.textView1.text = item.creationDate.toString().subSequence(0,10)
 
         val loc = item.localization.split(",")
