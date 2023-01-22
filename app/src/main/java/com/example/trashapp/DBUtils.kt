@@ -8,8 +8,10 @@ import android.text.SpannableStringBuilder
 import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.trashapp.ConvertResponse.convertAllUsers
 import com.example.trashapp.ConvertResponse.convertCompanies
 import com.example.trashapp.adapters.CompanyItemAdapter
+import com.example.trashapp.adapters.UserItemAdapter
 import com.example.trashapp.classes.*
 import com.example.trashapp.databinding.FragmentAccountBinding
 import kotlinx.coroutines.CoroutineScope
@@ -210,51 +212,41 @@ object DBUtils {
         return items
     }
 
-    fun getUsers(context: Context): ArrayList<User> {
+    fun getUsers(context: Context, recyclerView: RecyclerView) {
+        val funSend = "getUsers"
+
         val dbHelper = DatabaseHelper(context)
         val db = dbHelper.writableDatabase
         var items = kotlin.collections.ArrayList<User>()
         //TODO - return all users
-        try {
-            val elements = ArrayList<String>()
-            elements.add("login");elements.add("password");elements.add("email");elements.add("phone");
-            elements.add("fullname");elements.add("country");elements.add("city");elements.add("district");
-            elements.add("street");elements.add("flat_number");elements.add("post_code")
 
-            val whereString = ""
+        val elements = ArrayList<String>()
+        elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
+        elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.phone");
+        elements.add("${Tab.USER}.fullname");elements.add("${Tab.ROLE}.role_name")
 
-            val qResult = useSelect(db, elements, Tab.USER, whereString)
-            Log.i("SQLiteCustom", qResult.toString())
+        val dataToSend = elements.joinToString(separator = ", ")
 
-            if (qResult["login"] != null) {
-                for (i in qResult["login"]!!.indices) {
-                    items.add(
-                        User(
-                            qResult["login"]!![i],
-                            qResult["password"]!![i],
-                            qResult["email"]!![i],
-                            qResult["phone"]!![i],
-                            qResult["fullname"]!![i],
-                            qResult["country"]!![i],
-                            qResult["city"]!![i],
-                            qResult["district"]!![i],
-                            qResult["street"]!![i],
-                            qResult["flat_number"]!![i],
-                            qResult["post_code"]!![i]
-                        )
-                    )
+
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val response = service.getJson(dataToSend, funSend)
+                    withContext(Dispatchers.Main) {
+                        val json = response.body()?.string()
+                        Log.i("ServerSQL", json.toString())
+
+                        val usersArray = json?.let { convertAllUsers(json.toString()) }
+                        val adapter = UserItemAdapter(usersArray)
+                        recyclerView.adapter = adapter
+
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Log.e("ServerSQL", e.toString())
+                    }
                 }
             }
         }
-        catch(ex:Exception)
-        {
-            Log.w("getUsers : Exception : ", ex.message.toString())
-        }
-        finally{
-            db.close()
-        }
-        return items
-    }
 
     fun getCompanies(context: Context, recyclerView: RecyclerView){
         val funSend = "getCompanies"

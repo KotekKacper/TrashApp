@@ -36,9 +36,7 @@ class UsersFragment : Fragment() {
 
         val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewUsers)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        val usersArray = context?.let { DBUtils.getUsers(it) }
-        val adapter = UserItemAdapter(usersArray)
-        recyclerView.adapter = adapter
+        context?.let { DBUtils.getUsers(it, recyclerView) }
 
         return root
     }
