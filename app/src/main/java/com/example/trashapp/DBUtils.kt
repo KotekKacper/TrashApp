@@ -27,7 +27,7 @@ import kotlin.collections.ArrayList
 object DBUtils {
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("http://10.0.2.2:8080/")
+        .baseUrl("http://192.168.1.11:8888/")
         .build()
     private val service = retrofit.create(ServerApiService::class.java)
 
@@ -259,14 +259,19 @@ object DBUtils {
     fun getCompanies(context: Context, recyclerView: RecyclerView){
         val funSend = "getCompanies"
 
+        var elements = ArrayList<String>()
+        elements.add("nip");elements.add("email");elements.add("phone")
+        elements.add("country");elements.add("city");elements.add("street")
+        val dataToSend = elements.joinToString(separator = ", ")
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = service.getJson("data_sent", funSend)
+                val response = service.getJson(dataToSend, funSend)
                 withContext(Dispatchers.Main) {
                     val json = response.body()?.string()
                     Log.i("ServerSQL", json.toString())
 
-                    val companiesArray = json?.let { convertCompanies(it) }
+                    val companiesArray = json?.let { convertCompanies(json.toString()) }
                     val adapter = CompanyItemAdapter(companiesArray)
                     recyclerView.adapter = adapter
 
