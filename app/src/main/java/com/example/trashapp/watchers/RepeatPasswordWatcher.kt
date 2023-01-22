@@ -19,6 +19,9 @@ class RepeatPasswordWatcher (private val repeatPasswordEditText: EditText,
             check.contains(" ")) {
             // show an error message
             repeatPasswordEditText.error = "Field can't contain ; \\n \" or space"
+        } else if (check.length > 40) {
+            // show an error message
+            repeatPasswordEditText.error = "Maximum of 40 characters"
         } else if (check != passwordEditText.text.toString()) {
             //show an error message
             repeatPasswordEditText.error = "Passwords don't match"

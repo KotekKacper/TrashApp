@@ -18,7 +18,10 @@ class EmailWatcher(private val emailEditText: EditText) : TextWatcher {
             check.contains(" ")) {
             // show an error message
             emailEditText.error = "Field can't contain ; \\n  \" or space"
-        }else if (check.indexOf("@") == 0 || check.indexOf("@") == check.length - 1) {
+        } else if (check.length > 40) {
+            // show an error message
+            emailEditText.error = "Maximum of 40 characters"
+        } else if (check.indexOf("@") == 0 || check.indexOf("@") == check.length - 1) {
             //show an error message
             emailEditText.error = "Email must contain something before and after @"
         } else {

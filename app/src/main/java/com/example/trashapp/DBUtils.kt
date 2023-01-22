@@ -286,8 +286,8 @@ object DBUtils {
 
     fun getAccount(context: Context, binding: FragmentAccountBinding, username: String){
 
-        binding.editTextTextAccountLogin.text = SpannableStringBuilder("admin")
-        binding.editTextTextAccountPassword.text = SpannableStringBuilder("adminpass")
+        binding.editTextTextAccountLogin.text = SpannableStringBuilder("login")
+        binding.editTextTextAccountPassword.text = SpannableStringBuilder("password")
         //...
 
     }

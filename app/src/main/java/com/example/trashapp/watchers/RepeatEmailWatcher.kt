@@ -19,6 +19,9 @@ class RepeatEmailWatcher(private val repeatEmailEditText: EditText,
             check.contains(" ")) {
             // show an error message
             repeatEmailEditText.error = "Field can't contain ; \\n  \" or space"
+        } else if (check.length > 40) {
+            // show an error message
+            repeatEmailEditText.error = "Maximum of 40 characters"
         } else if (check.indexOf("@") == 0 || check.indexOf("@") == check.length - 1) {
             //show an error message
             repeatEmailEditText.error = "Email must contain something before and after @"
