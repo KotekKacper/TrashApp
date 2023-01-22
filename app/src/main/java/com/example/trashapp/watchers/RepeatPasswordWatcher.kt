@@ -13,9 +13,12 @@ class RepeatPasswordWatcher (private val repeatPasswordEditText: EditText,
         if (check.isEmpty()) {
             // show an error message
             repeatPasswordEditText.error = "Field can't be empty"
-        } else if (check.contains(";") || check.contains("\n") || check.contains("\"")) {
+        } else if (check.contains(";") ||
+            check.contains("\n") ||
+            check.contains("\"") ||
+            check.contains(" ")) {
             // show an error message
-            repeatPasswordEditText.error = "Field can't contain ; \\n or \""
+            repeatPasswordEditText.error = "Field can't contain ; \\n \" or space"
         } else if (check != passwordEditText.text.toString()) {
             //show an error message
             repeatPasswordEditText.error = "Passwords don't match"

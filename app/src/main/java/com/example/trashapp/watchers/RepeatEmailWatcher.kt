@@ -13,6 +13,12 @@ class RepeatEmailWatcher(private val repeatEmailEditText: EditText,
         if (!check.contains("@")) {
             //show an error message
             repeatEmailEditText.error = "Email must contain @"
+        } else if (check.contains(";") ||
+            check.contains("\n") ||
+            check.contains("\"") ||
+            check.contains(" ")) {
+            // show an error message
+            repeatEmailEditText.error = "Field can't contain ; \\n  \" or space"
         } else if (check.indexOf("@") == 0 || check.indexOf("@") == check.length - 1) {
             //show an error message
             repeatEmailEditText.error = "Email must contain something before and after @"

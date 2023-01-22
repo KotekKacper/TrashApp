@@ -12,9 +12,12 @@ class LoginWatcher (private val loginEditText: EditText) : TextWatcher {
             if (check.isEmpty()) {
                 // show an error message
                 loginEditText.error = "Field can't be empty"
-            } else if (check.contains(";") || check.contains("\n") || check.contains("\"")) {
+            } else if (check.contains(";") ||
+                       check.contains("\n") ||
+                       check.contains("\"") ||
+                       check.contains(" ")) {
                 // show an error message
-                loginEditText.error = "Field can't contain ; \\n or \""
+                loginEditText.error = "Field can't contain ; \\n \" or space"
             } else {
                 loginEditText.error = null
             }

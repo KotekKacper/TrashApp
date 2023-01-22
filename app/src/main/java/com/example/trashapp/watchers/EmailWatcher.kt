@@ -12,7 +12,13 @@ class EmailWatcher(private val emailEditText: EditText) : TextWatcher {
         if (!check.contains("@")) {
             //show an error message
             emailEditText.error = "Email must contain @"
-        } else if (check.indexOf("@") == 0 || check.indexOf("@") == check.length - 1) {
+        } else if (check.contains(";") ||
+            check.contains("\n") ||
+            check.contains("\"") ||
+            check.contains(" ")) {
+            // show an error message
+            emailEditText.error = "Field can't contain ; \\n  \" or space"
+        }else if (check.indexOf("@") == 0 || check.indexOf("@") == check.length - 1) {
             //show an error message
             emailEditText.error = "Email must contain something before and after @"
         } else {
