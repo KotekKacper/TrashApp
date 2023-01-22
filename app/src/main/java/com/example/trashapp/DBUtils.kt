@@ -3,12 +3,15 @@ package com.example.trashapp
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
+import android.text.Editable
+import android.text.SpannableStringBuilder
 import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.ConvertResponse.convertCompanies
 import com.example.trashapp.adapters.CompanyItemAdapter
 import com.example.trashapp.classes.*
+import com.example.trashapp.databinding.FragmentAccountBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -274,6 +277,14 @@ object DBUtils {
                 }
             }
         }
+    }
+
+    fun getAccount(context: Context, binding: FragmentAccountBinding, username: String){
+
+        binding.editTextTextAccountLogin.text = SpannableStringBuilder("admin")
+        binding.editTextTextAccountPassword.text = SpannableStringBuilder("adminpass")
+        //...
+
     }
 
 

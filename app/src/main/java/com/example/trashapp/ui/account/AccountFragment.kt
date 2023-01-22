@@ -1,5 +1,7 @@
 package com.example.trashapp.ui.account
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.trashapp.DBUtils
+import com.example.trashapp.LoginActivity
 import com.example.trashapp.databinding.FragmentAccountBinding
 
 class AccountFragment : Fragment() {
@@ -28,10 +32,20 @@ class AccountFragment : Fragment() {
         _binding = FragmentAccountBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textAccount
-        slideshowViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        val preferences = this.activity?.getSharedPreferences("credentials", Context.MODE_PRIVATE)
+
+        context?.let { preferences?.getString("login", "")
+            ?.let { it1 -> DBUtils.getAccount(it, binding, it1) } }
+
+        binding.buttonAccountLogOut.setOnClickListener {
+            val editor = preferences!!.edit()
+            editor.putString("login", "")
+            editor.putString("password", "")
+            editor.apply()
+            startActivity(Intent(context, LoginActivity::class.java))
+            activity?.finish()
         }
+
         return root
     }
 
