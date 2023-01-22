@@ -9,8 +9,12 @@ import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.ConvertResponse.convertAllUsers
+import com.example.trashapp.ConvertResponse.convertCollectionPoints
 import com.example.trashapp.ConvertResponse.convertCompanies
+import com.example.trashapp.ConvertResponse.convertUserReports
+import com.example.trashapp.adapters.CollectingPointItemAdapter
 import com.example.trashapp.adapters.CompanyItemAdapter
+import com.example.trashapp.adapters.ReportItemAdapter
 import com.example.trashapp.adapters.UserItemAdapter
 import com.example.trashapp.classes.*
 import com.example.trashapp.databinding.FragmentAccountBinding
@@ -62,40 +66,34 @@ object DBUtils {
         return output;
     }
 
-    fun getAllActiveTrash(context: Context): ArrayList<OverlayItem>{
-        val dbHelper = DatabaseHelper(context)
-        val db = dbHelper.writableDatabase
-        val items = ArrayList<OverlayItem>()
-        try {
-            //TODO - change to prevent sql injection
-            val elements = ArrayList<String>()
-            elements.add("id");elements.add("localization");elements.add("trash_size")
-            var whereString = "collection_date IS NULL"
+    fun getAllActiveTrash(context: Context):ArrayList<OverlayItem>? {
+        val funSend = "getAllActiveTrash"
+        var items = ArrayList<OverlayItem>()
+        var elements = ArrayList<String>()
+        elements.add("${Tab.TRASH}.id");elements.add("${Tab.TRASH}.localization");elements.add("${Tab.TRASH}.creation_date");
+        elements.add("${Tab.TRASH}.trash_size");elements.add("${Tab.IMAGE}.content")
+        var dataToSend = elements.joinToString(separator = ", ")
 
-            val qResult = useSelect(db, elements, Tab.TRASH, whereString)
-            Log.i("SQLiteCustom", qResult.toString())
+        val scope = CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
 
-            if (qResult["id"] != null) {
-                for (i in qResult["id"]!!.indices) {
-                    val p = qResult["localization"]?.get(i)?.split(",")
-                    items.add(
-                        OverlayItem(
-                            qResult["id"]!![i],
-                            qResult["localization"]!![i],
-                            qResult["trash_size"].toString(),
-                            GeoPoint(p!![0].toDouble(), p[1].toDouble())
-                        )
-                    )
-                    Log.i("SQLiteCustom : useSelect : localization", p[0] + ", " + p[1])
+                    val pointsArray = json?.let { ConvertResponse.convertActiveTrashOnMap(json.toString()) }
+                    if (pointsArray != null) {
+                        items = pointsArray
+                    }
+
+
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
                 }
             }
-        }
-        catch(ex: Exception)
-        {
-            Log.w("getAllActiveTrash : Exception : ",ex.message.toString())
-        }
-        finally{
-        db.close()
+
         }
         return items
     }
@@ -135,21 +133,32 @@ object DBUtils {
         db.close()
     }
 
-    fun getReports(context: Context, username: String): ArrayList<Trash> {
-        val dbHelper = DatabaseHelper(context)
-        val db = dbHelper.writableDatabase
+    fun getReports(context: Context, recyclerView: RecyclerView) {
+        val funSend = "getReports"
 
-        //TODO - return trash reported by the user and images connected to it
+        var elements = ArrayList<String>()
+        elements.add("${Tab.TRASH}.id");elements.add("${Tab.TRASH}.localization");elements.add("${Tab.TRASH}.creation_date");
+        elements.add("${Tab.TRASH}.trash_size");elements.add("${Tab.IMAGE}.content")
+        val dataToSend = elements.joinToString(separator = ", ")
 
-        db.close()
-        return arrayListOf(
-            Trash(
-                creationDate = Instant.now(),
-                localization = "52.40427145950248,16.94963942393314,0.0",
-                id = 1,
-                trashSize = 1
-            )
-        )
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+
+                    val pointsArray = json?.let { convertUserReports(json.toString()) }
+                    val adapter = ReportItemAdapter(pointsArray)
+                    recyclerView.adapter = adapter
+
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
     }
 
     fun getGroups(context: Context, username: String): ArrayList<Group> {
@@ -168,48 +177,32 @@ object DBUtils {
         )
     }
 
-    fun getCollectingPoints(context: Context): ArrayList<TrashCollectingPoint> {
-        //TODO - return all collecting points
+    fun getCollectingPoints(context: Context, recyclerView: RecyclerView) {
 
-        val dbHelper = DatabaseHelper(context)
-        val db = dbHelper.writableDatabase
-        val items = ArrayList<TrashCollectingPoint>()
-        try{
-            val elements = ArrayList<String>()
-            elements.add("localization")
-            //;elements.add("bus_empty");elements.add("processing_type")
-            val whereString = ""
+        val funSend = "getCollectingPoints"
 
-            val qResult = useSelect(db, elements, Tab.TRASH_COLLECT_POINT, whereString)
-            Log.i("SQLiteCustom", qResult.toString())
+        var elements = ArrayList<String>()
+        elements.add("localization")
+        val dataToSend = elements.joinToString(separator = "")
 
-            if (qResult["localization"] != null) {
-                for (i in qResult["localization"]!!.indices) {
-                    val p = qResult["localization"]?.get(i)?.split(",")
-                    //TODO - add to items trashType for this collecting point from DB.
-                    items.add(
-                        TrashCollectingPoint(
-                            qResult["localization"]!![i])
-                            //,
-                            //qResult["bus_empty"]!![i].toBoolean(),
-                            //qResult["processing_type"]!![i])
-                        )
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
 
+                    val pointsArray = json?.let { convertCollectionPoints(json.toString()) }
+                    val adapter = CollectingPointItemAdapter(pointsArray)
+                    recyclerView.adapter = adapter
 
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
                 }
             }
         }
-        catch(ex:Exception)
-        {
-            Log.w("getCollectingPoints : Exception: ", ex.message.toString())
-        }
-        finally{
-            db.close()
-        }
-
-
-
-        return items
     }
 
     fun getUsers(context: Context, recyclerView: RecyclerView) {

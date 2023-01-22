@@ -36,9 +36,7 @@ class CollectingPointsFragment : Fragment() {
 
         val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewCollectingPoints)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        val pointsArray = context?.let { DBUtils.getCollectingPoints(it, ) }
-        val adapter = CollectingPointItemAdapter(pointsArray)
-        recyclerView.adapter = adapter
+        context?.let { DBUtils.getCollectingPoints(it, recyclerView) }
 
         return root
     }
