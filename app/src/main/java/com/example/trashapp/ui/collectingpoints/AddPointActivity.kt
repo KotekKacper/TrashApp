@@ -11,9 +11,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import com.example.trashapp.DBUtils
 import com.example.trashapp.R
-import com.example.trashapp.classes.Group
 import com.example.trashapp.classes.TrashCollectingPoint
-import com.example.trashapp.watchers.DateWatcher
 import com.example.trashapp.watchers.LatitudeWatcher
 import com.example.trashapp.watchers.LoginWatcher
 import com.example.trashapp.watchers.LongitudeWatcher
@@ -88,7 +86,8 @@ class AddPointActivity : AppCompatActivity() {
                     processingTypeEditText.error == null && trashTypesEditText.error == null &&
                     trashHereEditText.error == null){
                 DBUtils.addCollectingPoint(
-                    TrashCollectingPoint(localization = arrayListOf(
+                    TrashCollectingPoint(
+                        localization = arrayListOf(
                             latitudeEditText.text.toString(), longitudeEditText.text.toString())
                             .joinToString(","),
                         busEmpty = this.findViewById<CheckBox>(R.id.checkboxPointNotInUse).isChecked,

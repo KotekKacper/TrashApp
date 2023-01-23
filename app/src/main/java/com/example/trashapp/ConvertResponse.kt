@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable
 import com.example.trashapp.classes.*
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.OverlayItem
-import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -61,7 +60,10 @@ object ConvertResponse {
                 val attributes = point.split(";")
                 out.add(
                     TrashCollectingPoint(
-                        localization = attributes[0]
+                        localization = attributes[0],
+                                busEmpty = attributes[1].toBoolean(),
+                                processingType = attributes[2],
+                                trashId = attributes[3].split("-")
                     )
                 )
             }
