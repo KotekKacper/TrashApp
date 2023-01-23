@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class AddReportActivity : AppCompatActivity() {
+    private var adding = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +25,7 @@ class AddReportActivity : AppCompatActivity() {
 
         val extras = intent.extras;
         if (extras != null) {
+            adding = false
             try {
                 this.findViewById<EditText>(R.id.editTextTextReportLoginReported).text =
                     SpannableStringBuilder(extras.getString("login"))
@@ -88,7 +90,7 @@ class AddReportActivity : AppCompatActivity() {
             trashSizeEditText.addTextChangedListener(trashSizeWatcher)
 
             val trashTypeEditText = this.findViewById<EditText>(R.id.editTextTextReportTrashType)
-            val trashTypeWatcher = LoginWatcher(trashTypeEditText, obligatory = false)
+            val trashTypeWatcher = ListWatcher(trashTypeEditText)
             trashTypeEditText.addTextChangedListener(trashTypeWatcher)
 
             val collectionDateEditText = this.findViewById<EditText>(R.id.editTextTextReportCollectionDate)
@@ -115,7 +117,7 @@ class AddReportActivity : AppCompatActivity() {
                         trashSizeEditText.error == null && trashTypeEditText.error == null &&
                         collectionDateEditText.error == null && firstEditText.error == null &&
                         secondEditText.error == null && thirdEditText.error == null){
-                    DBUtils.addReport(this,
+                    DBUtils.addReport(this, adding,
                         Trash(localization = arrayListOf(
                         latitudeEditText.text.toString(), longitudeEditText.text.toString()).joinToString(","),
                         creationDate = creationDateEditText.text.toString(),

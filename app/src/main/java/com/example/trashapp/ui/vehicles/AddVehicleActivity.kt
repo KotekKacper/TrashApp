@@ -18,6 +18,7 @@ import com.example.trashapp.watchers.LongitudeWatcher
 import com.example.trashapp.watchers.PercentWatcher
 
 class AddVehicleActivity : AppCompatActivity() {
+    private var adding = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_vehicle)
@@ -26,6 +27,7 @@ class AddVehicleActivity : AppCompatActivity() {
 
         val extras = intent.extras;
         if (extras != null) {
+            adding = false
             try {
                 try {
                     this.findViewById<EditText>(R.id.editTextVehicleLatitude).text =
@@ -62,7 +64,7 @@ class AddVehicleActivity : AppCompatActivity() {
                 latitudeEditText.error == null &&
                 fillingEditText.text.toString().isNotEmpty() &&
                 fillingEditText.error == null){
-                DBUtils.addVehicle(this,
+                DBUtils.addVehicle(this, adding,
                     Vehicle(localization = arrayListOf(
                             latitudeEditText.text.toString(), longitudeEditText.text.toString())
                             .joinToString(","),

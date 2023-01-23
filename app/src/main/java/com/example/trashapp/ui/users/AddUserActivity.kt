@@ -15,12 +15,14 @@ import com.example.trashapp.classes.User
 import com.example.trashapp.watchers.*
 
 class AddUserActivity : AppCompatActivity() {
+    private var adding = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_user)
 
         val extras = intent.extras;
         if (extras != null) {
+            adding = false
             try {
                 this.findViewById<EditText>(R.id.editTextUserAccountLogin).text =
                     SpannableStringBuilder(extras.getString("login"))
@@ -28,6 +30,8 @@ class AddUserActivity : AppCompatActivity() {
                     SpannableStringBuilder(extras.getString("password"))
                 this.findViewById<EditText>(R.id.editTextUserAccountEmail).text =
                     SpannableStringBuilder(extras.getString("email"))
+                this.findViewById<EditText>(R.id.editTextUserAccountRole).text =
+                    SpannableStringBuilder(extras.getString("roles"))
 
                 try {
                     this.findViewById<EditText>(R.id.editTextUserAccountFullname).text =
@@ -137,6 +141,9 @@ class AddUserActivity : AppCompatActivity() {
         val postCodeWatcher = PostCodeWatcher(postCodeEditText)
         postCodeEditText.addTextChangedListener(postCodeWatcher)
 
+        val roleEditText = findViewById<EditText>(R.id.editTextUserAccountRole)
+        roleEditText.addTextChangedListener(RoleWatcher(roleEditText, setOf("USER", "ADMIN")))
+
         val anyChangeWatcher = AnyChangeWatcher(arrayListOf(
             loginEditText,
             passwordEditText,
@@ -175,7 +182,7 @@ class AddUserActivity : AppCompatActivity() {
                 cityEditText.error == null && districtEditText.error == null &&
                 streetEditText.error == null && houseNumberEditText.error == null &&
                 flatNumberEditText.error == null && postCodeEditText.error == null){
-                DBUtils.addUser(this,
+                DBUtils.addUser(this, adding,
                     User(login = findViewById<EditText>(R.id.editTextUserAccountLogin).text.toString(),
                         password = findViewById<EditText>(R.id.editTextUserAccountPassword).text.toString(),
                         email = findViewById<EditText>(R.id.editTextUserAccountEmail).text.toString(),
@@ -187,7 +194,8 @@ class AddUserActivity : AppCompatActivity() {
                         street = findViewById<EditText>(R.id.editTextUserAccountStreet).text.toString(),
                         houseNumber = findViewById<EditText>(R.id.editTextUserAccountHouse).text.toString(),
                         flatNumber = findViewById<EditText>(R.id.editTextUserAccountFlat).text.toString(),
-                        postCode = findViewById<EditText>(R.id.editTextUserAccountPostCode).text.toString()
+                        postCode = findViewById<EditText>(R.id.editTextUserAccountPostCode).text.toString(),
+                        roles = ArrayList(findViewById<EditText>(R.id.editTextUserAccountRole).text.toString().split(","))
                     )
                 )
                 finish()

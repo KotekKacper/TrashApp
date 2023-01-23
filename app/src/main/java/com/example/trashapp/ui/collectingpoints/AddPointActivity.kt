@@ -13,14 +13,12 @@ import com.example.trashapp.DBUtils
 import com.example.trashapp.R
 import com.example.trashapp.classes.Group
 import com.example.trashapp.classes.TrashCollectingPoint
-import com.example.trashapp.watchers.DateWatcher
-import com.example.trashapp.watchers.LatitudeWatcher
-import com.example.trashapp.watchers.LoginWatcher
-import com.example.trashapp.watchers.LongitudeWatcher
+import com.example.trashapp.watchers.*
 
 class AddPointActivity : AppCompatActivity() {
 
     private var loc : String = ""
+    private var adding = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +26,7 @@ class AddPointActivity : AppCompatActivity() {
 
         val extras = intent.extras;
         if (extras != null) {
+            adding = false
             try {
                 this.findViewById<EditText>(R.id.editTextPointLatitude).text =
                     SpannableStringBuilder(extras.getString("latitude"))
@@ -77,10 +76,10 @@ class AddPointActivity : AppCompatActivity() {
         processingTypeEditText.addTextChangedListener(LoginWatcher(processingTypeEditText))
 
         val trashTypesEditText = this.findViewById<EditText>(R.id.editTextPointTrashTypes)
-        trashTypesEditText.addTextChangedListener(LoginWatcher(trashTypesEditText))
+        trashTypesEditText.addTextChangedListener(ListWatcher(trashTypesEditText))
 
         val trashHereEditText = this.findViewById<EditText>(R.id.editTextPointTrashCollectedHere)
-        trashHereEditText.addTextChangedListener(LoginWatcher(trashHereEditText, obligatory = false))
+        trashHereEditText.addTextChangedListener(ListWatcher(trashHereEditText))
 
         val applyButton = findViewById<Button>(R.id.buttonPointConfirm)
         applyButton.setOnClickListener{
@@ -89,7 +88,7 @@ class AddPointActivity : AppCompatActivity() {
                     processingTypeEditText.error == null && processingTypeEditText.text.toString() != "" &&
                 trashTypesEditText.error == null && trashTypesEditText.text.toString() != "" &&
                     trashHereEditText.error == null){
-                DBUtils.addCollectingPoint(this,
+                DBUtils.addCollectingPoint(this, adding,
                     TrashCollectingPoint(localization = arrayListOf(
                             latitudeEditText.text.toString(), longitudeEditText.text.toString())
                             .joinToString(","),

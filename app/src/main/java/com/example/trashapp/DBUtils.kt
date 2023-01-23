@@ -167,7 +167,7 @@ object DBUtils {
         }
     }
 
-    fun addReport(context: Context, trash: Trash){
+    fun addReport(context: Context, adding: Boolean, trash: Trash){
 
     }
 
@@ -216,7 +216,7 @@ object DBUtils {
         }
     }
 
-    fun addGroup(context: Context, group: Group){
+    fun addGroup(context: Context, adding: Boolean, group: Group){
 
     }
 
@@ -270,7 +270,7 @@ object DBUtils {
         }
     }
 
-    fun addCollectingPoint(context: Context, point: TrashCollectingPoint){
+    fun addCollectingPoint(context: Context, adding: Boolean, point: TrashCollectingPoint){
 
     }
 
@@ -314,6 +314,9 @@ object DBUtils {
                                 intent.putExtra("houseNumber", usersArray?.get(position)?.houseNumber)
                                 intent.putExtra("flatNumber", usersArray?.get(position)?.flatNumber)
                                 intent.putExtra("postCode", usersArray?.get(position)?.postCode)
+                                intent.putExtra("roles",
+                                    usersArray?.get(position)?.roles?.joinToString(",")
+                                )
                                 context.startActivity(intent)
                             }})
                         recyclerView.adapter = adapter
@@ -327,7 +330,7 @@ object DBUtils {
             }
         }
 
-    fun addUser(context: Context, user: User){
+    fun addUser(context: Context, adding: Boolean, user: User){
 
     }
 
@@ -381,7 +384,7 @@ object DBUtils {
         }
     }
 
-    fun addCompany(context: Context, company:CleaningCompany){
+    fun addCompany(context: Context, adding: Boolean, company:CleaningCompany){
 
     }
 
@@ -440,7 +443,7 @@ object DBUtils {
         }
     }
 
-    fun addVehicle(context: Context, vehicle: Vehicle){
+    fun addVehicle(context: Context, adding: Boolean, vehicle: Vehicle){
 
     }
 
@@ -493,7 +496,7 @@ object DBUtils {
 
     }
 
-    fun addWorker(context: Context, worker: Worker){
+    fun addWorker(context: Context, adding: Boolean, worker: Worker){
 
     }
 

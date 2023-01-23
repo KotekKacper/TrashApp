@@ -13,5 +13,5 @@ data class User (
     var houseNumber: String? = null,
     var flatNumber: String? = null,
     var postCode: String? = null,
-    var roles: ArrayList<Role>? = null
+    var roles: ArrayList<String>? = null
         )

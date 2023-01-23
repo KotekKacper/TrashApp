@@ -15,12 +15,14 @@ import com.example.trashapp.classes.User
 import com.example.trashapp.watchers.*
 
 class AddCompanyActivity : AppCompatActivity() {
+    private var adding = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_company)
 
         val extras = intent.extras;
         if (extras != null) {
+            adding = false
             try {
                 this.findViewById<EditText>(R.id.editTextCompanyNIP).text =
                     SpannableStringBuilder(extras.getString("nip"))
@@ -127,7 +129,7 @@ class AddCompanyActivity : AppCompatActivity() {
                 cityEditText.error == null && districtEditText.error == null &&
                 streetEditText.error == null && houseNumberEditText.error == null &&
                 flatNumberEditText.error == null && postCodeEditText.error == null){
-                DBUtils.addCompany(this,
+                DBUtils.addCompany(this, adding,
                     CleaningCompany(NIP = findViewById<EditText>(R.id.editTextCompanyNIP).text.toString(),
                         email = findViewById<EditText>(R.id.editTextCompanyEmail).text.toString(),
                         phone = findViewById<EditText>(R.id.editTextCompanyPhone).text.toString(),

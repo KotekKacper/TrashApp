@@ -16,6 +16,7 @@ import com.example.trashapp.classes.Worker
 import com.example.trashapp.watchers.*
 
 class AddWorkerActivity : AppCompatActivity() {
+    private var adding = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_worker)
@@ -24,6 +25,7 @@ class AddWorkerActivity : AppCompatActivity() {
         var birthDate = ""
         val extras = intent.extras;
         if (extras != null) {
+            adding = false
             try {
                 val fullNameEditText = this.findViewById<EditText>(R.id.editTextWorkerFullName)
                 fullNameEditText.text = SpannableStringBuilder(extras.getString("fullname"))
@@ -76,7 +78,7 @@ class AddWorkerActivity : AppCompatActivity() {
                 fullNameEditText.error == null && birthDateEditText.error == null &&
                 jobStartTimeEditText.error == null && jobEndTimeEditText.error == null &&
                 cleaningCompanyNipEditText.error == null && vehicleIdEditText.error == null){
-                DBUtils.addWorker(this,
+                DBUtils.addWorker(this, adding,
                     Worker(
                         fullNameEditText.text.toString(),
                         birthDateEditText.text.toString(),
