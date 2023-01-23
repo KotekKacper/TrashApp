@@ -453,7 +453,7 @@ object DBUtils {
     fun getWorkers(context: Context, recyclerView: RecyclerView){
         val workersArray = arrayListOf(Worker(
             fullname = "Ivan",
-            birthDate = "2023-01-18 0:0:0.0",
+            birthDate = "2023-01-18",
             jobStartTime = "8:00",
             jobEndTime = "16:00",
             cleaningCompanyNIP = "3345",
@@ -491,6 +491,14 @@ object DBUtils {
                 }
             }
         }
+
+    }
+
+    fun addWorker(context: Context, worker: Worker){
+
+    }
+
+    fun deleteWorker(context: Context, fullname: String, birthDate: String){
 
     }
 
