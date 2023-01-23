@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.text.SpannableStringBuilder
 import android.util.Log
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.ConvertResponse.convertAllUsers
 import com.example.trashapp.ConvertResponse.convertCollectionPoints
@@ -40,33 +41,12 @@ object DBUtils {
         .build()
     private val service = retrofit.create(ServerApiService::class.java)
 
-    private fun useSelect(db: SQLiteDatabase, elements: ArrayList<String>,
-                  tabName: String, whereString: String = "")
-    : HashMap<String, ArrayList<String>>{
-        // TODO - change to prevent sql injection
-        var whereStringComplete = if(whereString.equals("")) whereString else "WHERE ".plus(whereString)
-
-        val elementsString = elements.joinToString(separator = ", ")
-        val sqlString = "SELECT ${elementsString} FROM ${tabName} ${whereStringComplete};"
-        Log.i("SQLiteCustom : useSelect : sqlString", sqlString)
-
-        val output = HashMap<String, ArrayList<String>>();
-        val cursor = db.rawQuery(sqlString, null)
-        cursor.use {
-            while(it!!.moveToNext()){
-                for (element: String in elements){
-                    val rowResult = it.getString(it.getColumnIndexOrThrow(element))
-                    Log.i("SQLiteCustom", "${element}: ${rowResult}")
-                    if(output.containsKey(element)){
-                        output[element]?.add(rowResult)
-                    }else{
-                        output[element] = arrayListOf(rowResult)
-                    }
-                }
-            }
+    private fun checkForError(context: Context, output: String): Boolean{
+        if (output.startsWith("ERROR")){
+            Toast.makeText(context, output.split(":")[1], Toast.LENGTH_SHORT).show()
+            return true
         }
-        db.close()
-        return output;
+        return false
     }
 
     fun getAllActiveTrash(context: Context):ArrayList<OverlayItem>? {
@@ -83,6 +63,9 @@ object DBUtils {
                 withContext(Dispatchers.Main) {
                     val json = response.body()?.string()
                     Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())){
+                        return@withContext
+                    }
 
                     val pointsArray = json?.let { ConvertResponse.convertActiveTrashOnMap(json.toString()) }
                     if (pointsArray != null) {
@@ -150,6 +133,9 @@ object DBUtils {
                 withContext(Dispatchers.Main) {
                     val json = response.body()?.string()
                     Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())){
+                        return@withContext
+                    }
 
                     val reportsArray = json?.let { convertUserReports(json.toString()) }
                     val adapter = ReportItemAdapter(reportsArray, object : OnItemClickListener {
@@ -252,6 +238,9 @@ object DBUtils {
                 withContext(Dispatchers.Main) {
                     val json = response.body()?.string()
                     Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())){
+                        return@withContext
+                    }
 
                     val pointsArray = json?.let { convertCollectionPoints(json.toString()) }
                     val adapter = CollectingPointItemAdapter(pointsArray, object : OnItemClickListener {
@@ -305,6 +294,9 @@ object DBUtils {
                     withContext(Dispatchers.Main) {
                         val json = response.body()?.string()
                         Log.i("ServerSQL", json.toString())
+                        if (checkForError(context, json.toString())){
+                            return@withContext
+                        }
 
                         val usersArray = json?.let { convertAllUsers(json.toString()) }
                         val adapter = UserItemAdapter(usersArray, object : OnItemClickListener {
@@ -359,6 +351,9 @@ object DBUtils {
                 withContext(Dispatchers.Main) {
                     val json = response.body()?.string()
                     Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())){
+                        return@withContext
+                    }
 
                     val companiesArray = json?.let { convertCompanies(json.toString()) }
                     val adapter = CompanyItemAdapter(companiesArray)
