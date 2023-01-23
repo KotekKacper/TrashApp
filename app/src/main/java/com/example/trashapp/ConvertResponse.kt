@@ -85,7 +85,7 @@ object ConvertResponse {
                     Trash(
                         id = attributes[0].toInt(),
                         localization = attributes[1],
-                        creationDate = Instant.parse(attributes[2]),
+                        creationDate = attributes[2],
                         trashSize = attributes[3].toInt(),
                         images = drawableArray
                     )
@@ -147,10 +147,10 @@ object ConvertResponse {
                     Trash(
                         id = attributes[0].toInt(),
                         localization = attributes[1],
-                        creationDate = LocalDateTime.parse(attributes[2], formatter).toInstant(ZoneOffset.UTC),
+                        creationDate = attributes[2],
 
                         trashSize = attributes[3].toInt(),
-                        collectionDate = Instant.parse(attributes[4]),
+                        collectionDate = attributes[4],
                         images = drawableArray
                     )
                 )

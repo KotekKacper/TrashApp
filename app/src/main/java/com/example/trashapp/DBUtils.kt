@@ -28,7 +28,6 @@ import kotlinx.coroutines.withContext
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.OverlayItem
 import retrofit2.Retrofit
-import java.time.Instant
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -36,7 +35,7 @@ import kotlin.collections.ArrayList
 object DBUtils {
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("http://192.168.1.11:8888/")
+        .baseUrl("http://10.0.2.2:8080/")
         .build()
     private val service = retrofit.create(ServerApiService::class.java)
 
@@ -136,7 +135,7 @@ object DBUtils {
         db.close()
     }
 
-    fun getReports(context: Context, recyclerView: RecyclerView) {
+    fun getReports(context: Context, recyclerView: RecyclerView, username: String) {
         val funSend = "getReports"
 
         var elements = ArrayList<String>()
@@ -155,16 +154,20 @@ object DBUtils {
                     val adapter = ReportItemAdapter(reportsArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(context, AddReportActivity::class.java)
-                            intent.putExtra("id", reportsArray[position].id.toString())
-                            intent.putExtra("login", reportsArray[position].userLoginReport)
-                            intent.putExtra("latitude", reportsArray[position].localization.split(",")[0])
-                            intent.putExtra("longitude", reportsArray[position].localization.split(",")[1])
-                            intent.putExtra("reportDate", reportsArray[position].creationDate)
-                            intent.putExtra("trashSize", reportsArray[position].trashSize.toString())
-                            intent.putExtra("trashTypes", reportsArray[position].trashType?.joinToString(","))
-                            intent.putExtra("collectionDate", reportsArray[position].collectionDate)
+                            intent.putExtra("id", reportsArray?.get(position)?.id.toString())
+                            intent.putExtra("login", reportsArray?.get(position)?.userLoginReport)
+                            intent.putExtra("latitude",
+                                reportsArray?.get(position)?.localization?.split(",")?.get(0)
+                            )
+                            intent.putExtra("longitude",
+                                reportsArray?.get(position)?.localization?.split(",")?.get(1)
+                            )
+                            intent.putExtra("reportDate", reportsArray?.get(position)?.creationDate)
+                            intent.putExtra("trashSize", reportsArray?.get(position)?.trashSize.toString())
+                            intent.putExtra("trashTypes", reportsArray?.get(position)?.trashType?.joinToString(","))
+                            intent.putExtra("collectionDate",reportsArray?.get(position)?.collectionDate)
                             intent.putExtra("collectedBy", "crew")
-                            intent.putExtra("collectedVal", reportsArray[position].cleaningCrewId?.toString())
+                            intent.putExtra("collectedVal", reportsArray?.get(position)?.cleaningCrewId?.toString())
                             context.startActivity(intent)
                         }
                     })
@@ -226,6 +229,11 @@ object DBUtils {
         }
     }
 
+    fun addGroup(group: Group){
+
+    }
+
+    fun deleteGroup(loc: String){
 
     }
 
@@ -248,12 +256,16 @@ object DBUtils {
                     val adapter = CollectingPointItemAdapter(pointsArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(context, AddPointActivity::class.java)
-                            intent.putExtra("latitude", pointsArray[position].localization.split(",")[0])
-                            intent.putExtra("longitude", pointsArray[position].localization.split(",")[1])
-                            intent.putExtra("notInUse", pointsArray[position].busEmpty)
-                            intent.putExtra("processingType", pointsArray[position].processingType.toString())
-                            intent.putExtra("trashTypes", pointsArray[position].trashType?.joinToString(","))
-                            intent.putExtra("trashIds", pointsArray[position].trashId?.joinToString(","))
+                            intent.putExtra("latitude",
+                                pointsArray?.get(position)?.localization?.split(",")?.get(0)
+                            )
+                            intent.putExtra("longitude",
+                                pointsArray?.get(position)?.localization?.split(",")?.get(1)
+                            )
+                            intent.putExtra("notInUse", pointsArray?.get(position)?.busEmpty)
+                            intent.putExtra("processingType", pointsArray?.get(position)?.processingType.toString())
+                            intent.putExtra("trashTypes", pointsArray?.get(position)?.trashType?.joinToString(","))
+                            intent.putExtra("trashIds", pointsArray?.get(position)?.trashId?.joinToString(","))
                             context.startActivity(intent)
                         }
                     })

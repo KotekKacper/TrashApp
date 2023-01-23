@@ -12,9 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.DBUtils
-import com.example.trashapp.OnItemClickListener
 import com.example.trashapp.R
-import com.example.trashapp.adapters.ReportItemAdapter
 import com.example.trashapp.databinding.FragmentReportsBinding
 
 class ReportsFragment : Fragment() {
