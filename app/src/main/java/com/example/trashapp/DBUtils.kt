@@ -1,7 +1,10 @@
 package com.example.trashapp
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import androidx.appcompat.app.AppCompatActivity
 import android.net.Uri
 import android.text.SpannableStringBuilder
 import android.util.Log
@@ -26,6 +29,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.ItemizedIconOverlay
+import org.osmdroid.views.overlay.ItemizedOverlayWithFocus
 import org.osmdroid.views.overlay.OverlayItem
 import retrofit2.Retrofit
 import java.util.*
@@ -47,7 +53,7 @@ object DBUtils {
         return false
     }
 
-    fun getAllActiveTrash(context: Context):ArrayList<OverlayItem>? {
+    fun getAllActiveTrash(context: Context, map: MapView):ArrayList<OverlayItem>? {
         val funSend = "getAllActiveTrash"
         var items = ArrayList<OverlayItem>()
         var elements = ArrayList<String>()
@@ -67,7 +73,8 @@ object DBUtils {
 
                     val pointsArray = json?.let { ConvertResponse.convertActiveTrashOnMap(json.toString()) }
                     if (pointsArray != null) {
-                        items = pointsArray
+
+                        addIconsToMap(context, map, pointsArray, ArrayList() )
                     }
 
 
@@ -83,38 +90,71 @@ object DBUtils {
     }
 
     fun addTrash(context: Context, pos: GeoPoint, chosen_imgs : ArrayList<Uri>, size: String, user_login_report: String? = null, vehicle_id: Int? = null, user_login: String? = null, crew_id:Int? = null){
-        val dbHelper = DatabaseHelper(context)
-        val db = dbHelper.writableDatabase
-        try {
-            //TODO - improve to add element with all given properties and to prevent sql injection
-            val position: String = pos.toDoubleString()
-            val sqlString: String =
-                "INSERT INTO ${Tab.TRASH} (localization, creation_date, trash_size, user_login_report, vehicle_id, user_login,cleaningcrew_id, collection_date) " +
-                        "VALUES (?, datetime(), ?, ?,  ${vehicle_id}, '${user_login}', ${crew_id}, NULL)"
-            val statement = db.compileStatement(sqlString)
-            statement.bindString(1, position)
-            statement.bindLong(2, TrashSize.valueOf(size.uppercase()).intValue!!.toLong())
-            statement.bindString(3,user_login_report)
-            statement.executeInsert()
+        val funSend = "addTrash"
+        var dataToSend = "'${pos.toDoubleString()}', '${user_login_report}', '${TrashSize.valueOf(size.uppercase()).intValue}'"
+//        for(img in chosen_imgs) {
+//            val dbHelper = DatabaseHelper(context)
+//            val db = dbHelper.writableDatabase
+//            try {
+//                //TODO - improve to add element with all given properties and to prevent sql injection
+//                //dataToSend = dataToSend.plus("|${context.contentResolver.openInputStream(img)?.readBytes().toString()}")
+//                val sqlString: String =
+//                    "INSERT INTO ${Tab.IMAGE} (content, mime_type, trash_id) " + "VALUES (${context.contentResolver.openInputStream(img)?.readBytes()},'png', '${pos.toDoubleString()}')"
+//                val statement = db.compileStatement(sqlString)
+//                statement.executeInsert()
+//                db.close()
+//
+//            } catch (ex: Exception) {
+//                Log.w("addTrash : Exception : ", ex.message.toString())
+//            }
+//        }
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())){
+                        return@withContext
+                    }
 
-            //db.execSQL(sqlString)
-        }
-        catch (ex: Exception)
-        {
-            Log.w("addTrash : Exception : ",ex.message.toString())
-        }
-        finally{
-            db.close()
+                    Toast.makeText(context, "Thank You for report!", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
         }
     }
 
     fun collectTrash(context: Context, item: OverlayItem){
-        val dbHelper = DatabaseHelper(context)
-        val db = dbHelper.writableDatabase
+        val funSend = "collectTrash"
 
-        //TODO - Update: add collection_date - not delete.
+        val elements = ArrayList<String>()
+        elements.add("${Tab.TRASH}.localization");
 
-        db.close()
+        var dataToSend = elements.joinToString(separator = "")
+        dataToSend = dataToSend.plus("|")
+        dataToSend = dataToSend.plus("'${item.point.toString()}'")
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())){
+                        return@withContext
+                    }
+                    Toast.makeText(context, "Thank You for collecting this trash!", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
     }
 
     fun getReports(context: Context, recyclerView: RecyclerView, username: String) {
@@ -122,8 +162,8 @@ object DBUtils {
 
         var elements = ArrayList<String>()
         elements.add("${Tab.TRASH}.id");elements.add("${Tab.TRASH}.localization");elements.add("${Tab.TRASH}.creation_date");
-        elements.add("${Tab.TRASH}.trash_size");elements.add("${Tab.IMAGE}.content")
-        val dataToSend = elements.joinToString(separator = ", ")
+        elements.add("${Tab.TRASH}.trash_size");elements.add("${Tab.TRASH}.collection_date");elements.add("${Tab.IMAGE}.content")
+        val dataToSend = elements.joinToString(separator = ", ").plus("|${username}")
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -229,8 +269,8 @@ object DBUtils {
         val funSend = "getCollectingPoints"
 
         var elements = ArrayList<String>()
-        elements.add("localization")
-        val dataToSend = elements.joinToString(separator = "")
+        elements.add("${Tab.TRASH_COLLECT_POINT}.localization");elements.add("${Tab.TRASH_COLLECT_POINT}.bus_empty");elements.add("${Tab.TRASH_COLLECT_POINT}.processing_type")
+        val dataToSend = elements.joinToString(separator = ", ").plus(", GROUP_CONCAT(${Tab.TRASH}.id SEPARATOR '-')")
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -331,8 +371,31 @@ object DBUtils {
         }
 
     fun addUser(context: Context, adding: Boolean, user: User){
+        val funSend = "addUser"
 
-    }
+        val elements = ArrayList<String>()
+        elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
+        elements.add("${Tab.USER}.email");
+        var dataToSend = elements.joinToString(separator = ", ")
+        dataToSend = dataToSend.plus("|")
+        dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}'")
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())){
+                        return@withContext
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
 
     fun deleteUser(context:Context, login: String){
 
@@ -514,13 +577,72 @@ object DBUtils {
 
     }
 
-    fun checkLogin(context: Context, username: String, password: String): Boolean{
-        val dbHelper = DatabaseHelper(context)
-        val db = dbHelper.writableDatabase
+    fun checkLogin(context: Context, username: String, password: String): Boolean {
+        val funSend = "checkUserForLogin"
+        var userExists = false
+        var dataToSend = "'${username}', '${Encryption.decrypt(password)}'"
 
-        // TODO - check if login and password are correct
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        userExists = false
+                        return@withContext
+                    }
+                    if(json?.contains("1") == true){
+                    context.startActivity(Intent(context, MainActivity::class.java))
+                        (context as Activity).finish()
+                    }
 
-        db.close()
-        return true
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+
+        }
+        return userExists
+    }
+
+    private fun addIconsToMap(context: Context, map: MapView, items: ArrayList<OverlayItem>, collectedItems: ArrayList<String>) {
+        for (item in items) {
+            item.setMarker(context.resources.getDrawable(R.drawable.red_marker_v2))
+        }
+        var overlay = ItemizedOverlayWithFocus<OverlayItem>(
+            items,
+            object : ItemizedIconOverlay.OnItemGestureListener<OverlayItem> {
+                override fun onItemSingleTapUp(index: Int, item: OverlayItem): Boolean {
+                    return if (collectedItems.indexOf(item.uid) == -1){
+                        Toast.makeText(context, "Hold to collect", Toast.LENGTH_SHORT).show()
+                        true
+                    } else{
+                        Toast.makeText(context, "Trash already collected", Toast.LENGTH_SHORT).show()
+                        false
+                    }
+
+                }
+
+                override fun onItemLongPress(index: Int, item: OverlayItem): Boolean {
+                    if (collectedItems.indexOf(item.uid) == -1){
+                        item.setMarker(context.resources.getDrawable(R.drawable.green_marker_v2))
+                        context?.let { collectTrash(it, item) };
+                        collectedItems.add(item.uid)
+                        Toast.makeText(context, "Item marked as collected", Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+                        Toast.makeText(context, "Trash already collected", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    return false
+                }
+            }, context
+        )
+        overlay.setFocusItemsOnTap(true);
+        overlay.setMarkerBackgroundColor(Color.CYAN)
+        map.overlays.add(overlay);
     }
 }

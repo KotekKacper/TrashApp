@@ -37,19 +37,16 @@ class LoginActivity : AppCompatActivity() {
 
             if (loginEditText.error == null && loginEditText.text.toString() != "" &&
                 passwordEditText.error == null && passwordEditText.text.toString() != "") {
-                if (DBUtils.checkLogin(this, login, encryptedPassword)){
+
+                DBUtils.checkLogin(this, login, encryptedPassword)
                     val preferences = getSharedPreferences("credentials", Context.MODE_PRIVATE)
                     val editor = preferences.edit()
                     editor.putString("login", login)
                     editor.putString("password", encryptedPassword)
                     editor.apply()
 
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
-                }
-                else{
-                    Toast.makeText(this, "Incorrect login or password", Toast.LENGTH_SHORT).show()
-                }
+
+
             } else {
                 Toast.makeText(this, "Invalid login data", Toast.LENGTH_SHORT).show()
             }

@@ -58,17 +58,19 @@ class MapFragment : Fragment() {
         map = binding.root.findViewById(R.id.map)
         map.setTileSource(TileSourceFactory.MAPNIK)
 
+
+
+        // Add icons to map
+        items = context?.let { DBUtils.getAllActiveTrash(it, map) }!!
+        collectedItems = ArrayList<String>()
+        //addIconsToMap(items, collectedItems)
+
         // Add button setup
         binding.fab.setOnClickListener { view ->
             val intent = Intent(context, AddTrashActivity::class.java)
             intent.putExtra("startPosition", (map.mapCenter as GeoPoint).toDoubleString())
             startActivity(intent)
         }
-
-        // Add icons to map
-        items = context?.let { DBUtils.getAllActiveTrash(it) }!!
-        collectedItems = ArrayList<String>()
-        addIconsToMap(items, collectedItems)
 
         // Enable pinch to zoom
         map.setMultiTouchControls(true)

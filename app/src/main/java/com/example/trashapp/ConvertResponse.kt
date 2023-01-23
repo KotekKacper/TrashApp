@@ -61,7 +61,10 @@ object ConvertResponse {
                 val attributes = point.split(";")
                 out.add(
                     TrashCollectingPoint(
-                        localization = attributes[0]
+                        localization = attributes[0],
+                                busEmpty = attributes[1].toBoolean(),
+                                processingType = attributes[2],
+                                trashId = attributes[3].split("-")
                     )
                 )
             }
@@ -135,23 +138,23 @@ object ConvertResponse {
         for (point in points){
             if(!point.isEmpty()) {
                 val attributes = point.split(";")
-                val drawableArray = ArrayList<Drawable>()
-                val imageString = attributes[5]
-                if(!imageString.equals("null")) {
-                    val imageBytes = imageString.toByteArray()
-                    val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-                    val drawableImage = BitmapDrawable(bitmap)
-                    drawableArray.add(drawableImage)
-                }
+//                val drawableArray = ArrayList<Drawable>()
+//                val imageString = attributes[5]
+//                if(!imageString.equals("null")) {
+//                    val imageBytes = imageString.toByteArray()
+//                    val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+//                    val drawableImage = BitmapDrawable(bitmap)
+//                    drawableArray.add(drawableImage)
+//                }
                 out.add(
                     Trash(
                         id = attributes[0],
                         localization = attributes[1],
                         creationDate = attributes[2],
 
-                        trashSize = attributes[3].toInt(),
+                        trashSize = attributes[3]?.toInt(),
                         collectionDate = attributes[4],
-                        images = drawableArray
+                        //images = drawableArray
                     )
                 )
             }
