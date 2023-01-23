@@ -139,18 +139,18 @@ object DBUtils {
         //TODO - return trash reported by the user and images connected to it
         val reportsArray = arrayListOf(
             Trash(
-                creationDate = Instant.now(),
+                creationDate = "2023-01-18 23:18:13.0",
                 localization = "52.40427145950248,16.94963942393314,0.0",
                 id = 1,
                 trashSize = 1,
                 userLoginReport = "ivan"
             ),
             Trash(
-                creationDate = Instant.now(),
+                creationDate = "2023-01-18 23:18:13.0",
                 localization = "52.40427145950248,16.94963942393314,0.0",
                 id = 2,
                 trashSize = 2,
-                collectionDate = Instant.now(),
+                collectionDate = "2023-01-21 00:26:31.0",
                 userLoginReport = "kacper",
                 trashType = arrayListOf("synthetic", "paper"),
                 cleaningCrewId = 666
@@ -168,12 +168,14 @@ object DBUtils {
                     val adapter = ReportItemAdapter(reportsArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(context, AddReportActivity::class.java)
+                            intent.putExtra("id", reportsArray[position].id.toString())
                             intent.putExtra("login", reportsArray[position].userLoginReport)
                             intent.putExtra("latitude", reportsArray[position].localization.split(",")[0])
                             intent.putExtra("longitude", reportsArray[position].localization.split(",")[1])
-                            intent.putExtra("reportDate", "2023-01-18 23:18:13.0")
+                            intent.putExtra("reportDate", reportsArray[position].creationDate)
+                            intent.putExtra("trashSize", reportsArray[position].trashSize.toString())
                             intent.putExtra("trashTypes", reportsArray[position].trashType?.joinToString(","))
-                            intent.putExtra("collectionDate", "2023-01-21 00:26:31.0")
+                            intent.putExtra("collectionDate", reportsArray[position].collectionDate)
                             intent.putExtra("collectedBy", "crew")
                             intent.putExtra("collectedVal", reportsArray[position].cleaningCrewId?.toString())
                             context.startActivity(intent)
@@ -189,6 +191,16 @@ object DBUtils {
             }
         }
     }
+
+    fun addReport(trash: Trash){
+
+    }
+
+    fun deleteReport(id: String){
+
+    }
+
+
 
     fun getGroups(context: Context, username: String): ArrayList<Group> {
         val dbHelper = DatabaseHelper(context)

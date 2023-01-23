@@ -4,15 +4,15 @@ import android.graphics.drawable.Drawable
 import java.time.Instant
 
 data class Trash(
-    var id: Int,
+    var id: Int? = null,
     var localization: String,
-    var creationDate: Instant,
-    var trashSize: Int,
+    var creationDate: String,
+    var trashSize: Int? = null,
     var vehicleId: Int? = null,
     var userLoginReport: String? = null,
     var cleaningCrewId: Int? = null,
     var userLogin: String? = null,
-    var collectionDate: Instant? = null,
+    var collectionDate: String? = null,
     var images: ArrayList<Drawable>? = null,
     var trashType: ArrayList<String>? = null
 )

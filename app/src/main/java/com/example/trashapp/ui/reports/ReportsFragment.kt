@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,10 +39,25 @@ class ReportsFragment : Fragment() {
         val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewReports)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
+        val addButton = binding.root.findViewById<Button>(R.id.buttonReportsAdd)
+        addButton.setOnClickListener {
+            val intent = Intent(context, AddReportActivity::class.java)
+            context?.startActivity(intent)
+        }
+
         context?.let { DBUtils.getReports(it, recyclerView,
             activity!!.getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "")!!) }
 
         return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewReports)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+
+        context?.let { DBUtils.getReports(it, recyclerView,
+            activity!!.getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "")!!) }
     }
 
     override fun onDestroyView() {
