@@ -4,10 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
-import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.util.Log
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.ConvertResponse.convertCompanies
 import com.example.trashapp.adapters.CompanyItemAdapter
@@ -144,14 +142,18 @@ object DBUtils {
                 creationDate = Instant.now(),
                 localization = "52.40427145950248,16.94963942393314,0.0",
                 id = 1,
-                trashSize = 1
+                trashSize = 1,
+                userLoginReport = "ivan"
             ),
             Trash(
                 creationDate = Instant.now(),
                 localization = "52.40427145950248,16.94963942393314,0.0",
                 id = 2,
                 trashSize = 2,
-                collectionDate = Instant.now()
+                collectionDate = Instant.now(),
+                userLoginReport = "kacper",
+                trashType = arrayListOf("synthetic", "paper"),
+                cleaningCrewId = 666
             )
         )
 
@@ -166,7 +168,14 @@ object DBUtils {
                     val adapter = ReportItemAdapter(reportsArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(context, AddReportActivity::class.java)
-                            intent.putExtra("id", reportsArray[position].id)
+                            intent.putExtra("login", reportsArray[position].userLoginReport)
+                            intent.putExtra("latitude", reportsArray[position].localization.split(",")[0])
+                            intent.putExtra("longitude", reportsArray[position].localization.split(",")[1])
+                            intent.putExtra("reportDate", "2023-01-18 23:18:13.0")
+                            intent.putExtra("trashTypes", reportsArray[position].trashType?.joinToString(","))
+                            intent.putExtra("collectionDate", "2023-01-21 00:26:31.0")
+                            intent.putExtra("collectedBy", "crew")
+                            intent.putExtra("collectedVal", reportsArray[position].cleaningCrewId?.toString())
                             context.startActivity(intent)
                         }
                     })
