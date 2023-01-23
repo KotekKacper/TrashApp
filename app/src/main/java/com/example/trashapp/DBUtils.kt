@@ -164,7 +164,7 @@ object DBUtils {
 
         var elements = ArrayList<String>()
         elements.add("${Tab.TRASH}.id");elements.add("${Tab.TRASH}.localization");elements.add("${Tab.TRASH}.creation_date");
-        elements.add("${Tab.TRASH}.trash_size");elements.add("${Tab.IMAGE}.content")
+        elements.add("${Tab.TRASH}.trash_size");elements.add("${Tab.TRASH}.collection_date");elements.add("${Tab.IMAGE}.content")
         val dataToSend = elements.joinToString(separator = ", ").plus("|${username}")
 
         CoroutineScope(Dispatchers.IO).launch {
