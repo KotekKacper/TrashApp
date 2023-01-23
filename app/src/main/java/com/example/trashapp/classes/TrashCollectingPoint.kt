@@ -4,6 +4,6 @@ data class TrashCollectingPoint (
     var localization: String,
     var busEmpty: Boolean? = null,
     var processingType:String? = null,
-    var trashType: Array<TrashType>? = null,
-    var trash: Array<Trash>? = null
+    var trashType: ArrayList<String>? = null,
+    var trashId: ArrayList<String>? = null
         )

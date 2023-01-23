@@ -8,11 +8,13 @@ import android.text.SpannableStringBuilder
 import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.ConvertResponse.convertCompanies
+import com.example.trashapp.adapters.CollectingPointItemAdapter
 import com.example.trashapp.adapters.CompanyItemAdapter
 import com.example.trashapp.adapters.GroupItemAdapter
 import com.example.trashapp.adapters.ReportItemAdapter
 import com.example.trashapp.classes.*
 import com.example.trashapp.databinding.FragmentAccountBinding
+import com.example.trashapp.ui.collectingpoints.AddPointActivity
 import com.example.trashapp.ui.groups.AddGroupActivity
 import com.example.trashapp.ui.reports.AddReportActivity
 import kotlinx.coroutines.CoroutineScope
@@ -251,48 +253,55 @@ object DBUtils {
 
     }
 
-    fun getCollectingPoints(context: Context): ArrayList<TrashCollectingPoint> {
-        //TODO - return all collecting points
+    fun getCollectingPoints(context: Context, recyclerView: RecyclerView){
+        val pointsArray = arrayListOf<TrashCollectingPoint>(
+            TrashCollectingPoint(
+                localization = "52.40427145950248,16.94963942393314,0.0",
+                busEmpty = false,
+                processingType = "burning",
+                trashType = arrayListOf("synthetic", "paper"),
+                trashId = arrayListOf("1","5")
+            )
+        )
+        //TODO - get all collecting points
 
-        val dbHelper = DatabaseHelper(context)
-        val db = dbHelper.writableDatabase
-        val items = ArrayList<TrashCollectingPoint>()
-        try{
-            val elements = ArrayList<String>()
-            elements.add("localization")
-            //;elements.add("bus_empty");elements.add("processing_type")
-            val whereString = ""
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+//                val response = service.getJson(username, funSend)
+                withContext(Dispatchers.Main) {
+//                    val json = response.body()?.string()
+//                    Log.i("ServerSQL", json.toString())
+//
+//                    val companiesArray = json?.let { convertReports(json.toString()) }
+                    val adapter = CollectingPointItemAdapter(pointsArray, object : OnItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            val intent = Intent(context, AddPointActivity::class.java)
+                            intent.putExtra("latitude", pointsArray[position].localization.split(",")[0])
+                            intent.putExtra("longitude", pointsArray[position].localization.split(",")[1])
+                            intent.putExtra("notInUse", pointsArray[position].busEmpty)
+                            intent.putExtra("processingType", pointsArray[position].processingType.toString())
+                            intent.putExtra("trashTypes", pointsArray[position].trashType?.joinToString(","))
+                            intent.putExtra("trashIds", pointsArray[position].trashId?.joinToString(","))
+                            context.startActivity(intent)
+                        }
+                    })
+                    recyclerView.adapter = adapter
 
-            val qResult = useSelect(db, elements, Tab.TRASH_COLLECT_POINT, whereString)
-            Log.i("SQLiteCustom", qResult.toString())
-
-            if (qResult["localization"] != null) {
-                for (i in qResult["localization"]!!.indices) {
-                    val p = qResult["localization"]?.get(i)?.split(",")
-                    //TODO - add to items trashType for this collecting point from DB.
-                    items.add(
-                        TrashCollectingPoint(
-                            qResult["localization"]!![i])
-                            //,
-                            //qResult["bus_empty"]!![i].toBoolean(),
-                            //qResult["processing_type"]!![i])
-                        )
-
-
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
                 }
             }
         }
-        catch(ex:Exception)
-        {
-            Log.w("getCollectingPoints : Exception: ", ex.message.toString())
-        }
-        finally{
-            db.close()
-        }
+    }
 
+    fun addCollectingPoint(point: TrashCollectingPoint){
 
+    }
 
-        return items
+    fun deleteCollectingPoint(localization: String){
+
     }
 
     fun getUsers(context: Context): ArrayList<User> {

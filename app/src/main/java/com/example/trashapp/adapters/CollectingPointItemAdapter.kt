@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.LocalizationToAddress
 import com.example.trashapp.NominatimApiService
+import com.example.trashapp.OnItemClickListener
 import com.example.trashapp.R
 import com.example.trashapp.classes.TrashCollectingPoint
 import kotlinx.coroutines.CoroutineScope
@@ -18,7 +19,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 
-class CollectingPointItemAdapter(private val mData: ArrayList<TrashCollectingPoint>?) :
+class CollectingPointItemAdapter(private val mData: ArrayList<TrashCollectingPoint>?,
+                                 private val listener: OnItemClickListener
+) :
     RecyclerView.Adapter<CollectingPointItemAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context)
@@ -28,6 +31,11 @@ class CollectingPointItemAdapter(private val mData: ArrayList<TrashCollectingPoi
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mData?.get(position)
+
+        holder.itemView.setOnClickListener {
+            listener.onItemClick(position)
+        }
+
         val loc = item!!.localization.split(",")
         val retrofit = Retrofit.Builder()
             .baseUrl("https://nominatim.openstreetmap.org/")
