@@ -167,11 +167,11 @@ object DBUtils {
         }
     }
 
-    fun addReport(trash: Trash){
+    fun addReport(context: Context, trash: Trash){
 
     }
 
-    fun deleteReport(id: String){
+    fun deleteReport(context: Context, id: String){
 
     }
 
@@ -179,6 +179,7 @@ object DBUtils {
     fun getGroups(context: Context, recyclerView: RecyclerView, username: String){
         val groupsArray = arrayListOf(
             Group(
+                id = "1",
                 name = "Sprzątacze crew",
                 meetingDate = "2023-01-18 23:18:13.0",
                 meetingLoc = "52.40427145950248,16.94963942393314,0.0"
@@ -196,6 +197,7 @@ object DBUtils {
                     val adapter = GroupItemAdapter(groupsArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(context, AddGroupActivity::class.java)
+                            intent.putExtra("id", groupsArray[position].id)
                             intent.putExtra("crewName", groupsArray[position].name)
                             intent.putExtra("meetingDate", groupsArray[position].meetingDate)
                             intent.putExtra("latitude", groupsArray[position].meetingLoc.split(",")[0])
@@ -214,11 +216,11 @@ object DBUtils {
         }
     }
 
-    fun addGroup(group: Group){
+    fun addGroup(context: Context, group: Group){
 
     }
 
-    fun deleteGroup(loc: String){
+    fun deleteGroup(context: Context, id: String){
 
     }
 
@@ -268,11 +270,11 @@ object DBUtils {
         }
     }
 
-    fun addCollectingPoint(point: TrashCollectingPoint){
+    fun addCollectingPoint(context: Context, point: TrashCollectingPoint){
 
     }
 
-    fun deleteCollectingPoint(localization: String){
+    fun deleteCollectingPoint(context: Context, localization: String){
 
     }
 
@@ -326,11 +328,10 @@ object DBUtils {
         }
 
     fun addUser(context: Context, user: User){
-        //TODO - insert user into database
 
     }
 
-    fun deleteUser(login: String){
+    fun deleteUser(context:Context, login: String){
 
     }
 
@@ -439,15 +440,13 @@ object DBUtils {
         }
     }
 
-    fun addVehicle(vehicle: Vehicle){
+    fun addVehicle(context: Context, vehicle: Vehicle){
 
     }
 
-    fun deleteVehicle(vehicleId: String){
+    fun deleteVehicle(context: Context, vehicleId: String){
 
     }
-
-
 
 
     fun getWorkers(context: Context, recyclerView: RecyclerView){
@@ -501,9 +500,6 @@ object DBUtils {
     fun deleteWorker(context: Context, fullname: String, birthDate: String){
 
     }
-
-
-
 
 
 

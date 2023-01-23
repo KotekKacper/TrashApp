@@ -60,8 +60,8 @@ class AddGroupActivity : AppCompatActivity() {
         applyButton.setOnClickListener{
             if (crewNameEditText.error == null && meetingDateEditText.error == null &&
                 latitudeEditText.error == null && longitudeEditText.error == null){
-                DBUtils.addGroup(
-                    Group(name = crewNameEditText.text.toString(),
+                DBUtils.addGroup(this,
+                    Group(id = "-1", name = crewNameEditText.text.toString(),
                         meetingDate = meetingDateEditText.text.toString(),
                         meetingLoc = arrayListOf(
                             latitudeEditText.text.toString(), longitudeEditText.text.toString()).joinToString(",")
@@ -80,7 +80,7 @@ class AddGroupActivity : AppCompatActivity() {
         val deleteButton = findViewById<Button>(R.id.buttonGroupDelete)
         if (extras != null) {
             deleteButton.setOnClickListener {
-                DBUtils.deleteGroup(extras.getString("crewName")!!)
+                DBUtils.deleteGroup(this, extras.getString("id")!!)
                 finish()
             }
         }else{

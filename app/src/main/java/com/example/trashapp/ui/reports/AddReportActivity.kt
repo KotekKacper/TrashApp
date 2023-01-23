@@ -113,7 +113,8 @@ class AddReportActivity : AppCompatActivity() {
                         trashSizeEditText.error == null && trashTypeEditText.error == null &&
                         collectionDateEditText.error == null && firstEditText.error == null &&
                         secondEditText.error == null && thirdEditText.error == null){
-                    DBUtils.addReport(Trash(localization = arrayListOf(
+                    DBUtils.addReport(this,
+                        Trash(localization = arrayListOf(
                         latitudeEditText.text.toString(), longitudeEditText.text.toString()).joinToString(","),
                         creationDate = creationDateEditText.text.toString(),
                         userLoginReport = loginReportedEditText.text.toString(),
@@ -133,7 +134,7 @@ class AddReportActivity : AppCompatActivity() {
             val deleteButton = findViewById<Button>(R.id.buttonReportDelete)
         if (extras != null) {
             deleteButton.setOnClickListener {
-                DBUtils.deleteReport(extras.getString("id")!!)
+                DBUtils.deleteReport(this, extras.getString("id")!!)
                 finish()
             }
         }else{

@@ -62,7 +62,7 @@ class AddVehicleActivity : AppCompatActivity() {
                 latitudeEditText.error == null &&
                 fillingEditText.text.toString().isNotEmpty() &&
                 fillingEditText.error == null){
-                DBUtils.addVehicle(
+                DBUtils.addVehicle(this,
                     Vehicle(localization = arrayListOf(
                             latitudeEditText.text.toString(), longitudeEditText.text.toString())
                             .joinToString(","),
@@ -84,7 +84,7 @@ class AddVehicleActivity : AppCompatActivity() {
         val deleteButton = findViewById<Button>(R.id.buttonVehicleDelete)
         if (extras != null) {
             deleteButton.setOnClickListener {
-                DBUtils.deleteVehicle(vehicleId)
+                DBUtils.deleteVehicle(this, vehicleId)
                 finish()
             }
         }else{

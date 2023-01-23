@@ -201,7 +201,7 @@ class AddUserActivity : AppCompatActivity() {
         val deleteButton = findViewById<Button>(R.id.buttonUserDelete)
         if (extras != null) {
             deleteButton.setOnClickListener {
-                DBUtils.deleteUser(extras.getString("login")!!)
+                DBUtils.deleteUser(this, extras.getString("login")!!)
                 finish()
             }
         }else{

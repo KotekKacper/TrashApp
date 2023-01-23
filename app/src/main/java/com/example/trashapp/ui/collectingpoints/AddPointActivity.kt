@@ -87,7 +87,7 @@ class AddPointActivity : AppCompatActivity() {
             if (latitudeEditText.error == null && longitudeEditText.error == null &&
                     processingTypeEditText.error == null && trashTypesEditText.error == null &&
                     trashHereEditText.error == null){
-                DBUtils.addCollectingPoint(
+                DBUtils.addCollectingPoint(this,
                     TrashCollectingPoint(localization = arrayListOf(
                             latitudeEditText.text.toString(), longitudeEditText.text.toString())
                             .joinToString(","),
@@ -110,7 +110,7 @@ class AddPointActivity : AppCompatActivity() {
         val deleteButton = findViewById<Button>(R.id.buttonPointDelete)
         if (extras != null) {
             deleteButton.setOnClickListener {
-                DBUtils.deleteGroup(loc)
+                DBUtils.deleteCollectingPoint(this, loc)
                 finish()
             }
         }else{
