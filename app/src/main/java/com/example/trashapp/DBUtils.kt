@@ -7,11 +7,15 @@ import android.net.Uri
 import android.text.SpannableStringBuilder
 import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
+import com.example.trashapp.ConvertResponse.convertAllUsers
+import com.example.trashapp.ConvertResponse.convertCollectionPoints
 import com.example.trashapp.ConvertResponse.convertCompanies
 import com.example.trashapp.adapters.CollectingPointItemAdapter
+import com.example.trashapp.ConvertResponse.convertUserReports
 import com.example.trashapp.adapters.CompanyItemAdapter
 import com.example.trashapp.adapters.GroupItemAdapter
 import com.example.trashapp.adapters.ReportItemAdapter
+import com.example.trashapp.adapters.UserItemAdapter
 import com.example.trashapp.classes.*
 import com.example.trashapp.databinding.FragmentAccountBinding
 import com.example.trashapp.ui.collectingpoints.AddPointActivity
@@ -65,40 +69,34 @@ object DBUtils {
         return output;
     }
 
-    fun getAllActiveTrash(context: Context): ArrayList<OverlayItem>{
-        val dbHelper = DatabaseHelper(context)
-        val db = dbHelper.writableDatabase
-        val items = ArrayList<OverlayItem>()
-        try {
-            //TODO - change to prevent sql injection
-            val elements = ArrayList<String>()
-            elements.add("id");elements.add("localization");elements.add("trash_size")
-            var whereString = "collection_date IS NULL"
+    fun getAllActiveTrash(context: Context):ArrayList<OverlayItem>? {
+        val funSend = "getAllActiveTrash"
+        var items = ArrayList<OverlayItem>()
+        var elements = ArrayList<String>()
+        elements.add("${Tab.TRASH}.id");elements.add("${Tab.TRASH}.localization");elements.add("${Tab.TRASH}.creation_date");
+        elements.add("${Tab.TRASH}.trash_size");elements.add("${Tab.IMAGE}.content")
+        var dataToSend = elements.joinToString(separator = ", ")
 
-            val qResult = useSelect(db, elements, Tab.TRASH, whereString)
-            Log.i("SQLiteCustom", qResult.toString())
+        val scope = CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
 
-            if (qResult["id"] != null) {
-                for (i in qResult["id"]!!.indices) {
-                    val p = qResult["localization"]?.get(i)?.split(",")
-                    items.add(
-                        OverlayItem(
-                            qResult["id"]!![i],
-                            qResult["localization"]!![i],
-                            qResult["trash_size"].toString(),
-                            GeoPoint(p!![0].toDouble(), p[1].toDouble())
-                        )
-                    )
-                    Log.i("SQLiteCustom : useSelect : localization", p[0] + ", " + p[1])
+                    val pointsArray = json?.let { ConvertResponse.convertActiveTrashOnMap(json.toString()) }
+                    if (pointsArray != null) {
+                        items = pointsArray
+                    }
+
+
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
                 }
             }
-        }
-        catch(ex: Exception)
-        {
-            Log.w("getAllActiveTrash : Exception : ",ex.message.toString())
-        }
-        finally{
-        db.close()
+
         }
         return items
     }
@@ -138,37 +136,22 @@ object DBUtils {
         db.close()
     }
 
-    fun getReports(context: Context, recyclerView: RecyclerView, username: String){
+    fun getReports(context: Context, recyclerView: RecyclerView) {
         val funSend = "getReports"
-        //TODO - return trash reported by the user and images connected to it
-        val reportsArray = arrayListOf(
-            Trash(
-                creationDate = "2023-01-18 23:18:13.0",
-                localization = "52.40427145950248,16.94963942393314,0.0",
-                id = 1,
-                trashSize = 1,
-                userLoginReport = "ivan"
-            ),
-            Trash(
-                creationDate = "2023-01-18 23:18:13.0",
-                localization = "52.40427145950248,16.94963942393314,0.0",
-                id = 2,
-                trashSize = 2,
-                collectionDate = "2023-01-21 00:26:31.0",
-                userLoginReport = "kacper",
-                trashType = arrayListOf("synthetic", "paper"),
-                cleaningCrewId = 666
-            )
-        )
+
+        var elements = ArrayList<String>()
+        elements.add("${Tab.TRASH}.id");elements.add("${Tab.TRASH}.localization");elements.add("${Tab.TRASH}.creation_date");
+        elements.add("${Tab.TRASH}.trash_size");elements.add("${Tab.IMAGE}.content")
+        val dataToSend = elements.joinToString(separator = ", ")
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-//                val response = service.getJson(username, funSend)
+                val response = service.getJson(dataToSend, funSend)
                 withContext(Dispatchers.Main) {
-//                    val json = response.body()?.string()
-//                    Log.i("ServerSQL", json.toString())
-//
-//                    val companiesArray = json?.let { convertReports(json.toString()) }
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+
+                    val reportsArray = json?.let { convertUserReports(json.toString()) }
                     val adapter = ReportItemAdapter(reportsArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(context, AddReportActivity::class.java)
@@ -205,7 +188,6 @@ object DBUtils {
     }
 
 
-
     fun getGroups(context: Context, recyclerView: RecyclerView, username: String){
         val groupsArray = arrayListOf(
             Group(
@@ -214,7 +196,6 @@ object DBUtils {
                 meetingLoc = "52.40427145950248,16.94963942393314,0.0"
             )
         )
-        //TODO - groups that the given user is connected to
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -245,34 +226,25 @@ object DBUtils {
         }
     }
 
-    fun addGroup(group: Group){
 
     }
 
-    fun deleteGroup(name: String){
+    fun getCollectingPoints(context: Context, recyclerView: RecyclerView) {
 
-    }
+        val funSend = "getCollectingPoints"
 
-    fun getCollectingPoints(context: Context, recyclerView: RecyclerView){
-        val pointsArray = arrayListOf<TrashCollectingPoint>(
-            TrashCollectingPoint(
-                localization = "52.40427145950248,16.94963942393314,0.0",
-                busEmpty = false,
-                processingType = "burning",
-                trashType = arrayListOf("synthetic", "paper"),
-                trashId = arrayListOf("1","5")
-            )
-        )
-        //TODO - get all collecting points
+        var elements = ArrayList<String>()
+        elements.add("localization")
+        val dataToSend = elements.joinToString(separator = "")
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-//                val response = service.getJson(username, funSend)
+                val response = service.getJson(dataToSend, funSend)
                 withContext(Dispatchers.Main) {
-//                    val json = response.body()?.string()
-//                    Log.i("ServerSQL", json.toString())
-//
-//                    val companiesArray = json?.let { convertReports(json.toString()) }
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+
+                    val pointsArray = json?.let { convertCollectionPoints(json.toString()) }
                     val adapter = CollectingPointItemAdapter(pointsArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(context, AddPointActivity::class.java)
@@ -304,51 +276,41 @@ object DBUtils {
 
     }
 
-    fun getUsers(context: Context): ArrayList<User> {
+    fun getUsers(context: Context, recyclerView: RecyclerView){
+        val funSend = "getUsers"
+
         val dbHelper = DatabaseHelper(context)
         val db = dbHelper.writableDatabase
         var items = kotlin.collections.ArrayList<User>()
         //TODO - return all users
-        try {
-            val elements = ArrayList<String>()
-            elements.add("login");elements.add("password");elements.add("email");elements.add("phone");
-            elements.add("fullname");elements.add("country");elements.add("city");elements.add("district");
-            elements.add("street");elements.add("flat_number");elements.add("post_code")
 
-            val whereString = ""
+        val elements = ArrayList<String>()
+        elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
+        elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.phone");
+        elements.add("${Tab.USER}.fullname");elements.add("${Tab.ROLE}.role_name")
 
-            val qResult = useSelect(db, elements, Tab.USER, whereString)
-            Log.i("SQLiteCustom", qResult.toString())
+        val dataToSend = elements.joinToString(separator = ", ")
 
-            if (qResult["login"] != null) {
-                for (i in qResult["login"]!!.indices) {
-                    items.add(
-                        User(
-                            qResult["login"]!![i],
-                            qResult["password"]!![i],
-                            qResult["email"]!![i],
-                            qResult["phone"]!![i],
-                            qResult["fullname"]!![i],
-                            qResult["country"]!![i],
-                            qResult["city"]!![i],
-                            qResult["district"]!![i],
-                            qResult["street"]!![i],
-                            qResult["flat_number"]!![i],
-                            qResult["post_code"]!![i]
-                        )
-                    )
+
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val response = service.getJson(dataToSend, funSend)
+                    withContext(Dispatchers.Main) {
+                        val json = response.body()?.string()
+                        Log.i("ServerSQL", json.toString())
+
+                        val usersArray = json?.let { convertAllUsers(json.toString()) }
+                        val adapter = UserItemAdapter(usersArray)
+                        recyclerView.adapter = adapter
+
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Log.e("ServerSQL", e.toString())
+                    }
                 }
             }
         }
-        catch(ex:Exception)
-        {
-            Log.w("getUsers : Exception : ", ex.message.toString())
-        }
-        finally{
-            db.close()
-        }
-        return items
-    }
 
     fun getCompanies(context: Context, recyclerView: RecyclerView){
         val funSend = "getCompanies"

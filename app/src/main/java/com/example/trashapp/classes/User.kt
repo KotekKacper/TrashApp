@@ -11,5 +11,6 @@ data class User (
     var district: String? = null,
     var street: String? = null,
     var flatNumber: String? = null,
-    var postCode: String? = null
+    var postCode: String? = null,
+    var roles: Role
         )

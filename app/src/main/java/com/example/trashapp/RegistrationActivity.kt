@@ -4,8 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+
+import com.example.trashapp.classes.Role
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+
 import com.example.trashapp.classes.User
 import com.example.trashapp.watchers.*
 
@@ -37,15 +40,17 @@ class RegistrationActivity : AppCompatActivity() {
 
         val registerButton = findViewById<Button>(R.id.buttonRegister)
         registerButton.setOnClickListener{
-            if (loginEditText.error == null && loginEditText.text.toString() != "" &&
-                passwordEditText.error == null && passwordEditText.text.toString() != "" &&
-                repeatPasswordEditText.error == null && repeatPasswordEditText.text.toString() != "" &&
-                emailEditText.error == null && emailEditText.text.toString() != "" &&
-                repeatEmailEditText.error == null &&  repeatEmailEditText.text.toString() != "") {
+
+            if (loginEditText.error == null &&
+                passwordEditText.error == null &&
+                repeatPasswordEditText.error == null &&
+                emailEditText.error == null &&
+                repeatEmailEditText.error == null) {
                 val user = User(
                     login = findViewById<EditText>(R.id.editTextTextLogin).text.toString(),
                     password = findViewById<EditText>(R.id.editTextTextPassword).text.toString(),
-                    email = findViewById<EditText>(R.id.editTextTextEmailAddress).text.toString()
+                    email = findViewById<EditText>(R.id.editTextTextEmailAddress).text.toString(),
+                            roles = Role("USER")
                 )
                 DBUtils.addUser(this, user)
                 startActivity(Intent(this, LoginActivity::class.java))
