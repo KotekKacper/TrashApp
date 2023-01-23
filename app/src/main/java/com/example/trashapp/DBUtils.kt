@@ -1,8 +1,11 @@
 package com.example.trashapp
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
+import android.graphics.Color
+import androidx.appcompat.app.AppCompatActivity
 import android.net.Uri
 import android.text.SpannableStringBuilder
 import android.util.Log
@@ -28,6 +31,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.ItemizedIconOverlay
+import org.osmdroid.views.overlay.ItemizedOverlayWithFocus
 import org.osmdroid.views.overlay.OverlayItem
 import retrofit2.Retrofit
 import java.util.*
@@ -37,7 +43,7 @@ import kotlin.collections.ArrayList
 object DBUtils {
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("http://10.0.2.2:8080/")
+        .baseUrl("http://192.168.1.11:8888/")
         .build()
     private val service = retrofit.create(ServerApiService::class.java)
 
@@ -49,7 +55,7 @@ object DBUtils {
         return false
     }
 
-    fun getAllActiveTrash(context: Context):ArrayList<OverlayItem>? {
+    fun getAllActiveTrash(context: Context, map: MapView):ArrayList<OverlayItem>? {
         val funSend = "getAllActiveTrash"
         var items = ArrayList<OverlayItem>()
         var elements = ArrayList<String>()
@@ -69,7 +75,8 @@ object DBUtils {
 
                     val pointsArray = json?.let { ConvertResponse.convertActiveTrashOnMap(json.toString()) }
                     if (pointsArray != null) {
-                        items = pointsArray
+
+                        addIconsToMap(context, map, pointsArray, ArrayList() )
                     }
 
 
@@ -229,7 +236,7 @@ object DBUtils {
         val funSend = "getCollectingPoints"
 
         var elements = ArrayList<String>()
-        elements.add("localization")
+        elements.add("localization");elements.add("localization");elements.add("localization")
         val dataToSend = elements.joinToString(separator = "")
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -328,8 +335,32 @@ object DBUtils {
         }
 
     fun addUser(context: Context, user: User){
-        //TODO - insert user into database
+        val funSend = "addUser"
 
+        val elements = ArrayList<String>()
+        elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
+        elements.add("${Tab.USER}.email");
+
+        var dataToSend = elements.joinToString(separator = ", ")
+        dataToSend = dataToSend.plus("|")
+        dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}'")
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())){
+                        return@withContext
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
     }
 
     fun deleteUser(login: String){
@@ -376,13 +407,72 @@ object DBUtils {
 
     }
 
-    fun checkLogin(context: Context, username: String, password: String): Boolean{
-        val dbHelper = DatabaseHelper(context)
-        val db = dbHelper.writableDatabase
+    fun checkLogin(context: Context, username: String, password: String): Boolean {
+        val funSend = "checkUserForLogin"
+        var userExists = false
+        var dataToSend = "'${username}', '${Encryption.decrypt(password)}'"
 
-        // TODO - check if login and password are correct
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        userExists = false
+                        return@withContext
+                    }
+                    if(json?.contains("1") == true){
+                    context.startActivity(Intent(context, MainActivity::class.java))
+                        (context as Activity).finish()
+                    }
 
-        db.close()
-        return true
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+
+        }
+        return userExists
+    }
+
+    private fun addIconsToMap(context: Context, map: MapView, items: ArrayList<OverlayItem>, collectedItems: ArrayList<String>) {
+        for (item in items) {
+            item.setMarker(context.resources.getDrawable(R.drawable.red_marker_v2))
+        }
+        var overlay = ItemizedOverlayWithFocus<OverlayItem>(
+            items,
+            object : ItemizedIconOverlay.OnItemGestureListener<OverlayItem> {
+                override fun onItemSingleTapUp(index: Int, item: OverlayItem): Boolean {
+                    return if (collectedItems.indexOf(item.uid) == -1){
+                        Toast.makeText(context, "Hold to collect", Toast.LENGTH_SHORT).show()
+                        true
+                    } else{
+                        Toast.makeText(context, "Trash already collected", Toast.LENGTH_SHORT).show()
+                        false
+                    }
+
+                }
+
+                override fun onItemLongPress(index: Int, item: OverlayItem): Boolean {
+                    if (collectedItems.indexOf(item.uid) == -1){
+                        item.setMarker(context.resources.getDrawable(R.drawable.green_marker_v2))
+                        context?.let { collectTrash(it, item) };
+                        collectedItems.add(item.uid)
+                        Toast.makeText(context, "Item marked as collected", Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+                        Toast.makeText(context, "Trash already collected", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    return false
+                }
+            }, context
+        )
+        overlay.setFocusItemsOnTap(true);
+        overlay.setMarkerBackgroundColor(Color.CYAN)
+        map.overlays.add(overlay);
     }
 }
