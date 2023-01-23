@@ -20,6 +20,7 @@ import com.example.trashapp.ui.groups.AddGroupActivity
 import com.example.trashapp.ui.reports.AddReportActivity
 import com.example.trashapp.ui.users.AddUserActivity
 import com.example.trashapp.ui.vehicles.AddVehicleActivity
+import com.example.trashapp.ui.workers.AddWorkerActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -449,7 +450,7 @@ object DBUtils {
 
 
 
-    fun getWorkers(){
+    fun getWorkers(context: Context, recyclerView: RecyclerView){
         val workersArray = arrayListOf(Worker(
             fullname = "Ivan",
             birthDate = "2023-01-18 0:0:0.0",
@@ -458,6 +459,38 @@ object DBUtils {
             cleaningCompanyNIP = "3345",
             vehicleId = "1"
         ))
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+//                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+//                    val json = response.body()?.string()
+//                    Log.i("ServerSQL", json.toString())
+//                    if (checkForError(context, json.toString())){
+//                        return@withContext
+//                    }
+
+//                    val usersArray = json?.let { convertAllUsers(json.toString()) }
+                    val adapter = WorkerItemAdapter(workersArray, object : OnItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            val intent = Intent(context, AddWorkerActivity::class.java)
+                            intent.putExtra("fullname", workersArray?.get(position)?.fullname)
+                            intent.putExtra("birthDate", workersArray?.get(position)?.birthDate)
+                            intent.putExtra("jobStartTime", workersArray?.get(position)?.jobStartTime)
+                            intent.putExtra("jobEndTime", workersArray?.get(position)?.jobEndTime)
+                            intent.putExtra("cleaningCompanyNIP", workersArray?.get(position)?.cleaningCompanyNIP)
+                            intent.putExtra("vehicleId", workersArray?.get(position)?.vehicleId)
+                            context.startActivity(intent)
+                        }})
+                    recyclerView.adapter = adapter
+
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
 
     }
 

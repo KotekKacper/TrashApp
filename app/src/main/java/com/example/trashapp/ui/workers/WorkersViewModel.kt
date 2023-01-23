@@ -1,12 +1,12 @@
-package com.example.trashapp.ui.vehicles
+package com.example.trashapp.ui.workers
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class VehicleViewModel : ViewModel() {
+class WorkersViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is vehicles Fragment"
+        value = "This is workers Fragment"
     }
     val text: LiveData<String> = _text
 }

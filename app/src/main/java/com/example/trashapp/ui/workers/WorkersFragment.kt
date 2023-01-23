@@ -1,4 +1,4 @@
-package com.example.trashapp.ui.vehicles
+package com.example.trashapp.ui.workers
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.DBUtils
 import com.example.trashapp.R
-import com.example.trashapp.databinding.FragmentVehiclesBinding
+import com.example.trashapp.databinding.FragmentWorkersBinding
 
-class VehicleFragment : Fragment() {
+class WorkersFragment : Fragment() {
 
-    private var _binding: FragmentVehiclesBinding? = null
+    private var _binding: FragmentWorkersBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -26,14 +26,14 @@ class VehicleFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val slideshowViewModel =
-            ViewModelProvider(this).get(VehicleViewModel::class.java)
+            ViewModelProvider(this).get(WorkersViewModel::class.java)
 
-        _binding = FragmentVehiclesBinding.inflate(inflater, container, false)
+        _binding = FragmentWorkersBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewVehicles)
+        val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewWorkers)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        context?.let { DBUtils.getVehicles(it, recyclerView) }
+        context?.let { DBUtils.getWorkers(it, recyclerView) }
 
         return root
     }
