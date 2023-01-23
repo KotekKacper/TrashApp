@@ -9,9 +9,11 @@ import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.ConvertResponse.convertCompanies
 import com.example.trashapp.adapters.CompanyItemAdapter
+import com.example.trashapp.adapters.GroupItemAdapter
 import com.example.trashapp.adapters.ReportItemAdapter
 import com.example.trashapp.classes.*
 import com.example.trashapp.databinding.FragmentAccountBinding
+import com.example.trashapp.ui.groups.AddGroupActivity
 import com.example.trashapp.ui.reports.AddReportActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -202,20 +204,51 @@ object DBUtils {
 
 
 
-    fun getGroups(context: Context, username: String): ArrayList<Group> {
-        val dbHelper = DatabaseHelper(context)
-        val db = dbHelper.writableDatabase
-
-        //TODO - return groups that the given user is connected to
-
-        db.close()
-        return arrayListOf(
+    fun getGroups(context: Context, recyclerView: RecyclerView, username: String){
+        val groupsArray = arrayListOf(
             Group(
                 name = "Sprzątacze crew",
-                meetingDate = Instant.now(),
+                meetingDate = "2023-01-18 23:18:13.0",
                 meetingLoc = "52.40427145950248,16.94963942393314,0.0"
             )
         )
+        //TODO - groups that the given user is connected to
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+//                val response = service.getJson(username, funSend)
+                withContext(Dispatchers.Main) {
+//                    val json = response.body()?.string()
+//                    Log.i("ServerSQL", json.toString())
+//
+//                    val companiesArray = json?.let { convertReports(json.toString()) }
+                    val adapter = GroupItemAdapter(groupsArray, object : OnItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            val intent = Intent(context, AddGroupActivity::class.java)
+                            intent.putExtra("crewName", groupsArray[position].name)
+                            intent.putExtra("meetingDate", groupsArray[position].meetingDate)
+                            intent.putExtra("latitude", groupsArray[position].meetingLoc.split(",")[0])
+                            intent.putExtra("longitude", groupsArray[position].meetingLoc.split(",")[1])
+                            context.startActivity(intent)
+                        }
+                    })
+                    recyclerView.adapter = adapter
+
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+    }
+
+    fun addGroup(group: Group){
+
+    }
+
+    fun deleteGroup(name: String){
+
     }
 
     fun getCollectingPoints(context: Context): ArrayList<TrashCollectingPoint> {

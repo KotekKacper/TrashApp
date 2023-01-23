@@ -4,7 +4,7 @@ import java.time.Instant
 
 data class Group(
     val name: String,
-    val meetingDate: Instant,
+    val meetingDate: String,
     val meetingLoc: String,
     var users: ArrayList<String>? = null
     )

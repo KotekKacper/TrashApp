@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.LocalizationToAddress
 import com.example.trashapp.NominatimApiService
+import com.example.trashapp.OnItemClickListener
 import com.example.trashapp.R
 import com.example.trashapp.classes.Group
 import kotlinx.coroutines.CoroutineScope
@@ -18,7 +19,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 
-class GroupItemAdapter(private val mData: ArrayList<Group>?) :
+class GroupItemAdapter(private val mData: ArrayList<Group>?,
+                       private val listener: OnItemClickListener
+) :
     RecyclerView.Adapter<GroupItemAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context)
@@ -29,6 +32,10 @@ class GroupItemAdapter(private val mData: ArrayList<Group>?) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mData?.get(position)
         holder.textView1.text = item!!.name
+
+        holder.itemView.setOnClickListener {
+            listener.onItemClick(position)
+        }
 
         val loc = item.meetingLoc.split(",")
         val retrofit = Retrofit.Builder()
