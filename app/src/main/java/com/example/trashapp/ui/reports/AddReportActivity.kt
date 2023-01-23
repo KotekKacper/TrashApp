@@ -108,8 +108,10 @@ class AddReportActivity : AppCompatActivity() {
 
             val applyButton = findViewById<Button>(R.id.buttonReportConfirm)
             applyButton.setOnClickListener{
-                if (loginReportedEditText.error == null && latitudeEditText.error == null &&
-                        longitudeEditText.error == null && creationDateEditText.error == null &&
+                if (loginReportedEditText.error == null && loginReportedEditText.text.toString() != "" &&
+                        latitudeEditText.error == null && latitudeEditText.text.toString() != "" &&
+                        longitudeEditText.error == null && longitudeEditText.text.toString() != "" &&
+                        creationDateEditText.error == null && creationDateEditText.text.toString() != "" &&
                         trashSizeEditText.error == null && trashTypeEditText.error == null &&
                         collectionDateEditText.error == null && firstEditText.error == null &&
                         secondEditText.error == null && thirdEditText.error == null){

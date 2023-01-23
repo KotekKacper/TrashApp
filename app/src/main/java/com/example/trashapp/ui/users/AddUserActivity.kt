@@ -167,8 +167,10 @@ class AddUserActivity : AppCompatActivity() {
 
         val applyButton = findViewById<Button>(R.id.buttonUserConfirm)
         applyButton.setOnClickListener{
-            if (loginEditText.error == null && passwordEditText.error == null &&
-                emailEditText.error == null && fullnameEditText.error == null &&
+            if (loginEditText.error == null && loginEditText.text.toString() != "" &&
+                passwordEditText.error == null && passwordEditText.text.toString() != "" &&
+                emailEditText.error == null && emailEditText.text.toString() != "" &&
+                fullnameEditText.error == null &&
                 phoneEditText.error == null && countryEditText.error == null &&
                 cityEditText.error == null && districtEditText.error == null &&
                 streetEditText.error == null && houseNumberEditText.error == null &&

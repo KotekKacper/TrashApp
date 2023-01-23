@@ -58,7 +58,8 @@ class AddGroupActivity : AppCompatActivity() {
 
         val applyButton = findViewById<Button>(R.id.buttonGroupConfirm)
         applyButton.setOnClickListener{
-            if (crewNameEditText.error == null && meetingDateEditText.error == null &&
+            if (crewNameEditText.error == null && crewNameEditText.text.toString() != "" &&
+                meetingDateEditText.error == null &&
                 latitudeEditText.error == null && longitudeEditText.error == null){
                 DBUtils.addGroup(this,
                     Group(id = "-1", name = crewNameEditText.text.toString(),

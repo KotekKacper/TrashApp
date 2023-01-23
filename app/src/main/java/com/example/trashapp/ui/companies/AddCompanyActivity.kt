@@ -120,8 +120,10 @@ class AddCompanyActivity : AppCompatActivity() {
 
         val applyButton = findViewById<Button>(R.id.buttonCompanyConfirm)
         applyButton.setOnClickListener{
-            if (nipEditText.error == null && emailEditText.error == null &&
-                phoneEditText.error == null && countryEditText.error == null &&
+            if (nipEditText.error == null && nipEditText.text.toString() != "" &&
+                emailEditText.error == null && emailEditText.text.toString() != "" &&
+                phoneEditText.error == null && phoneEditText.text.toString() != "" &&
+                countryEditText.error == null &&
                 cityEditText.error == null && districtEditText.error == null &&
                 streetEditText.error == null && houseNumberEditText.error == null &&
                 flatNumberEditText.error == null && postCodeEditText.error == null){
@@ -140,7 +142,7 @@ class AddCompanyActivity : AppCompatActivity() {
                 )
                 finish()
             } else{
-                Toast.makeText(this, "Invalid user data", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Invalid company data", Toast.LENGTH_SHORT).show()
             }
         }
         val cancelButton = findViewById<Button>(R.id.buttonCompanyCancel)

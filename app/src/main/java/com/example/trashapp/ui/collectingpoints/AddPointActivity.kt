@@ -84,8 +84,10 @@ class AddPointActivity : AppCompatActivity() {
 
         val applyButton = findViewById<Button>(R.id.buttonPointConfirm)
         applyButton.setOnClickListener{
-            if (latitudeEditText.error == null && longitudeEditText.error == null &&
-                    processingTypeEditText.error == null && trashTypesEditText.error == null &&
+            if (latitudeEditText.error == null && latitudeEditText.text.toString() != "" &&
+                longitudeEditText.error == null && longitudeEditText.text.toString() != "" &&
+                    processingTypeEditText.error == null && processingTypeEditText.text.toString() != "" &&
+                trashTypesEditText.error == null && trashTypesEditText.text.toString() != "" &&
                     trashHereEditText.error == null){
                 DBUtils.addCollectingPoint(this,
                     TrashCollectingPoint(localization = arrayListOf(
@@ -99,7 +101,7 @@ class AddPointActivity : AppCompatActivity() {
                 )
                 finish()
             } else{
-                Toast.makeText(this, "Invalid group data", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Invalid collecting point data", Toast.LENGTH_SHORT).show()
             }
         }
         val cancelButton = findViewById<Button>(R.id.buttonPointCancel)
