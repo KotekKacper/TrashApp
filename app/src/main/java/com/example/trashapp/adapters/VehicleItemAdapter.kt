@@ -10,21 +10,21 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.OnItemClickListener
 import com.example.trashapp.R
-import com.example.trashapp.classes.CleaningCompany
+import com.example.trashapp.classes.Vehicle
 
-class CompanyItemAdapter(private val mData: ArrayList<CleaningCompany>?,
-                         private val listener: OnItemClickListener
+class VehicleItemAdapter(private val mData: ArrayList<Vehicle>?,
+                      private val listener: OnItemClickListener
 ) :
-    RecyclerView.Adapter<CompanyItemAdapter.ViewHolder>() {
+    RecyclerView.Adapter<VehicleItemAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_company, parent, false)
+            .inflate(R.layout.item_vehicle, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mData?.get(position)
-        holder.textView1.text = item!!.email
+        holder.textView1.text = item!!.id.toString()
 
         holder.itemView.setOnClickListener {
             listener.onItemClick(position)

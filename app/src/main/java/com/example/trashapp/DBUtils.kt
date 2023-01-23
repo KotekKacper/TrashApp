@@ -2,7 +2,6 @@ package com.example.trashapp
 
 import android.content.Context
 import android.content.Intent
-import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.text.SpannableStringBuilder
 import android.util.Log
@@ -11,18 +10,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.ConvertResponse.convertAllUsers
 import com.example.trashapp.ConvertResponse.convertCollectionPoints
 import com.example.trashapp.ConvertResponse.convertCompanies
-import com.example.trashapp.adapters.CollectingPointItemAdapter
 import com.example.trashapp.ConvertResponse.convertUserReports
-import com.example.trashapp.adapters.CompanyItemAdapter
-import com.example.trashapp.adapters.GroupItemAdapter
-import com.example.trashapp.adapters.ReportItemAdapter
-import com.example.trashapp.adapters.UserItemAdapter
+import com.example.trashapp.adapters.*
 import com.example.trashapp.classes.*
 import com.example.trashapp.databinding.FragmentAccountBinding
 import com.example.trashapp.ui.collectingpoints.AddPointActivity
+import com.example.trashapp.ui.companies.AddCompanyActivity
 import com.example.trashapp.ui.groups.AddGroupActivity
 import com.example.trashapp.ui.reports.AddReportActivity
 import com.example.trashapp.ui.users.AddUserActivity
+import com.example.trashapp.ui.vehicles.AddVehicleActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -356,7 +353,21 @@ object DBUtils {
                     }
 
                     val companiesArray = json?.let { convertCompanies(json.toString()) }
-                    val adapter = CompanyItemAdapter(companiesArray)
+                    val adapter = CompanyItemAdapter(companiesArray, object : OnItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            val intent = Intent(context, AddCompanyActivity::class.java)
+                            intent.putExtra("nip", companiesArray?.get(position)?.NIP)
+                            intent.putExtra("email", companiesArray?.get(position)?.email)
+                            intent.putExtra("phone", companiesArray?.get(position)?.phone)
+                            intent.putExtra("country", companiesArray?.get(position)?.country)
+                            intent.putExtra("city", companiesArray?.get(position)?.city)
+                            intent.putExtra("district", companiesArray?.get(position)?.district)
+                            intent.putExtra("street", companiesArray?.get(position)?.street)
+                            intent.putExtra("houseNumber", companiesArray?.get(position)?.houseNumber)
+                            intent.putExtra("flatNumber", companiesArray?.get(position)?.flatNumber)
+                            intent.putExtra("postCode", companiesArray?.get(position)?.postCode)
+                            context.startActivity(intent)
+                        }})
                     recyclerView.adapter = adapter
 
                 }
@@ -367,6 +378,93 @@ object DBUtils {
             }
         }
     }
+
+    fun addCompany(context: Context, company:CleaningCompany){
+
+    }
+
+    fun deleteCompany(context: Context, nip: String){
+
+    }
+
+
+    fun getVehicles(context: Context, recyclerView: RecyclerView){
+        val vehiclesArray = arrayListOf(Vehicle(
+            id = "1",
+            inUse = true,
+            filling = 0.4,
+            localization = "52.40427145950248,16.94963942393314,0.0",
+            workers = "Ivan (2023-01-18),Kacper (2001-01-01)"
+        ))
+        val funSend = "getVehicles"
+
+//        val elements = ArrayList<String>()
+
+//        val dataToSend = elements.joinToString(separator = ", ")
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+//                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+//                    val json = response.body()?.string()
+//                    Log.i("ServerSQL", json.toString())
+//                    if (checkForError(context, json.toString())){
+//                        return@withContext
+//                    }
+
+//                    val usersArray = json?.let { convertAllUsers(json.toString()) }
+                    val adapter = VehicleItemAdapter(vehiclesArray, object : OnItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            val intent = Intent(context, AddVehicleActivity::class.java)
+                            intent.putExtra("id", vehiclesArray?.get(position)?.id)
+                            intent.putExtra("inUse", vehiclesArray?.get(position)?.inUse)
+                            intent.putExtra("filling", vehiclesArray?.get(position)?.filling)
+                            intent.putExtra("latitude",
+                                vehiclesArray[position].localization?.split(",")?.get(0)
+                            )
+                            intent.putExtra("longitude",
+                                vehiclesArray[position].localization?.split(",")?.get(1)
+                            )
+                            context.startActivity(intent)
+                        }})
+                    recyclerView.adapter = adapter
+
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+    }
+
+    fun addVehicle(vehicle: Vehicle){
+
+    }
+
+    fun deleteVehicle(vehicleId: String){
+
+    }
+
+
+
+
+    fun getWorkers(){
+        val workersArray = arrayListOf(Worker(
+            fullname = "Ivan",
+            birthDate = "2023-01-18 0:0:0.0",
+            jobStartTime = "8:00",
+            jobEndTime = "16:00",
+            cleaningCompanyNIP = "3345",
+            vehicleId = "1"
+        ))
+
+    }
+
+
+
+
+
 
     fun getAccount(context: Context, binding: FragmentAccountBinding, username: String){
 

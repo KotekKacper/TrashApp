@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable
 import java.time.Instant
 
 data class Trash(
-    var id: Int? = null,
+    var id: String? = null,
     var localization: String,
     var creationDate: String,
     var trashSize: Int? = null,

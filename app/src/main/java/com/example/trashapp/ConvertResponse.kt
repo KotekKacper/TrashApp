@@ -23,7 +23,7 @@ object ConvertResponse {
                     CleaningCompany(
                         NIP = attributes[0],
                         email = attributes[1],
-                        phone = attributes[2].toInt(),
+                        phone = attributes[2],
                         country = attributes[3],
                         city = attributes[4],
                         street = attributes[5]
@@ -83,7 +83,7 @@ object ConvertResponse {
                 drawableArray.add(drawableImage)
                 out.add(
                     Trash(
-                        id = attributes[0].toInt(),
+                        id = attributes[0],
                         localization = attributes[1],
                         creationDate = attributes[2],
                         trashSize = attributes[3].toInt(),
@@ -145,7 +145,7 @@ object ConvertResponse {
                 }
                 out.add(
                     Trash(
-                        id = attributes[0].toInt(),
+                        id = attributes[0],
                         localization = attributes[1],
                         creationDate = attributes[2],
 

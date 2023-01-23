@@ -29,6 +29,10 @@
             android:icon="@drawable/ic_menu_business"
             android:title="@string/menu_companies" />
         <item
+            android:id="@+id/nav_vehicles"
+            android:icon="@drawable/ic_menu_vehicle"
+            android:title="@string/menu_vehicles" />
+        <item
             android:id="@+id/nav_account"
             android:icon="@drawable/ic_menu_manage_account"
             android:title="@string/menu_account" />
