@@ -50,7 +50,7 @@ class RegistrationActivity : AppCompatActivity() {
                     login = findViewById<EditText>(R.id.editTextTextLogin).text.toString(),
                     password = findViewById<EditText>(R.id.editTextTextPassword).text.toString(),
                     email = findViewById<EditText>(R.id.editTextTextEmailAddress).text.toString(),
-                            roles = Role("USER")
+                            roles = arrayListOf(Role("USER"))
                 )
                 DBUtils.addUser(this, user)
                 startActivity(Intent(this, LoginActivity::class.java))

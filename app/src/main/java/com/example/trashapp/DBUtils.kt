@@ -21,6 +21,7 @@ import com.example.trashapp.databinding.FragmentAccountBinding
 import com.example.trashapp.ui.collectingpoints.AddPointActivity
 import com.example.trashapp.ui.groups.AddGroupActivity
 import com.example.trashapp.ui.reports.AddReportActivity
+import com.example.trashapp.ui.users.AddUserActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -291,18 +292,12 @@ object DBUtils {
     fun getUsers(context: Context, recyclerView: RecyclerView){
         val funSend = "getUsers"
 
-        val dbHelper = DatabaseHelper(context)
-        val db = dbHelper.writableDatabase
-        var items = kotlin.collections.ArrayList<User>()
-        //TODO - return all users
-
         val elements = ArrayList<String>()
         elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
         elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.phone");
         elements.add("${Tab.USER}.fullname");elements.add("${Tab.ROLE}.role_name")
 
         val dataToSend = elements.joinToString(separator = ", ")
-
 
             CoroutineScope(Dispatchers.IO).launch {
                 try {
@@ -312,7 +307,23 @@ object DBUtils {
                         Log.i("ServerSQL", json.toString())
 
                         val usersArray = json?.let { convertAllUsers(json.toString()) }
-                        val adapter = UserItemAdapter(usersArray)
+                        val adapter = UserItemAdapter(usersArray, object : OnItemClickListener {
+                            override fun onItemClick(position: Int) {
+                                val intent = Intent(context, AddUserActivity::class.java)
+                                intent.putExtra("login", usersArray?.get(position)?.login)
+                                intent.putExtra("password", usersArray?.get(position)?.password)
+                                intent.putExtra("email", usersArray?.get(position)?.email)
+                                intent.putExtra("fullname", usersArray?.get(position)?.fullname)
+                                intent.putExtra("phone", usersArray?.get(position)?.phone)
+                                intent.putExtra("country", usersArray?.get(position)?.country)
+                                intent.putExtra("city", usersArray?.get(position)?.city)
+                                intent.putExtra("district", usersArray?.get(position)?.district)
+                                intent.putExtra("street", usersArray?.get(position)?.street)
+                                intent.putExtra("houseNumber", usersArray?.get(position)?.houseNumber)
+                                intent.putExtra("flatNumber", usersArray?.get(position)?.flatNumber)
+                                intent.putExtra("postCode", usersArray?.get(position)?.postCode)
+                                context.startActivity(intent)
+                            }})
                         recyclerView.adapter = adapter
 
                     }
@@ -323,6 +334,16 @@ object DBUtils {
                 }
             }
         }
+
+    fun addUser(context: Context, user: User){
+        //TODO - insert user into database
+
+    }
+
+    fun deleteUser(login: String){
+
+    }
+
 
     fun getCompanies(context: Context, recyclerView: RecyclerView){
         val funSend = "getCompanies"
@@ -358,18 +379,6 @@ object DBUtils {
         binding.editTextTextAccountPassword.text = SpannableStringBuilder("password")
         //...
 
-    }
-
-
-
-    fun addUser(context: Context, user: User): Boolean{
-        val dbHelper = DatabaseHelper(context)
-        val db = dbHelper.writableDatabase
-
-        //TODO - insert user into database (return true - added, return false - not added)
-
-        db.close()
-        return true
     }
 
     fun checkLogin(context: Context, username: String, password: String): Boolean{

@@ -10,7 +10,8 @@ data class User (
     var city: String? = null,
     var district: String? = null,
     var street: String? = null,
+    var houseNumber: String? = null,
     var flatNumber: String? = null,
     var postCode: String? = null,
-    var roles: Role
+    var roles: ArrayList<Role>? = null
         )

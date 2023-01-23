@@ -8,10 +8,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.trashapp.OnItemClickListener
 import com.example.trashapp.R
 import com.example.trashapp.classes.User
 
-class UserItemAdapter(private val mData: ArrayList<User>?) :
+class UserItemAdapter(private val mData: ArrayList<User>?,
+                      private val listener: OnItemClickListener
+) :
     RecyclerView.Adapter<UserItemAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context)
@@ -22,6 +25,10 @@ class UserItemAdapter(private val mData: ArrayList<User>?) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mData?.get(position)
         holder.textView1.text = item!!.login
+
+        holder.itemView.setOnClickListener {
+            listener.onItemClick(position)
+        }
     }
 
     override fun getItemCount(): Int {
