@@ -53,6 +53,16 @@ class GroupsFragment : Fragment() {
         return root
     }
 
+    override fun onResume(){
+        super.onResume()
+
+        val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewGroups)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        context?.let { DBUtils.getGroups(it, recyclerView,
+            activity!!.getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "")!!) }
+    }
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

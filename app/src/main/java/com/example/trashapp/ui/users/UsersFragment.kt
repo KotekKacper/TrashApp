@@ -1,9 +1,11 @@
 package com.example.trashapp.ui.users
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +16,7 @@ import com.example.trashapp.R
 import com.example.trashapp.adapters.CollectingPointItemAdapter
 import com.example.trashapp.adapters.UserItemAdapter
 import com.example.trashapp.databinding.FragmentUsersBinding
+import com.example.trashapp.ui.collectingpoints.AddPointActivity
 
 class UsersFragment : Fragment() {
 
@@ -34,12 +37,27 @@ class UsersFragment : Fragment() {
         _binding = FragmentUsersBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        val addButton = binding.root.findViewById<Button>(R.id.buttonUsersAdd)
+        addButton.setOnClickListener {
+            val intent = Intent(context, AddUserActivity::class.java)
+            context?.startActivity(intent)
+        }
+
         val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewUsers)
         recyclerView.layoutManager = LinearLayoutManager(context)
         context?.let { DBUtils.getUsers(it, recyclerView) }
 
         return root
     }
+
+    override fun onResume(){
+        super.onResume()
+
+        val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewUsers)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        context?.let { DBUtils.getUsers(it, recyclerView) }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

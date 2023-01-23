@@ -50,6 +50,15 @@ class CollectingPointsFragment : Fragment() {
         return root
     }
 
+    override fun onResume(){
+        super.onResume()
+
+        val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewCollectingPoints)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        context?.let { DBUtils.getCollectingPoints(it, recyclerView) }
+    }
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
