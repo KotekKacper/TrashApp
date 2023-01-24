@@ -62,6 +62,7 @@ class MapFragment : Fragment() {
 
         // Add icons to map
         items = context?.let { DBUtils.getAllActiveTrash(it, map) }!!
+        //items = context?.let { DBUtils.getAllCollectedTrash(it, map) }!!
         collectedItems = ArrayList<String>()
         //addIconsToMap(items, collectedItems)
 

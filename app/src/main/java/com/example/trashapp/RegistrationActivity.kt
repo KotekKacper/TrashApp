@@ -52,7 +52,7 @@ class RegistrationActivity : AppCompatActivity() {
                     email = findViewById<EditText>(R.id.editTextTextEmailAddress).text.toString(),
                             roles = arrayListOf("USER")
                 )
-                DBUtils.addUser(this, true, user)
+                DBUtils.addUserRegister(this, true, user)
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             } else {

@@ -34,16 +34,18 @@ import org.osmdroid.views.overlay.ItemizedIconOverlay
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus
 import org.osmdroid.views.overlay.OverlayItem
 import retrofit2.Retrofit
+import java.time.Clock
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayList
 
 
 object DBUtils {
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl("http://10.0.2.2:8080/")
+    public val retrofit = Retrofit.Builder()
+        .baseUrl("http://192.168.1.11:8888/")
         .build()
-    private val service = retrofit.create(ServerApiService::class.java)
+    public val service = retrofit.create(ServerApiService::class.java)
 
     fun checkForError(context: Context, output: String): Boolean{
         if (output.startsWith("ERROR")){
@@ -75,6 +77,43 @@ object DBUtils {
                     if (pointsArray != null) {
 
                         addIconsToMap(context, map, pointsArray, ArrayList() )
+
+                    }
+
+
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+
+        }
+        return items
+    }
+
+    fun getAllCollectedTrash(context: Context, map: MapView):ArrayList<OverlayItem>? {
+        val funSend = "getAllCollectedTrash"
+        var items = ArrayList<OverlayItem>()
+        var elements = ArrayList<String>()
+        elements.add("${Tab.TRASH}.id");elements.add("${Tab.TRASH}.localization");elements.add("${Tab.TRASH}.creation_date");
+        elements.add("${Tab.TRASH}.trash_size")
+        var dataToSend = elements.joinToString(separator = ", ")
+
+        val scope = CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())){
+                        return@withContext
+                    }
+
+                    val pointsArray = json?.let { ConvertResponse.convertActiveTrashOnMap(json.toString()) }
+                    if (pointsArray != null) {
+
+                        addCollectedIconsToMap(context, map, pointsArray)
                     }
 
 
@@ -129,14 +168,9 @@ object DBUtils {
     }
 
     fun collectTrash(context: Context, item: OverlayItem){
-        val funSend = "collectTrash"
+        val funSend = "updateTrash"
 
-        val elements = ArrayList<String>()
-        elements.add("${Tab.TRASH}.localization");
-
-        var dataToSend = elements.joinToString(separator = "")
-        dataToSend = dataToSend.plus("|")
-        dataToSend = dataToSend.plus("'${item.point.toString()}'")
+        var dataToSend = "collection_date = NOW() | ${Tab.TRASH}.localization = '${item.point.toString()}'"
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -162,7 +196,7 @@ object DBUtils {
 
         var elements = ArrayList<String>()
         elements.add("${Tab.TRASH}.id");elements.add("${Tab.TRASH}.localization");elements.add("${Tab.TRASH}.creation_date");
-        elements.add("${Tab.TRASH}.trash_size");elements.add("${Tab.TRASH}.collection_date");elements.add("${Tab.IMAGE}.content")
+        elements.add("${Tab.TRASH}.trash_size");elements.add("${Tab.TRASH}.collection_date")
         val dataToSend = elements.joinToString(separator = ", ").plus("|${username}")
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -208,13 +242,54 @@ object DBUtils {
     }
 
     fun addReport(context: Context, adding: Boolean, trash: Trash, id: String = ""){
+        if(adding) {
+            val funSend = "addTrash"
+            var dataToSend =
+                "'${trash.localization}', '${trash.userLoginReport}', '${trash.trashSize}'"
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val response = service.getJson(dataToSend, funSend)
+                    withContext(Dispatchers.Main) {
+                        val json = response.body()?.string()
+                        Log.i("ServerSQL", json.toString())
+                        if (checkForError(context, json.toString())) {
+                            return@withContext
+                        }
 
+                        Toast.makeText(context, "Report was added!", Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Log.e("ServerSQL", e.toString())
+                    }
+                }
+            }
+        }
     }
 
     fun deleteReport(context: Context, id: String){
+        val funSend = "deleteReport"
 
+        var dataToSend = "id = '${id}'"
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
+                    Toast.makeText(context, "Report ${id} was deleted.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
     }
-
 
     fun getGroups(context: Context, recyclerView: RecyclerView, username: String){
         val groupsArray = arrayListOf(
@@ -257,11 +332,60 @@ object DBUtils {
     }
 
     fun addGroup(context: Context, adding: Boolean, group: Group, id: String = ""){
+        var funSend = ""
+        if(adding) {
+             funSend = "addGroup"
+        }
+        else  funSend = "updateGroup"
+            val elements = ArrayList<String>()
+            elements.add("${Tab.CLEAN_CREW}.crew_name");elements.add("${Tab.CLEAN_CREW}.meet_date")
+            elements.add("${Tab.CLEAN_CREW}.meeting_localization")
+            var dataToSend = elements.joinToString(separator = ", ")
+            dataToSend = dataToSend.plus("|")
+            dataToSend = dataToSend.plus("'${group.name}', '${group.meetingDate}', '${group.meetingLoc}'")
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val response = service.getJson(dataToSend, funSend)
+                    withContext(Dispatchers.Main) {
+                        val json = response.body()?.string()
+                        Log.i("ServerSQL", json.toString())
+                        if (checkForError(context, json.toString())) {
+                            return@withContext
+                        }
 
+                        Toast.makeText(context, "Action was done successfully!", Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Log.e("ServerSQL", e.toString())
+                    }
+                }
+
+        }
     }
 
     fun deleteGroup(context: Context, id: String){
+        val funSend = "deleteGroup"
 
+        var dataToSend = "id = '${id}'"
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
+                    Toast.makeText(context, "Group ${id} was deleted.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
     }
 
     fun getCollectingPoints(context: Context, recyclerView: RecyclerView) {
@@ -311,11 +435,60 @@ object DBUtils {
     }
 
     fun addCollectingPoint(context: Context, adding: Boolean, point: TrashCollectingPoint, localization: String = ""){
+        var funSend = "addCollectingPoint"
+        if(adding) {
+            funSend = "addCollectingPoint"}
+        else funSend = "updateCollectingPoint"
+            val elements = ArrayList<String>()
+            elements.add("${Tab.TRASH_COLLECT_POINT}.localization");elements.add("${Tab.TRASH_COLLECT_POINT}.busEmpty")
+            elements.add("${Tab.TRASH_COLLECT_POINT}.processingType");elements.add("${Tab.TRASH_COLLECT_POINT}.trashType")
+            elements.add("${Tab.TRASH_COLLECT_POINT}.trashId")
+            var dataToSend = elements.joinToString(separator = ", ")
+            dataToSend = dataToSend.plus("|")
+            dataToSend = dataToSend.plus("'${point.localization}', '${point.busEmpty}', '${point.processingType}' - '${point.trashType}', '${point.trashId}'")
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val response = service.getJson(dataToSend, funSend)
+                    withContext(Dispatchers.Main) {
+                        val json = response.body()?.string()
+                        Log.i("ServerSQL", json.toString())
+                        if (checkForError(context, json.toString())) {
+                            return@withContext
+                        }
 
+                        Toast.makeText(context, "Action was done successfully!", Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Log.e("ServerSQL", e.toString())
+                    }
+
+            }
+        }
     }
 
     fun deleteCollectingPoint(context: Context, localization: String){
+        val funSend = "deleteCollectingPoint"
 
+        var dataToSend = "localization = '${localization}'"
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
+                    Toast.makeText(context, "Collecting Point ${localization} was deleted.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
     }
 
     fun getUsers(context: Context, recyclerView: RecyclerView){
@@ -324,7 +497,9 @@ object DBUtils {
         val elements = ArrayList<String>()
         elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
         elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.phone");
-        elements.add("${Tab.USER}.fullname");elements.add("${Tab.ROLE}.role_name")
+        elements.add("${Tab.USER}.fullname");elements.add("${Tab.USER}.country");
+        elements.add("${Tab.USER}.city");elements.add("${Tab.USER}.street");
+        elements.add("${Tab.USER}.post_code");elements.add("${Tab.ROLE}.role_name")
 
         val dataToSend = elements.joinToString(separator = ", ")
 
@@ -370,15 +545,17 @@ object DBUtils {
             }
         }
 
-    fun addUser(context: Context, adding: Boolean, user: User, login: String = "") {
-        val funSend = "addUser"
+    fun addUserRegister(context: Context, adding: Boolean, user: User, login: String = "") {
+        var funSend = "addUserRegister"
+        var dataToSend = ""
 
-        val elements = ArrayList<String>()
-        elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
-        elements.add("${Tab.USER}.email");
-        var dataToSend = elements.joinToString(separator = ", ")
-        dataToSend = dataToSend.plus("|")
-        dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}'")
+
+            val elements = ArrayList<String>()
+            elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
+            elements.add("${Tab.USER}.email");dataToSend = elements.joinToString(separator = ", ")
+            dataToSend = dataToSend.plus("|")
+            dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}'")
+
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -396,10 +573,76 @@ object DBUtils {
                 }
             }
         }
+
+    }
+
+    fun addUser(context: Context, adding: Boolean, user: User, login: String = "") {
+        var funSend = "addUser"
+        var dataToSend = ""
+        if(adding)
+        {    funSend = "addUser"
+
+        val elements = ArrayList<String>()
+            elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
+            elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.phone");elements.add("${Tab.USER}.fullname");
+            elements.add("${Tab.USER}.country");elements.add("${Tab.USER}.city");elements.add("${Tab.USER}.district");
+            elements.add("${Tab.USER}.street");elements.add("${Tab.USER}.flat_number");elements.add("${Tab.USER}.post_code");
+        dataToSend = dataToSend.plus("|")
+        dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}', '${user.phone}', '${user.fullname}', '${user.country}', '${user.city}', '${user.district}', '${user.street}', '${user.flatNumber}', '${user.postCode}'")
+        }
+        else
+        {
+            funSend = "updateUser"
+            val elements = ArrayList<String>()
+            elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
+            elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.phone");elements.add("${Tab.USER}.fullname");
+            elements.add("${Tab.USER}.country");elements.add("${Tab.USER}.city");elements.add("${Tab.USER}.district");
+            elements.add("${Tab.USER}.street");elements.add("${Tab.USER}.flat_number");elements.add("${Tab.USER}.post_code");
+            dataToSend = elements.joinToString(separator = ", ")
+            dataToSend = dataToSend.plus("|")
+            dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}', '${user.phone}', '${user.fullname}', '${user.country}', '${user.city}', '${user.district}', '${user.street}', '${user.flatNumber}', '${user.postCode}'")
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+
     }
 
     fun deleteUser(context:Context, login: String){
+        val funSend = "deleteUser"
 
+        var dataToSend = "login = '${login}'"
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
+                    Toast.makeText(context, "User ${login} was deleted.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
     }
 
 
@@ -453,7 +696,27 @@ object DBUtils {
     }
 
     fun deleteCompany(context: Context, nip: String){
+        val funSend = "deleteCompany"
 
+        var dataToSend = "nip = '${nip}'"
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
+                    Toast.makeText(context, "Company ${nip} was deleted.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
     }
 
 
@@ -512,7 +775,27 @@ object DBUtils {
     }
 
     fun deleteVehicle(context: Context, vehicleId: String){
+        val funSend = "deleteVehicle"
 
+        var dataToSend = "id = '${vehicleId}'"
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
+                    Toast.makeText(context, "Vehicle ${vehicleId} was deleted.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
     }
 
 
@@ -565,7 +848,27 @@ object DBUtils {
     }
 
     fun deleteWorker(context: Context, fullname: String, birthDate: String){
+        val funSend = "deleteWorker"
 
+        var dataToSend = "fullname = '${fullname}'"
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
+                    Toast.makeText(context, "Worker ${fullname} was deleted.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
     }
 
     fun checkLogin(context: Context, username: String, password: String): Boolean {
@@ -628,6 +931,29 @@ object DBUtils {
                         Toast.makeText(context, "Trash already collected", Toast.LENGTH_SHORT)
                             .show()
                     }
+                    return false
+                }
+            }, context
+        )
+//        overlay.setFocusItemsOnTap(true);
+//        overlay.setMarkerBackgroundColor(Color.CYAN)
+        map.overlays.add(overlay);
+    }
+    private fun addCollectedIconsToMap(context: Context, map: MapView, items: ArrayList<OverlayItem>) {
+        for (item in items) {
+            item.setMarker(context.resources.getDrawable(R.drawable.green_marker_v2))
+        }
+        var overlay = ItemizedOverlayWithFocus<OverlayItem>(
+            items,
+            object : ItemizedIconOverlay.OnItemGestureListener<OverlayItem> {
+                override fun onItemSingleTapUp(index: Int, item: OverlayItem): Boolean {
+                    return  false
+
+
+                }
+
+                override fun onItemLongPress(index: Int, item: OverlayItem): Boolean {
+
                     return false
                 }
             }, context

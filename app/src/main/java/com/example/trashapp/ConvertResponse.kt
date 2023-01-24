@@ -46,7 +46,11 @@ object ConvertResponse {
                         email = attributes[2],
                         phone = attributes[3],
                         fullname = attributes[4],
-                        roles = arrayListOf(attributes[5])
+                        country = attributes[5],
+                        city = attributes[6],
+                        street = attributes[7],
+                        postCode = attributes[8],
+                        roles = arrayListOf(attributes[9])
                     )
                 )
             }
