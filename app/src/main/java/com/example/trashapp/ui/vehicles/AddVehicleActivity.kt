@@ -19,15 +19,15 @@ import com.example.trashapp.watchers.PercentWatcher
 
 class AddVehicleActivity : AppCompatActivity() {
     private var adding = true
+    private var vehicleId = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_vehicle)
 
-        var vehicleId = ""
-
         val extras = intent.extras;
         if (extras != null) {
             adding = false
+            vehicleId = extras.getString("password")!!
             try {
                 try {
                     this.findViewById<EditText>(R.id.editTextVehicleLatitude).text =
@@ -39,7 +39,7 @@ class AddVehicleActivity : AppCompatActivity() {
                 }
                 this.findViewById<EditText>(R.id.editTextVehicleFilling).text =
                     SpannableStringBuilder(extras.getDouble("filling").toString())
-                vehicleId = extras.getString("password").toString()
+
                 if (extras.getBoolean("inUse"))
                     this.findViewById<CheckBox>(R.id.checkboxVehicleInUse).isChecked = true
             } catch (e: Exception) {
@@ -71,7 +71,7 @@ class AddVehicleActivity : AppCompatActivity() {
                         inUse = this.findViewById<CheckBox>(R.id.checkboxVehicleInUse).isChecked,
                         filling = fillingEditText.text.toString().toDouble(),
                         id = vehicleId
-                    )
+                    ), vehicleId
                 )
                 finish()
             } else{

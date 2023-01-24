@@ -96,7 +96,7 @@ class AddPointActivity : AppCompatActivity() {
                         processingType = processingTypeEditText.text.toString(),
                         trashType = ArrayList(trashTypesEditText.text.toString().split(",")),
                         trashId = ArrayList(trashHereEditText.text.toString().split(","))
-                    )
+                    ), loc
                 )
                 finish()
             } else{

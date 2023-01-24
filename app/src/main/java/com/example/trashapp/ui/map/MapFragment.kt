@@ -134,8 +134,8 @@ class MapFragment : Fragment() {
                 }
             }, context
         )
-        overlay.setFocusItemsOnTap(true);
-        overlay.setMarkerBackgroundColor(Color.CYAN)
+//        overlay.setFocusItemsOnTap(true);
+//        overlay.setMarkerBackgroundColor(Color.CYAN)
         map.overlays.add(overlay);
     }
 
@@ -145,6 +145,7 @@ class MapFragment : Fragment() {
         super.onResume()
         //this will refresh the osmdroid configuration on resuming.
         map.onResume() //needed for compass, my location overlays, v6.0.0 and up
+        items = context?.let { DBUtils.getAllActiveTrash(it, map) }!!
     }
 
     override fun onPause() {

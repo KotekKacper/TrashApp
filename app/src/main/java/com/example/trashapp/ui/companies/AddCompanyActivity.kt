@@ -16,6 +16,7 @@ import com.example.trashapp.watchers.*
 
 class AddCompanyActivity : AppCompatActivity() {
     private var adding = true
+    private var nip: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_company)
@@ -23,6 +24,7 @@ class AddCompanyActivity : AppCompatActivity() {
         val extras = intent.extras;
         if (extras != null) {
             adding = false
+            nip = extras.getString("nip")!!
             try {
                 this.findViewById<EditText>(R.id.editTextCompanyNIP).text =
                     SpannableStringBuilder(extras.getString("nip"))
@@ -140,7 +142,7 @@ class AddCompanyActivity : AppCompatActivity() {
                         houseNumber = findViewById<EditText>(R.id.editTextCompanyHouse).text.toString(),
                         flatNumber = findViewById<EditText>(R.id.editTextCompanyFlat).text.toString(),
                         postCode = findViewById<EditText>(R.id.editTextCompanyPostCode).text.toString()
-                    )
+                    ), nip
                 )
                 finish()
             } else{
@@ -155,7 +157,7 @@ class AddCompanyActivity : AppCompatActivity() {
         val deleteButton = findViewById<Button>(R.id.buttonCompanyDelete)
         if (extras != null) {
             deleteButton.setOnClickListener {
-                DBUtils.deleteCompany(this, extras.getString("nip")!!)
+                DBUtils.deleteCompany(this, nip)
                 finish()
             }
         }else{

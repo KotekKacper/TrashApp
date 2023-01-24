@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 
 class AddReportActivity : AppCompatActivity() {
     private var adding = true
-
+    private var id = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_report)
@@ -26,6 +26,7 @@ class AddReportActivity : AppCompatActivity() {
         val extras = intent.extras;
         if (extras != null) {
             adding = false
+            id = extras.getString("id")!!
             try {
                 this.findViewById<EditText>(R.id.editTextTextReportLoginReported).text =
                     SpannableStringBuilder(extras.getString("login"))
@@ -124,7 +125,7 @@ class AddReportActivity : AppCompatActivity() {
                         userLoginReport = loginReportedEditText.text.toString(),
                         trashType = ArrayList(trashTypeEditText.text.toString().split(",")),
                         collectionDate = collectionDateEditText.text.toString(),
-                    ))
+                    ), id)
                     finish()
                 } else{
                     Toast.makeText(this, "Invalid report data", Toast.LENGTH_SHORT).show()
@@ -138,7 +139,7 @@ class AddReportActivity : AppCompatActivity() {
             val deleteButton = findViewById<Button>(R.id.buttonReportDelete)
         if (extras != null) {
             deleteButton.setOnClickListener {
-                DBUtils.deleteReport(this, extras.getString("id")!!)
+                DBUtils.deleteReport(this, id)
                 finish()
             }
         }else{

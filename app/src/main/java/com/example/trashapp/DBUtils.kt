@@ -207,7 +207,7 @@ object DBUtils {
         }
     }
 
-    fun addReport(context: Context, adding: Boolean, trash: Trash){
+    fun addReport(context: Context, adding: Boolean, trash: Trash, id: String = ""){
 
     }
 
@@ -256,7 +256,7 @@ object DBUtils {
         }
     }
 
-    fun addGroup(context: Context, adding: Boolean, group: Group){
+    fun addGroup(context: Context, adding: Boolean, group: Group, id: String = ""){
 
     }
 
@@ -310,7 +310,7 @@ object DBUtils {
         }
     }
 
-    fun addCollectingPoint(context: Context, adding: Boolean, point: TrashCollectingPoint){
+    fun addCollectingPoint(context: Context, adding: Boolean, point: TrashCollectingPoint, localization: String = ""){
 
     }
 
@@ -370,7 +370,7 @@ object DBUtils {
             }
         }
 
-    fun addUser(context: Context, adding: Boolean, user: User){
+    fun addUser(context: Context, adding: Boolean, user: User, login: String = "") {
         val funSend = "addUser"
 
         val elements = ArrayList<String>()
@@ -386,7 +386,7 @@ object DBUtils {
                 withContext(Dispatchers.Main) {
                     val json = response.body()?.string()
                     Log.i("ServerSQL", json.toString())
-                    if (checkForError(context, json.toString())){
+                    if (checkForError(context, json.toString())) {
                         return@withContext
                     }
                 }
@@ -396,6 +396,7 @@ object DBUtils {
                 }
             }
         }
+    }
 
     fun deleteUser(context:Context, login: String){
 
@@ -447,7 +448,7 @@ object DBUtils {
         }
     }
 
-    fun addCompany(context: Context, adding: Boolean, company:CleaningCompany){
+    fun addCompany(context: Context, adding: Boolean, company:CleaningCompany, nip: String = ""){
 
     }
 
@@ -506,7 +507,7 @@ object DBUtils {
         }
     }
 
-    fun addVehicle(context: Context, adding: Boolean, vehicle: Vehicle){
+    fun addVehicle(context: Context, adding: Boolean, vehicle: Vehicle, vehicleId: String = ""){
 
     }
 
@@ -559,7 +560,7 @@ object DBUtils {
 
     }
 
-    fun addWorker(context: Context, adding: Boolean, worker: Worker){
+    fun addWorker(context: Context, adding: Boolean, worker: Worker, fullname: String = "", birthDate: String = ""){
 
     }
 
@@ -641,8 +642,8 @@ object DBUtils {
                 }
             }, context
         )
-        overlay.setFocusItemsOnTap(true);
-        overlay.setMarkerBackgroundColor(Color.CYAN)
+//        overlay.setFocusItemsOnTap(true);
+//        overlay.setMarkerBackgroundColor(Color.CYAN)
         map.overlays.add(overlay);
     }
 }

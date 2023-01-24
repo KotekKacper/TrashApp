@@ -17,12 +17,12 @@ import com.example.trashapp.watchers.*
 
 class AddWorkerActivity : AppCompatActivity() {
     private var adding = true
+    private var fullname = ""
+    private var birthDate = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_worker)
 
-        var fullname = ""
-        var birthDate = ""
         val extras = intent.extras;
         if (extras != null) {
             adding = false

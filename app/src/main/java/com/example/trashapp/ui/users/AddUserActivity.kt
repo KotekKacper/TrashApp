@@ -16,6 +16,7 @@ import com.example.trashapp.watchers.*
 
 class AddUserActivity : AppCompatActivity() {
     private var adding = true
+    private var login = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_user)
@@ -23,6 +24,7 @@ class AddUserActivity : AppCompatActivity() {
         val extras = intent.extras;
         if (extras != null) {
             adding = false
+            login = extras.getString("login")!!
             try {
                 this.findViewById<EditText>(R.id.editTextUserAccountLogin).text =
                     SpannableStringBuilder(extras.getString("login"))
@@ -196,7 +198,7 @@ class AddUserActivity : AppCompatActivity() {
                         flatNumber = findViewById<EditText>(R.id.editTextUserAccountFlat).text.toString(),
                         postCode = findViewById<EditText>(R.id.editTextUserAccountPostCode).text.toString(),
                         roles = ArrayList(findViewById<EditText>(R.id.editTextUserAccountRole).text.toString().split(","))
-                    )
+                    ), login
                 )
                 finish()
             } else{
@@ -211,7 +213,7 @@ class AddUserActivity : AppCompatActivity() {
         val deleteButton = findViewById<Button>(R.id.buttonUserDelete)
         if (extras != null) {
             deleteButton.setOnClickListener {
-                DBUtils.deleteUser(this, extras.getString("login")!!)
+                DBUtils.deleteUser(this, login)
                 finish()
             }
         }else{

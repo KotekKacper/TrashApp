@@ -19,6 +19,7 @@ import com.example.trashapp.watchers.LongitudeWatcher
 
 class AddGroupActivity : AppCompatActivity() {
     private var adding = true
+    private var id = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_group)
@@ -26,6 +27,7 @@ class AddGroupActivity : AppCompatActivity() {
         val extras = intent.extras;
         if (extras != null) {
             adding = false
+            id = extras.getString("id")!!
             try {
                 this.findViewById<EditText>(R.id.editTextGroupCrewName).text =
                     SpannableStringBuilder(extras.getString("crewName"))
@@ -68,7 +70,7 @@ class AddGroupActivity : AppCompatActivity() {
                         meetingDate = meetingDateEditText.text.toString(),
                         meetingLoc = arrayListOf(
                             latitudeEditText.text.toString(), longitudeEditText.text.toString()).joinToString(",")
-                    )
+                    ), id
                 )
                 finish()
             } else{
@@ -83,7 +85,7 @@ class AddGroupActivity : AppCompatActivity() {
         val deleteButton = findViewById<Button>(R.id.buttonGroupDelete)
         if (extras != null) {
             deleteButton.setOnClickListener {
-                DBUtils.deleteGroup(this, extras.getString("id")!!)
+                DBUtils.deleteGroup(this, id)
                 finish()
             }
         }else{
