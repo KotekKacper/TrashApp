@@ -45,7 +45,7 @@ object DBUtils {
         .build()
     private val service = retrofit.create(ServerApiService::class.java)
 
-    private fun checkForError(context: Context, output: String): Boolean{
+    fun checkForError(context: Context, output: String): Boolean{
         if (output.startsWith("ERROR")){
             Toast.makeText(context, output.split(":")[1], Toast.LENGTH_SHORT).show()
             return true
@@ -565,16 +565,6 @@ object DBUtils {
     }
 
     fun deleteWorker(context: Context, fullname: String, birthDate: String){
-
-    }
-
-
-
-    fun getAccount(context: Context, binding: FragmentAccountBinding, username: String){
-
-        binding.editTextTextAccountLogin.text = SpannableStringBuilder("login")
-        binding.editTextTextAccountPassword.text = SpannableStringBuilder("password")
-        //...
 
     }
 
