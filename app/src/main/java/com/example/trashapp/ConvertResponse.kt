@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable
 import com.example.trashapp.classes.*
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.OverlayItem
-import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -69,6 +68,25 @@ object ConvertResponse {
                                 busEmpty = attributes[1].toBoolean(),
                                 processingType = attributes[2],
                                 trashId = attributes[3].split("-")
+                    )
+                )
+            }
+        }
+        return out
+    }
+    fun convertGroups(str: String) : ArrayList<Group> {
+        val points = str.split("\n")
+        val out: ArrayList<Group> = arrayListOf()
+        for (point in points){
+            if(!point.isEmpty() || point !="\n") {
+                val attributes = point.split(";")
+                out.add(
+                    Group(
+                        id = attributes[0],
+                        name = attributes[1],
+                        meetingDate = attributes[2],
+                        meetingLoc = attributes[3],
+                        users = attributes[4]
                     )
                 )
             }
@@ -158,6 +176,8 @@ object ConvertResponse {
 
                         trashSize = attributes[3]?.toInt(),
                         collectionDate = attributes[4],
+                        userLoginReport =  attributes[5],
+                        trashType = attributes[6]
                         //images = drawableArray
                     )
                 )

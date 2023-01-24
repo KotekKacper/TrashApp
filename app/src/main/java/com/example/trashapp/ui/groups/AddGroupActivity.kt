@@ -11,7 +11,6 @@ import androidx.core.view.isVisible
 import com.example.trashapp.DBUtils
 import com.example.trashapp.R
 import com.example.trashapp.classes.Group
-import com.example.trashapp.classes.Trash
 import com.example.trashapp.watchers.DateWatcher
 import com.example.trashapp.watchers.LatitudeWatcher
 import com.example.trashapp.watchers.LoginWatcher
@@ -66,7 +65,8 @@ class AddGroupActivity : AppCompatActivity() {
                 meetingDateEditText.error == null &&
                 latitudeEditText.error == null && longitudeEditText.error == null){
                 DBUtils.addGroup(this, adding,
-                    Group(id = "-1", name = crewNameEditText.text.toString(),
+                    Group(
+                        id = "-1", name = crewNameEditText.text.toString(),
                         meetingDate = meetingDateEditText.text.toString(),
                         meetingLoc = arrayListOf(
                             latitudeEditText.text.toString(), longitudeEditText.text.toString()).joinToString(",")

@@ -123,7 +123,7 @@ class AddReportActivity : AppCompatActivity() {
                         latitudeEditText.text.toString(), longitudeEditText.text.toString()).joinToString(","),
                         creationDate = creationDateEditText.text.toString(),
                         userLoginReport = loginReportedEditText.text.toString(),
-                        trashType = ArrayList(trashTypeEditText.text.toString().split(",")),
+                        trashType = (trashTypeEditText.text.toString()),
                         collectionDate = collectionDateEditText.text.toString(),
                     ), id)
                     finish()

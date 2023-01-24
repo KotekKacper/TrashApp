@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.ConvertResponse.convertAllUsers
 import com.example.trashapp.ConvertResponse.convertCollectionPoints
 import com.example.trashapp.ConvertResponse.convertCompanies
+import com.example.trashapp.ConvertResponse.convertGroups
 import com.example.trashapp.ConvertResponse.convertUserReports
 import com.example.trashapp.adapters.*
 import com.example.trashapp.classes.*
@@ -196,7 +197,7 @@ object DBUtils {
 
         var elements = ArrayList<String>()
         elements.add("${Tab.TRASH}.id");elements.add("${Tab.TRASH}.localization");elements.add("${Tab.TRASH}.creation_date");
-        elements.add("${Tab.TRASH}.trash_size");elements.add("${Tab.TRASH}.collection_date")
+        elements.add("${Tab.TRASH}.trash_size");elements.add("${Tab.TRASH}.collection_date");elements.add("${Tab.TRASH}.user_login_report")
         val dataToSend = elements.joinToString(separator = ", ").plus("|${username}")
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -223,7 +224,7 @@ object DBUtils {
                             )
                             intent.putExtra("reportDate", reportsArray?.get(position)?.creationDate)
                             intent.putExtra("trashSize", reportsArray?.get(position)?.trashSize.toString())
-                            intent.putExtra("trashTypes", reportsArray?.get(position)?.trashType?.joinToString(","))
+                            intent.putExtra("trashTypes", reportsArray?.get(position)?.trashType?.toString())
                             intent.putExtra("collectionDate",reportsArray?.get(position)?.collectionDate)
                             intent.putExtra("collectedBy", "crew")
                             intent.putExtra("collectedVal", reportsArray?.get(position)?.cleaningCrewId?.toString())
@@ -292,31 +293,35 @@ object DBUtils {
     }
 
     fun getGroups(context: Context, recyclerView: RecyclerView, username: String){
-        val groupsArray = arrayListOf(
-            Group(
-                id = "1",
-                name = "Sprzątacze crew",
-                meetingDate = "2023-01-18 23:18:13.0",
-                meetingLoc = "52.40427145950248,16.94963942393314,0.0"
-            )
-        )
-
+//        val groupsArray = arrayListOf(
+//            Group(
+//                id = "1",
+//                name = "Sprzątacze crew",
+//                meetingDate = "2023-01-18 23:18:13.0",
+//                meetingLoc = "52.40427145950248,16.94963942393314,0.0"
+//            )
+//        )
+        val funSend = "getAllGroups"
         CoroutineScope(Dispatchers.IO).launch {
             try {
-//                val response = service.getJson(username, funSend)
+                val response = service.getJson(username, funSend)
                 withContext(Dispatchers.Main) {
-//                    val json = response.body()?.string()
-//                    Log.i("ServerSQL", json.toString())
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
 //
-//                    val companiesArray = json?.let { convertReports(json.toString()) }
+                    val groupsArray = json?.let { convertGroups(json.toString()) }
                     val adapter = GroupItemAdapter(groupsArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(context, AddGroupActivity::class.java)
-                            intent.putExtra("id", groupsArray[position].id)
-                            intent.putExtra("crewName", groupsArray[position].name)
-                            intent.putExtra("meetingDate", groupsArray[position].meetingDate)
-                            intent.putExtra("latitude", groupsArray[position].meetingLoc.split(",")[0])
-                            intent.putExtra("longitude", groupsArray[position].meetingLoc.split(",")[1])
+                            intent.putExtra("id", groupsArray?.get(position)?.id)
+                            intent.putExtra("crewName", groupsArray?.get(position)?.name)
+                            intent.putExtra("meetingDate", groupsArray?.get(position)?.meetingDate)
+                            intent.putExtra("latitude",
+                                groupsArray?.get(position)?.meetingLoc?.split(",")?.get(0)
+                            )
+                            intent.putExtra("longitude",
+                                groupsArray?.get(position)?.meetingLoc?.split(",")?.get(1)
+                            )
                             context.startActivity(intent)
                         }
                     })
@@ -844,7 +849,36 @@ object DBUtils {
     }
 
     fun addWorker(context: Context, adding: Boolean, worker: Worker, fullname: String = "", birthDate: String = ""){
+        var funSend = "addCollectingPoint"
+        if(adding) {
+            funSend = "addWorker1"}
+        else funSend = "updateWorker1"
+        val elements = ArrayList<String>()
+        elements.add("${Tab.WORKER}.fullname");elements.add("${Tab.WORKER}.birthdate")
+        elements.add("${Tab.WORKER}.job_start_time");elements.add("${Tab.WORKER}.job_end_time")
+        elements.add("${Tab.WORKER}.company_nip");elements.add("${Tab.WORKER}.vehicle_id")
+        var dataToSend = elements.joinToString(separator = ", ")
+        dataToSend = dataToSend.plus("|")
+        dataToSend = dataToSend.plus("'${worker.fullname}', '${worker.birthDate}', '${worker.jobStartTime}', '${worker.jobEndTime}', '${worker.cleaningCompanyNIP}', '${worker.vehicleId}'")
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
 
+                    Toast.makeText(context, "Action was done successfully!", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+
+            }
+        }
     }
 
     fun deleteWorker(context: Context, fullname: String, birthDate: String){
