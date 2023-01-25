@@ -144,7 +144,6 @@ class AddCompanyActivity : AppCompatActivity() {
                         postCode = findViewById<EditText>(R.id.editTextCompanyPostCode).text.toString()
                     ), nip
                 )
-                finish()
             } else{
                 Toast.makeText(this, "Invalid company data", Toast.LENGTH_SHORT).show()
             }

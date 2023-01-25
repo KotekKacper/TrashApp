@@ -40,7 +40,7 @@
             android:layout_marginEnd="8dp"
             android:textAlignment="center"
             android:textSize="20sp"
-            android:text="Group Meeting Date" />
+            android:text="Group Meeting Date \n (yyyy-MM-dd HH:mm:ss.S)" />
         <EditText
             android:id="@+id/editTextGroupMeetingDate"
             android:layout_width="match_parent"

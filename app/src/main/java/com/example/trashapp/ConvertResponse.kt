@@ -85,8 +85,9 @@ object ConvertResponse {
                         id = attributes[0],
                         name = attributes[1],
                         meetingDate = attributes[2],
-                        meetingLoc = attributes[3],
-                        users = attributes[4]
+                        meetingLoc = arrayListOf(attributes[3], attributes[4])
+                            .joinToString(","),
+                        users = attributes[5]
                     )
                 )
             }

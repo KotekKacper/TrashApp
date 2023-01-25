@@ -88,7 +88,6 @@ class AddWorkerActivity : AppCompatActivity() {
                         vehicleIdEditText.text.toString()
                     )
                 )
-                finish()
             } else{
                 Toast.makeText(this, "Invalid group data", Toast.LENGTH_SHORT).show()
             }

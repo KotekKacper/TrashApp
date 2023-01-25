@@ -58,9 +58,7 @@ class AddVehicleActivity : AppCompatActivity() {
 
         val applyButton = findViewById<Button>(R.id.buttonVehicleConfirm)
         applyButton.setOnClickListener{
-            if (longitudeEditText.text.toString().isNotEmpty() &&
-                longitudeEditText.error == null &&
-                latitudeEditText.text.toString().isNotEmpty() &&
+            if (longitudeEditText.error == null &&
                 latitudeEditText.error == null &&
                 fillingEditText.text.toString().isNotEmpty() &&
                 fillingEditText.error == null){
@@ -73,9 +71,8 @@ class AddVehicleActivity : AppCompatActivity() {
                         id = vehicleId
                     ), vehicleId
                 )
-                finish()
             } else{
-                Toast.makeText(this, "Invalid group data", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Invalid vehicle data", Toast.LENGTH_SHORT).show()
             }
         }
         val cancelButton = findViewById<Button>(R.id.buttonVehicleCancel)
