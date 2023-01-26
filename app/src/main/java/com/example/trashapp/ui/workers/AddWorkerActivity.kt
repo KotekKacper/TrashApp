@@ -86,7 +86,7 @@ class AddWorkerActivity : AppCompatActivity() {
                         jobEndTimeEditText.text.toString(),
                         cleaningCompanyNipEditText.text.toString(),
                         vehicleIdEditText.text.toString()
-                    )
+                    ), fullname, birthDate
                 )
             } else{
                 Toast.makeText(this, "Invalid group data", Toast.LENGTH_SHORT).show()

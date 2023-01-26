@@ -78,7 +78,7 @@ object ConvertResponse {
         val points = str.split("\n")
         val out: ArrayList<Group> = arrayListOf()
         for (point in points){
-            if(!point.isEmpty() || point !="\n") {
+            if(!point.isEmpty() && point !="\n") {
                 val attributes = point.split(";")
                 out.add(
                     Group(
@@ -180,6 +180,48 @@ object ConvertResponse {
                         userLoginReport =  attributes[5],
                         trashType = attributes[6]
                         //images = drawableArray
+                    )
+                )
+            }
+        }
+        return out
+    }
+    fun convertVehicles(str: String): ArrayList<Vehicle>{
+        val points = str.split("\n")
+        val out: ArrayList<Vehicle> = arrayListOf()
+        for (point in points){
+            if(!point.isEmpty() && point !="\n") {
+                val attributes = point.split(";")
+                var inUse = false
+                if (attributes[1] == 'T'.toString()){
+                    inUse = true
+                }
+                out.add(
+                    Vehicle(
+                        id = attributes[0],
+                        inUse = inUse,
+                        localization = attributes[2],
+                        filling = attributes[3].toDouble()
+                    )
+                )
+            }
+        }
+        return out
+    }
+    fun convertWorkers(str: String): ArrayList<Worker>{
+        val points = str.split("\n")
+        val out: ArrayList<Worker> = arrayListOf()
+        for (point in points){
+            if(!point.isEmpty() && point !="\n") {
+                val attributes = point.split(";")
+                out.add(
+                    Worker(
+                        fullname = attributes[0],
+                        birthDate = attributes[1].split(" ")[0],
+                        jobStartTime = attributes[2],
+                        jobEndTime = attributes[3],
+                        cleaningCompanyNIP = attributes[4],
+                        vehicleId = attributes[5]
                     )
                 )
             }

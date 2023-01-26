@@ -12,6 +12,8 @@ import com.example.trashapp.ConvertResponse.convertCollectionPoints
 import com.example.trashapp.ConvertResponse.convertCompanies
 import com.example.trashapp.ConvertResponse.convertGroups
 import com.example.trashapp.ConvertResponse.convertUserReports
+import com.example.trashapp.ConvertResponse.convertVehicles
+import com.example.trashapp.ConvertResponse.convertWorkers
 import com.example.trashapp.adapters.*
 import com.example.trashapp.classes.*
 import com.example.trashapp.databinding.FragmentAccountBinding
@@ -49,6 +51,7 @@ object DBUtils {
         }
         return false
     }
+
 
     fun getAllActiveTrash(context: Context, map: MapView):ArrayList<OverlayItem>? {
         val funSend = "getAllActiveTrash"
@@ -123,6 +126,323 @@ object DBUtils {
         return items
     }
 
+    fun getReports(context: Context, recyclerView: RecyclerView, username: String) {
+        val funSend = "getReports"
+
+        var elements = ArrayList<String>()
+        elements.add("${Tab.TRASH}.id");elements.add("${Tab.TRASH}.localization");elements.add("${Tab.TRASH}.creation_date");
+        elements.add("${Tab.TRASH}.trash_size");elements.add("${Tab.TRASH}.collection_date");elements.add("${Tab.TRASH}.user_login_report")
+        val dataToSend = elements.joinToString(separator = ", ").plus("|${username}")
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())){
+                        return@withContext
+                    }
+
+                    val reportsArray = json?.let { convertUserReports(json.toString()) }
+                    val adapter = ReportItemAdapter(reportsArray, object : OnItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            val intent = Intent(context, AddReportActivity::class.java)
+                            intent.putExtra("id", reportsArray?.get(position)?.id.toString())
+                            intent.putExtra("login", reportsArray?.get(position)?.userLoginReport)
+                            intent.putExtra("latitude",
+                                reportsArray?.get(position)?.localization?.split(",")?.get(0)
+                            )
+                            intent.putExtra("longitude",
+                                reportsArray?.get(position)?.localization?.split(",")?.get(1)
+                            )
+                            intent.putExtra("reportDate", reportsArray?.get(position)?.creationDate)
+                            intent.putExtra("trashSize", reportsArray?.get(position)?.trashSize.toString())
+                            intent.putExtra("trashTypes", reportsArray?.get(position)?.trashType?.toString())
+                            intent.putExtra("collectionDate",reportsArray?.get(position)?.collectionDate)
+                            intent.putExtra("collectedBy", "user")
+                            intent.putExtra("collectedVal", reportsArray?.get(position)?.userLoginReport?.toString())
+                            context.startActivity(intent)
+                        }
+                    })
+                    recyclerView.adapter = adapter
+
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+    }
+
+    fun getGroups(context: Context, recyclerView: RecyclerView, username: String){
+        val funSend = "getAllGroups"
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(username, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    val groupsArray = json?.let { convertGroups(json.toString()) }
+                    val adapter = GroupItemAdapter(groupsArray, object : OnItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            val intent = Intent(context, AddGroupActivity::class.java)
+                            intent.putExtra("id", groupsArray?.get(position)?.id)
+                            intent.putExtra("crewName", groupsArray?.get(position)?.name)
+                            intent.putExtra("meetingDate", groupsArray?.get(position)?.meetingDate)
+                            intent.putExtra("latitude",
+                                groupsArray?.get(position)?.meetingLoc?.split(",")?.get(0)
+                            )
+                            intent.putExtra("longitude",
+                                groupsArray?.get(position)?.meetingLoc?.split(",")?.get(1)
+                            )
+                            context.startActivity(intent)
+                        }
+                    })
+                    recyclerView.adapter = adapter
+
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+    }
+
+    fun getCollectingPoints(context: Context, recyclerView: RecyclerView) {
+
+        val funSend = "getCollectingPoints"
+
+        var elements = ArrayList<String>()
+        elements.add("${Tab.TRASH_COLLECT_POINT}.localization");elements.add("${Tab.TRASH_COLLECT_POINT}.bus_empty");elements.add("${Tab.TRASH_COLLECT_POINT}.processing_type")
+        val dataToSend = elements.joinToString(separator = ", ").plus(", GROUP_CONCAT(${Tab.TRASH}.id SEPARATOR '-')")
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())){
+                        return@withContext
+                    }
+
+                    val pointsArray = json?.let { convertCollectionPoints(json.toString()) }
+                    val adapter = CollectingPointItemAdapter(pointsArray, object : OnItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            val intent = Intent(context, AddPointActivity::class.java)
+                            intent.putExtra("latitude",
+                                pointsArray?.get(position)?.localization?.split(",")?.get(0)
+                            )
+                            intent.putExtra("longitude",
+                                pointsArray?.get(position)?.localization?.split(",")?.get(1)
+                            )
+                            intent.putExtra("notInUse", pointsArray?.get(position)?.busEmpty)
+                            intent.putExtra("processingType", pointsArray?.get(position)?.processingType.toString())
+                            intent.putExtra("trashTypes", pointsArray?.get(position)?.trashType?.joinToString(","))
+                            intent.putExtra("trashIds", pointsArray?.get(position)?.trashId?.joinToString(","))
+                            context.startActivity(intent)
+                        }
+                    })
+                    recyclerView.adapter = adapter
+
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+    }
+
+    fun getUsers(context: Context, recyclerView: RecyclerView){
+        val funSend = "getUsers"
+
+        val elements = ArrayList<String>()
+        elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
+        elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.phone");
+        elements.add("${Tab.USER}.fullname");elements.add("${Tab.USER}.country");
+        elements.add("${Tab.USER}.city");elements.add("${Tab.USER}.street");
+        elements.add("${Tab.USER}.post_code");elements.add("${Tab.ROLE}.role_name")
+
+        val dataToSend = elements.joinToString(separator = ", ")
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())){
+                        return@withContext
+                    }
+
+                    val usersArray = json?.let { convertAllUsers(json.toString()) }
+                    val adapter = UserItemAdapter(usersArray, object : OnItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            val intent = Intent(context, AddUserActivity::class.java)
+                            intent.putExtra("login", usersArray?.get(position)?.login)
+                            intent.putExtra("password", usersArray?.get(position)?.password)
+                            intent.putExtra("email", usersArray?.get(position)?.email)
+                            intent.putExtra("fullname", usersArray?.get(position)?.fullname)
+                            intent.putExtra("phone", usersArray?.get(position)?.phone)
+                            intent.putExtra("country", usersArray?.get(position)?.country)
+                            intent.putExtra("city", usersArray?.get(position)?.city)
+                            intent.putExtra("district", usersArray?.get(position)?.district)
+                            intent.putExtra("street", usersArray?.get(position)?.street)
+                            intent.putExtra("houseNumber", usersArray?.get(position)?.houseNumber)
+                            intent.putExtra("flatNumber", usersArray?.get(position)?.flatNumber)
+                            intent.putExtra("postCode", usersArray?.get(position)?.postCode)
+                            intent.putExtra("roles",
+                                usersArray?.get(position)?.roles?.joinToString(",")
+                            )
+                            context.startActivity(intent)
+                        }})
+                    recyclerView.adapter = adapter
+
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+    }
+
+    fun getCompanies(context: Context, recyclerView: RecyclerView){
+        val funSend = "getCompanies"
+
+        var elements = ArrayList<String>()
+        elements.add("nip");elements.add("email");elements.add("phone")
+        elements.add("country");elements.add("city");elements.add("street")
+        val dataToSend = elements.joinToString(separator = ", ")
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())){
+                        return@withContext
+                    }
+
+                    val companiesArray = json?.let { convertCompanies(json.toString()) }
+                    val adapter = CompanyItemAdapter(companiesArray, object : OnItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            val intent = Intent(context, AddCompanyActivity::class.java)
+                            intent.putExtra("nip", companiesArray?.get(position)?.NIP)
+                            intent.putExtra("email", companiesArray?.get(position)?.email)
+                            intent.putExtra("phone", companiesArray?.get(position)?.phone)
+                            intent.putExtra("country", companiesArray?.get(position)?.country)
+                            intent.putExtra("city", companiesArray?.get(position)?.city)
+                            intent.putExtra("district", companiesArray?.get(position)?.district)
+                            intent.putExtra("street", companiesArray?.get(position)?.street)
+                            intent.putExtra("houseNumber", companiesArray?.get(position)?.houseNumber)
+                            intent.putExtra("flatNumber", companiesArray?.get(position)?.flatNumber)
+                            intent.putExtra("postCode", companiesArray?.get(position)?.postCode)
+                            context.startActivity(intent)
+                        }})
+                    recyclerView.adapter = adapter
+
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+    }
+
+    fun getVehicles(context: Context, recyclerView: RecyclerView){
+        val funSend = "getVehicles"
+
+        var elements = ArrayList<String>()
+        elements.add("id");elements.add("in_use");elements.add("localization")
+        elements.add("filling");
+        val dataToSend = elements.joinToString(separator = ", ")
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())){
+                        return@withContext
+                    }
+
+                    val vehiclesArray = json?.let { convertVehicles(json.toString()) }
+                    val adapter = VehicleItemAdapter(vehiclesArray, object : OnItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            val intent = Intent(context, AddVehicleActivity::class.java)
+                            intent.putExtra("id", vehiclesArray?.get(position)?.id)
+                            intent.putExtra("inUse", vehiclesArray?.get(position)?.inUse)
+                            intent.putExtra("filling", vehiclesArray?.get(position)?.filling)
+                            intent.putExtra("latitude",
+                                vehiclesArray?.get(position)?.localization?.split(",")?.get(0)
+                            )
+                            intent.putExtra("longitude",
+                                vehiclesArray?.get(position)?.localization?.split(",")?.get(1)
+                            )
+                            context.startActivity(intent)
+                        }})
+                    recyclerView.adapter = adapter
+
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+    }
+
+    fun getWorkers(context: Context, recyclerView: RecyclerView){
+        val funSend = "getWorkers"
+
+        var elements = ArrayList<String>()
+        elements.add("fullname");elements.add("birthdate");elements.add("job_start_time")
+        elements.add("job_end_time");elements.add("company_nip");elements.add("vehicle_id");
+        val dataToSend = elements.joinToString(separator = ", ")
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())){
+                        return@withContext
+                    }
+
+                    val workersArray = json?.let { convertWorkers(json.toString()) }
+                    val adapter = WorkerItemAdapter(workersArray, object : OnItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            val intent = Intent(context, AddWorkerActivity::class.java)
+                            intent.putExtra("fullname", workersArray?.get(position)?.fullname)
+                            intent.putExtra("birthDate", workersArray?.get(position)?.birthDate)
+                            intent.putExtra("jobStartTime", workersArray?.get(position)?.jobStartTime)
+                            intent.putExtra("jobEndTime", workersArray?.get(position)?.jobEndTime)
+                            intent.putExtra("cleaningCompanyNIP", workersArray?.get(position)?.cleaningCompanyNIP)
+                            intent.putExtra("vehicleId", workersArray?.get(position)?.vehicleId)
+                            context.startActivity(intent)
+                        }})
+                    recyclerView.adapter = adapter
+
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+
+    }
+
+
     fun addTrash(context: Context, pos: GeoPoint, chosen_imgs : ArrayList<Uri>, size: String, user_login_report: String? = null, vehicle_id: Int? = null, user_login: String? = null, crew_id:Int? = null){
         val funSend = "addTrash"
         var dataToSend = "'${pos.toDoubleString()}', '${user_login_report}', '${TrashSize.valueOf(size.uppercase()).intValue}'"
@@ -186,56 +506,6 @@ object DBUtils {
         }
     }
 
-    fun getReports(context: Context, recyclerView: RecyclerView, username: String) {
-        val funSend = "getReports"
-
-        var elements = ArrayList<String>()
-        elements.add("${Tab.TRASH}.id");elements.add("${Tab.TRASH}.localization");elements.add("${Tab.TRASH}.creation_date");
-        elements.add("${Tab.TRASH}.trash_size");elements.add("${Tab.TRASH}.collection_date");elements.add("${Tab.TRASH}.user_login_report")
-        val dataToSend = elements.joinToString(separator = ", ").plus("|${username}")
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response = service.getJson(dataToSend, funSend)
-                withContext(Dispatchers.Main) {
-                    val json = response.body()?.string()
-                    Log.i("ServerSQL", json.toString())
-                    if (checkForError(context, json.toString())){
-                        return@withContext
-                    }
-
-                    val reportsArray = json?.let { convertUserReports(json.toString()) }
-                    val adapter = ReportItemAdapter(reportsArray, object : OnItemClickListener {
-                        override fun onItemClick(position: Int) {
-                            val intent = Intent(context, AddReportActivity::class.java)
-                            intent.putExtra("id", reportsArray?.get(position)?.id.toString())
-                            intent.putExtra("login", reportsArray?.get(position)?.userLoginReport)
-                            intent.putExtra("latitude",
-                                reportsArray?.get(position)?.localization?.split(",")?.get(0)
-                            )
-                            intent.putExtra("longitude",
-                                reportsArray?.get(position)?.localization?.split(",")?.get(1)
-                            )
-                            intent.putExtra("reportDate", reportsArray?.get(position)?.creationDate)
-                            intent.putExtra("trashSize", reportsArray?.get(position)?.trashSize.toString())
-                            intent.putExtra("trashTypes", reportsArray?.get(position)?.trashType?.toString())
-                            intent.putExtra("collectionDate",reportsArray?.get(position)?.collectionDate)
-                            intent.putExtra("collectedBy", "user")
-                            intent.putExtra("collectedVal", reportsArray?.get(position)?.userLoginReport?.toString())
-                            context.startActivity(intent)
-                        }
-                    })
-                    recyclerView.adapter = adapter
-
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Log.e("ServerSQL", e.toString())
-                }
-            }
-        }
-    }
-
     fun addReport(context: Context, adding: Boolean, trash: Trash, id: String = ""){
         if(adding) {
             val funSend = "addTrash"
@@ -257,65 +527,6 @@ object DBUtils {
                     withContext(Dispatchers.Main) {
                         Log.e("ServerSQL", e.toString())
                     }
-                }
-            }
-        }
-    }
-
-    fun deleteReport(context: Context, id: String){
-        val funSend = "deleteReport"
-
-        var dataToSend = "id = '${id}'"
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response = service.getJson(dataToSend, funSend)
-                withContext(Dispatchers.Main) {
-                    val json = response.body()?.string()
-                    Log.i("ServerSQL", json.toString())
-                    if (checkForError(context, json.toString())) {
-                        return@withContext
-                    }
-                    Toast.makeText(context, "Report ${id} was deleted.", Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Log.e("ServerSQL", e.toString())
-                }
-            }
-        }
-    }
-
-    fun getGroups(context: Context, recyclerView: RecyclerView, username: String){
-        val funSend = "getAllGroups"
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response = service.getJson(username, funSend)
-                withContext(Dispatchers.Main) {
-                    val json = response.body()?.string()
-                    Log.i("ServerSQL", json.toString())
-                    val groupsArray = json?.let { convertGroups(json.toString()) }
-                    val adapter = GroupItemAdapter(groupsArray, object : OnItemClickListener {
-                        override fun onItemClick(position: Int) {
-                            val intent = Intent(context, AddGroupActivity::class.java)
-                            intent.putExtra("id", groupsArray?.get(position)?.id)
-                            intent.putExtra("crewName", groupsArray?.get(position)?.name)
-                            intent.putExtra("meetingDate", groupsArray?.get(position)?.meetingDate)
-                            intent.putExtra("latitude",
-                                groupsArray?.get(position)?.meetingLoc?.split(",")?.get(0)
-                            )
-                            intent.putExtra("longitude",
-                                groupsArray?.get(position)?.meetingLoc?.split(",")?.get(1)
-                            )
-                            context.startActivity(intent)
-                        }
-                    })
-                    recyclerView.adapter = adapter
-
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Log.e("ServerSQL", e.toString())
                 }
             }
         }
@@ -352,199 +563,18 @@ object DBUtils {
         }
     }
 
-    fun deleteGroup(context: Context, id: String){
-        val funSend = "deleteGroup"
-
-        var dataToSend = "id = '${id}'"
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response = service.getJson(dataToSend, funSend)
-                withContext(Dispatchers.Main) {
-                    val json = response.body()?.string()
-                    Log.i("ServerSQL", json.toString())
-                    if (checkForError(context, json.toString())) {
-                        return@withContext
-                    }
-                    Toast.makeText(context, "Group ${id} was deleted.", Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Log.e("ServerSQL", e.toString())
-                }
-            }
-        }
-    }
-
-    fun getCollectingPoints(context: Context, recyclerView: RecyclerView) {
-
-        val funSend = "getCollectingPoints"
-
-        var elements = ArrayList<String>()
-        elements.add("${Tab.TRASH_COLLECT_POINT}.localization");elements.add("${Tab.TRASH_COLLECT_POINT}.bus_empty");elements.add("${Tab.TRASH_COLLECT_POINT}.processing_type")
-        val dataToSend = elements.joinToString(separator = ", ").plus(", GROUP_CONCAT(${Tab.TRASH}.id SEPARATOR '-')")
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response = service.getJson(dataToSend, funSend)
-                withContext(Dispatchers.Main) {
-                    val json = response.body()?.string()
-                    Log.i("ServerSQL", json.toString())
-                    if (checkForError(context, json.toString())){
-                        return@withContext
-                    }
-
-                    val pointsArray = json?.let { convertCollectionPoints(json.toString()) }
-                    val adapter = CollectingPointItemAdapter(pointsArray, object : OnItemClickListener {
-                        override fun onItemClick(position: Int) {
-                            val intent = Intent(context, AddPointActivity::class.java)
-                            intent.putExtra("latitude",
-                                pointsArray?.get(position)?.localization?.split(",")?.get(0)
-                            )
-                            intent.putExtra("longitude",
-                                pointsArray?.get(position)?.localization?.split(",")?.get(1)
-                            )
-                            intent.putExtra("notInUse", pointsArray?.get(position)?.busEmpty)
-                            intent.putExtra("processingType", pointsArray?.get(position)?.processingType.toString())
-                            intent.putExtra("trashTypes", pointsArray?.get(position)?.trashType?.joinToString(","))
-                            intent.putExtra("trashIds", pointsArray?.get(position)?.trashId?.joinToString(","))
-                            context.startActivity(intent)
-                        }
-                    })
-                    recyclerView.adapter = adapter
-
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Log.e("ServerSQL", e.toString())
-                }
-            }
-        }
-    }
-
     fun addCollectingPoint(context: Context, adding: Boolean, point: TrashCollectingPoint, localization: String = ""){
         var funSend = "addCollectingPoint"
         if(adding) {
             funSend = "addCollectingPoint"}
         else funSend = "updateCollectingPoint"
-            val elements = ArrayList<String>()
-            elements.add("${Tab.TRASH_COLLECT_POINT}.localization");elements.add("${Tab.TRASH_COLLECT_POINT}.busEmpty")
-            elements.add("${Tab.TRASH_COLLECT_POINT}.processingType");elements.add("${Tab.TRASH_COLLECT_POINT}.trashType")
-            elements.add("${Tab.TRASH_COLLECT_POINT}.trashId")
-            var dataToSend = elements.joinToString(separator = ", ")
-            dataToSend = dataToSend.plus("|")
-            dataToSend = dataToSend.plus("'${point.localization}', '${point.busEmpty}', '${point.processingType}' - '${point.trashType}', '${point.trashId}'")
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val response = service.getJson(dataToSend, funSend)
-                    withContext(Dispatchers.Main) {
-                        val json = response.body()?.string()
-                        Log.i("ServerSQL", json.toString())
-                        if (checkForError(context, json.toString())) {
-                            return@withContext
-                        }
-
-                        Toast.makeText(context, "Action was done successfully!", Toast.LENGTH_SHORT).show()
-                    }
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        Log.e("ServerSQL", e.toString())
-                    }
-
-            }
-        }
-    }
-
-    fun deleteCollectingPoint(context: Context, localization: String){
-        val funSend = "deleteCollectingPoint"
-
-        var dataToSend = "localization = '${localization}'"
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response = service.getJson(dataToSend, funSend)
-                withContext(Dispatchers.Main) {
-                    val json = response.body()?.string()
-                    Log.i("ServerSQL", json.toString())
-                    if (checkForError(context, json.toString())) {
-                        return@withContext
-                    }
-                    Toast.makeText(context, "Collecting Point ${localization} was deleted.", Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Log.e("ServerSQL", e.toString())
-                }
-            }
-        }
-    }
-
-    fun getUsers(context: Context, recyclerView: RecyclerView){
-        val funSend = "getUsers"
-
         val elements = ArrayList<String>()
-        elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
-        elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.phone");
-        elements.add("${Tab.USER}.fullname");elements.add("${Tab.USER}.country");
-        elements.add("${Tab.USER}.city");elements.add("${Tab.USER}.street");
-        elements.add("${Tab.USER}.post_code");elements.add("${Tab.ROLE}.role_name")
-
-        val dataToSend = elements.joinToString(separator = ", ")
-
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val response = service.getJson(dataToSend, funSend)
-                    withContext(Dispatchers.Main) {
-                        val json = response.body()?.string()
-                        Log.i("ServerSQL", json.toString())
-                        if (checkForError(context, json.toString())){
-                            return@withContext
-                        }
-
-                        val usersArray = json?.let { convertAllUsers(json.toString()) }
-                        val adapter = UserItemAdapter(usersArray, object : OnItemClickListener {
-                            override fun onItemClick(position: Int) {
-                                val intent = Intent(context, AddUserActivity::class.java)
-                                intent.putExtra("login", usersArray?.get(position)?.login)
-                                intent.putExtra("password", usersArray?.get(position)?.password)
-                                intent.putExtra("email", usersArray?.get(position)?.email)
-                                intent.putExtra("fullname", usersArray?.get(position)?.fullname)
-                                intent.putExtra("phone", usersArray?.get(position)?.phone)
-                                intent.putExtra("country", usersArray?.get(position)?.country)
-                                intent.putExtra("city", usersArray?.get(position)?.city)
-                                intent.putExtra("district", usersArray?.get(position)?.district)
-                                intent.putExtra("street", usersArray?.get(position)?.street)
-                                intent.putExtra("houseNumber", usersArray?.get(position)?.houseNumber)
-                                intent.putExtra("flatNumber", usersArray?.get(position)?.flatNumber)
-                                intent.putExtra("postCode", usersArray?.get(position)?.postCode)
-                                intent.putExtra("roles",
-                                    usersArray?.get(position)?.roles?.joinToString(",")
-                                )
-                                context.startActivity(intent)
-                            }})
-                        recyclerView.adapter = adapter
-
-                    }
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        Log.e("ServerSQL", e.toString())
-                    }
-                }
-            }
-        }
-
-    fun addUserRegister(context: Context, adding: Boolean, user: User, login: String = "") {
-        var funSend = "addUserRegister"
-        var dataToSend = ""
-
-
-            val elements = ArrayList<String>()
-            elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
-            elements.add("${Tab.USER}.email");dataToSend = elements.joinToString(separator = ", ")
-            dataToSend = dataToSend.plus("|")
-            dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}'")
-
-
+        elements.add("${Tab.TRASH_COLLECT_POINT}.localization");elements.add("${Tab.TRASH_COLLECT_POINT}.busEmpty")
+        elements.add("${Tab.TRASH_COLLECT_POINT}.processingType");elements.add("${Tab.TRASH_COLLECT_POINT}.trashType")
+        elements.add("${Tab.TRASH_COLLECT_POINT}.trashId")
+        var dataToSend = elements.joinToString(separator = ", ")
+        dataToSend = dataToSend.plus("|")
+        dataToSend = dataToSend.plus("'${point.localization}', '${point.busEmpty}', '${point.processingType}' - '${point.trashType}', '${point.trashId}'")
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = service.getJson(dataToSend, funSend)
@@ -554,14 +584,16 @@ object DBUtils {
                     if (checkForError(context, json.toString())) {
                         return@withContext
                     }
+
+                    Toast.makeText(context, "Action was done successfully!", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     Log.e("ServerSQL", e.toString())
                 }
+
             }
         }
-
     }
 
     fun addUser(context: Context, adding: Boolean, user: User, login: String = "") {
@@ -570,13 +602,13 @@ object DBUtils {
         if(adding)
         {    funSend = "addUser"
 
-        val elements = ArrayList<String>()
+            val elements = ArrayList<String>()
             elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
             elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.phone");elements.add("${Tab.USER}.fullname");
             elements.add("${Tab.USER}.country");elements.add("${Tab.USER}.city");elements.add("${Tab.USER}.district");
             elements.add("${Tab.USER}.street");elements.add("${Tab.USER}.flat_number");elements.add("${Tab.USER}.post_code");
-        dataToSend = dataToSend.plus("|")
-        dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}', '${user.phone}', '${user.fullname}', '${user.country}', '${user.city}', '${user.district}', '${user.street}', '${user.flatNumber}', '${user.postCode}'")
+            dataToSend = dataToSend.plus("|")
+            dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}', '${user.phone}', '${user.fullname}', '${user.country}', '${user.city}', '${user.district}', '${user.street}', '${user.flatNumber}', '${user.postCode}'")
         }
         else
         {
@@ -609,10 +641,17 @@ object DBUtils {
 
     }
 
-    fun deleteUser(context:Context, login: String){
-        val funSend = "deleteUser"
+    fun addUserRegister(context: Context, adding: Boolean, user: User, login: String = "") {
+        var funSend = "addUserRegister"
+        var dataToSend = ""
 
-        var dataToSend = "login = '${login}'"
+
+        val elements = ArrayList<String>()
+        elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
+        elements.add("${Tab.USER}.email");dataToSend = elements.joinToString(separator = ", ")
+        dataToSend = dataToSend.plus("|")
+        dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}'")
+
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -623,7 +662,6 @@ object DBUtils {
                     if (checkForError(context, json.toString())) {
                         return@withContext
                     }
-                    Toast.makeText(context, "User ${login} was deleted.", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -631,52 +669,7 @@ object DBUtils {
                 }
             }
         }
-    }
 
-
-    fun getCompanies(context: Context, recyclerView: RecyclerView){
-        val funSend = "getCompanies"
-
-        var elements = ArrayList<String>()
-        elements.add("nip");elements.add("email");elements.add("phone")
-        elements.add("country");elements.add("city");elements.add("street")
-        val dataToSend = elements.joinToString(separator = ", ")
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response = service.getJson(dataToSend, funSend)
-                withContext(Dispatchers.Main) {
-                    val json = response.body()?.string()
-                    Log.i("ServerSQL", json.toString())
-                    if (checkForError(context, json.toString())){
-                        return@withContext
-                    }
-
-                    val companiesArray = json?.let { convertCompanies(json.toString()) }
-                    val adapter = CompanyItemAdapter(companiesArray, object : OnItemClickListener {
-                        override fun onItemClick(position: Int) {
-                            val intent = Intent(context, AddCompanyActivity::class.java)
-                            intent.putExtra("nip", companiesArray?.get(position)?.NIP)
-                            intent.putExtra("email", companiesArray?.get(position)?.email)
-                            intent.putExtra("phone", companiesArray?.get(position)?.phone)
-                            intent.putExtra("country", companiesArray?.get(position)?.country)
-                            intent.putExtra("city", companiesArray?.get(position)?.city)
-                            intent.putExtra("district", companiesArray?.get(position)?.district)
-                            intent.putExtra("street", companiesArray?.get(position)?.street)
-                            intent.putExtra("houseNumber", companiesArray?.get(position)?.houseNumber)
-                            intent.putExtra("flatNumber", companiesArray?.get(position)?.flatNumber)
-                            intent.putExtra("postCode", companiesArray?.get(position)?.postCode)
-                            context.startActivity(intent)
-                        }})
-                    recyclerView.adapter = adapter
-
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Log.e("ServerSQL", e.toString())
-                }
-            }
-        }
     }
 
     fun addCompany(context: Context, adding: Boolean, company: CleaningCompany, nip: String = ""){
@@ -696,6 +689,9 @@ object DBUtils {
         dataToSend = dataToSend.plus("${company.NIP}`${company.email}`" +
                 "${company.phone}`${company.country}`${company.city}`${company.district}`" +
                 "${company.street}`${company.houseNumber}`${company.flatNumber}`${company.postCode}")
+        if (!adding){
+            dataToSend = dataToSend.plus("|${nip}")
+        }
         Log.i("ServerSQL", dataToSend)
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -707,6 +703,194 @@ object DBUtils {
                         return@withContext
                     }
                     (context as Activity).finish()
+                    if (adding){
+                        Toast.makeText(context, "Company added successfully!", Toast.LENGTH_SHORT).show()
+                    } else{
+                        Toast.makeText(context, "Company updated successfully!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+    }
+
+    fun addVehicle(context: Context, adding: Boolean, vehicle: Vehicle, vehicleId: String = ""){
+        val funSend: String
+        if (adding) funSend = "addVehicle"
+        else funSend = "updateVehicle"
+
+        var dataToSend = ""
+        val elements = ArrayList<String>()
+        elements.add("${Tab.VEHICLE}.in_use")
+        elements.add("${Tab.VEHICLE}.localization");elements.add("${Tab.VEHICLE}.filling");
+        dataToSend = elements.joinToString(",")
+        dataToSend = dataToSend.plus("|")
+        var inUse = 'F'
+        if (vehicle.inUse) {inUse = 'T'}
+        dataToSend = dataToSend.plus("${inUse}`" +
+                "${vehicle.localization}`${vehicle.filling}")
+        if (!adding){
+            dataToSend = dataToSend.plus("|${vehicleId}")
+        }
+        Log.i("ServerSQL", dataToSend)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
+                    (context as Activity).finish()
+                    if (adding){
+                        Toast.makeText(context, "Vehicle added successfully!", Toast.LENGTH_SHORT).show()
+                    } else{
+                        Toast.makeText(context, "Vehicle updated successfully!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+    }
+
+    fun addWorker(context: Context, adding: Boolean, worker: Worker, fullname: String = "", birthDate: String = ""){
+        var funSend: String
+        if(adding) {
+            funSend = "addWorker"}
+        else funSend = "updateWorker"
+        val elements = ArrayList<String>()
+        elements.add("${Tab.WORKER}.fullname");elements.add("${Tab.WORKER}.birthdate")
+        elements.add("${Tab.WORKER}.job_start_time");elements.add("${Tab.WORKER}.job_end_time")
+        elements.add("${Tab.WORKER}.company_nip");elements.add("${Tab.WORKER}.vehicle_id")
+        var dataToSend = elements.joinToString(separator = ",")
+        dataToSend = dataToSend.plus("|")
+        dataToSend = dataToSend.plus("${worker.fullname}`${worker.birthDate}`" +
+                "${worker.jobStartTime}`${worker.jobEndTime}`${worker.cleaningCompanyNIP}`" +
+                "${worker.vehicleId}")
+        if (!adding){
+            dataToSend = dataToSend.plus("|${fullname}")
+            dataToSend = dataToSend.plus("|${birthDate}")
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
+                    (context as Activity).finish()
+                    if (adding){
+                        Toast.makeText(context, "Worker added successfully!", Toast.LENGTH_SHORT).show()
+                    } else{
+                        Toast.makeText(context, "Worker updated successfully!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+
+            }
+        }
+    }
+
+
+    fun deleteReport(context: Context, id: String){
+        val funSend = "deleteReport"
+
+        var dataToSend = "id = '${id}'"
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
+                    Toast.makeText(context, "Report ${id} was deleted.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+    }
+
+    fun deleteGroup(context: Context, id: String){
+        val funSend = "deleteGroup"
+
+        var dataToSend = "id = '${id}'"
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
+                    Toast.makeText(context, "Group ${id} was deleted.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+    }
+
+    fun deleteCollectingPoint(context: Context, localization: String){
+        val funSend = "deleteCollectingPoint"
+
+        var dataToSend = "localization = '${localization}'"
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
+                    Toast.makeText(context, "Collecting Point ${localization} was deleted.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+    }
+
+    fun deleteUser(context:Context, login: String){
+        val funSend = "deleteUser"
+
+        var dataToSend = "login = '${login}'"
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
+                    Toast.makeText(context, "User ${login} was deleted.", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -740,93 +924,6 @@ object DBUtils {
         }
     }
 
-
-    fun getVehicles(context: Context, recyclerView: RecyclerView){
-        val vehiclesArray = arrayListOf(Vehicle(
-            id = "1",
-            inUse = true,
-            filling = 0.4,
-            localization = "52.40427145950248,16.94963942393314,0.0",
-            workers = "Ivan (2023-01-18),Kacper (2001-01-01)"
-        ))
-        val funSend = "getVehicles"
-
-//        val elements = ArrayList<String>()
-
-//        val dataToSend = elements.joinToString(separator = ", ")
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-//                val response = service.getJson(dataToSend, funSend)
-                withContext(Dispatchers.Main) {
-//                    val json = response.body()?.string()
-//                    Log.i("ServerSQL", json.toString())
-//                    if (checkForError(context, json.toString())){
-//                        return@withContext
-//                    }
-
-//                    val usersArray = json?.let { convertAllUsers(json.toString()) }
-                    val adapter = VehicleItemAdapter(vehiclesArray, object : OnItemClickListener {
-                        override fun onItemClick(position: Int) {
-                            val intent = Intent(context, AddVehicleActivity::class.java)
-                            intent.putExtra("id", vehiclesArray?.get(position)?.id)
-                            intent.putExtra("inUse", vehiclesArray?.get(position)?.inUse)
-                            intent.putExtra("filling", vehiclesArray?.get(position)?.filling)
-                            intent.putExtra("latitude",
-                                vehiclesArray[position].localization?.split(",")?.get(0)
-                            )
-                            intent.putExtra("longitude",
-                                vehiclesArray[position].localization?.split(",")?.get(1)
-                            )
-                            context.startActivity(intent)
-                        }})
-                    recyclerView.adapter = adapter
-
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Log.e("ServerSQL", e.toString())
-                }
-            }
-        }
-    }
-
-    fun addVehicle(context: Context, adding: Boolean, vehicle: Vehicle, vehicleId: String = ""){
-        val funSend: String
-        if (adding) funSend = "addVehicle"
-        else funSend = "updateVehicle"
-
-        var dataToSend = ""
-        val elements = ArrayList<String>()
-        elements.add("${Tab.VEHICLE}.in_use")
-        elements.add("${Tab.VEHICLE}.localization");elements.add("${Tab.VEHICLE}.filling");
-        dataToSend = elements.joinToString(",")
-        dataToSend = dataToSend.plus("|")
-        var inUse = 'F'
-        if (vehicle.inUse) {inUse = 'T'}
-        dataToSend = dataToSend.plus("${inUse}`" +
-                "${vehicle.localization}`${vehicle.filling}")
-        Log.i("ServerSQL", dataToSend)
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response = service.getJson(dataToSend, funSend)
-                withContext(Dispatchers.Main) {
-                    val json = response.body()?.string()
-                    Log.i("ServerSQL", json.toString())
-                    if (checkForError(context, json.toString())) {
-                        return@withContext
-                    }
-                    (context as Activity).finish()
-                    Toast.makeText(context, "Vehicle added successfully!", Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Log.e("ServerSQL", e.toString())
-                }
-            }
-        }
-    }
-
     fun deleteVehicle(context: Context, vehicleId: String){
         val funSend = "deleteVehicle"
 
@@ -847,86 +944,6 @@ object DBUtils {
                 withContext(Dispatchers.Main) {
                     Log.e("ServerSQL", e.toString())
                 }
-            }
-        }
-    }
-
-
-    fun getWorkers(context: Context, recyclerView: RecyclerView){
-        val workersArray = arrayListOf(Worker(
-            fullname = "Ivan",
-            birthDate = "2023-01-18",
-            jobStartTime = "8:00",
-            jobEndTime = "16:00",
-            cleaningCompanyNIP = "3345",
-            vehicleId = "1"
-        ))
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-//                val response = service.getJson(dataToSend, funSend)
-                withContext(Dispatchers.Main) {
-//                    val json = response.body()?.string()
-//                    Log.i("ServerSQL", json.toString())
-//                    if (checkForError(context, json.toString())){
-//                        return@withContext
-//                    }
-
-//                    val usersArray = json?.let { convertAllUsers(json.toString()) }
-                    val adapter = WorkerItemAdapter(workersArray, object : OnItemClickListener {
-                        override fun onItemClick(position: Int) {
-                            val intent = Intent(context, AddWorkerActivity::class.java)
-                            intent.putExtra("fullname", workersArray?.get(position)?.fullname)
-                            intent.putExtra("birthDate", workersArray?.get(position)?.birthDate)
-                            intent.putExtra("jobStartTime", workersArray?.get(position)?.jobStartTime)
-                            intent.putExtra("jobEndTime", workersArray?.get(position)?.jobEndTime)
-                            intent.putExtra("cleaningCompanyNIP", workersArray?.get(position)?.cleaningCompanyNIP)
-                            intent.putExtra("vehicleId", workersArray?.get(position)?.vehicleId)
-                            context.startActivity(intent)
-                        }})
-                    recyclerView.adapter = adapter
-
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Log.e("ServerSQL", e.toString())
-                }
-            }
-        }
-
-    }
-
-    fun addWorker(context: Context, adding: Boolean, worker: Worker, fullname: String = "", birthDate: String = ""){
-        var funSend: String
-        if(adding) {
-            funSend = "addWorker"}
-        else funSend = "updateWorker"
-        val elements = ArrayList<String>()
-        elements.add("${Tab.WORKER}.fullname");elements.add("${Tab.WORKER}.birthdate")
-        elements.add("${Tab.WORKER}.job_start_time");elements.add("${Tab.WORKER}.job_end_time")
-        elements.add("${Tab.WORKER}.company_nip");elements.add("${Tab.WORKER}.vehicle_id")
-        var dataToSend = elements.joinToString(separator = ",")
-        dataToSend = dataToSend.plus("|")
-        dataToSend = dataToSend.plus("${worker.fullname}`${worker.birthDate}`" +
-                "${worker.jobStartTime}`${worker.jobEndTime}`${worker.cleaningCompanyNIP}`" +
-                "${worker.vehicleId}")
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response = service.getJson(dataToSend, funSend)
-                withContext(Dispatchers.Main) {
-                    val json = response.body()?.string()
-                    Log.i("ServerSQL", json.toString())
-                    if (checkForError(context, json.toString())) {
-                        return@withContext
-                    }
-                    (context as Activity).finish()
-                    Toast.makeText(context, "Worker added successfully!", Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Log.e("ServerSQL", e.toString())
-                }
-
             }
         }
     }
@@ -954,6 +971,7 @@ object DBUtils {
             }
         }
     }
+
 
     fun checkLogin(context: Context, username: String, password: String): Boolean {
         val funSend = "checkUserForLogin"
@@ -1029,8 +1047,6 @@ object DBUtils {
     }
 
 
-
-
     private fun addIconsToMap(context: Context, map: MapView, items: ArrayList<OverlayItem>, collectedItems: ArrayList<String>) {
         for (item in items) {
             item.setMarker(context.resources.getDrawable(R.drawable.red_marker_v2))
@@ -1068,6 +1084,7 @@ object DBUtils {
 //        overlay.setMarkerBackgroundColor(Color.CYAN)
         map.overlays.add(overlay);
     }
+
     private fun addCollectedIconsToMap(context: Context, map: MapView, items: ArrayList<OverlayItem>) {
         for (item in items) {
             item.setMarker(context.resources.getDrawable(R.drawable.green_marker_v2))

@@ -27,7 +27,7 @@ class AddVehicleActivity : AppCompatActivity() {
         val extras = intent.extras;
         if (extras != null) {
             adding = false
-            vehicleId = extras.getString("password")!!
+            vehicleId = extras.getString("id")!!
             try {
                 try {
                     this.findViewById<EditText>(R.id.editTextVehicleLatitude).text =
