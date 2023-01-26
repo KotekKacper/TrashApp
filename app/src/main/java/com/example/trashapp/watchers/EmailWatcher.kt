@@ -15,9 +15,10 @@ class EmailWatcher(private val emailEditText: EditText) : TextWatcher {
         } else if (check.contains(";") ||
             check.contains("\n") ||
             check.contains("\"") ||
-            check.contains(" ")) {
+            check.contains("`") ||
+            check.contains("|")) {
             // show an error message
-            emailEditText.error = "Field can't contain ; \\n  \" or space"
+            emailEditText.error = "Field can't contain ; \\n  \" ` | or space"
         } else if (check.length > 40) {
             // show an error message
             emailEditText.error = "Maximum of 40 characters"

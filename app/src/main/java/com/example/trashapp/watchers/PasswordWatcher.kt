@@ -15,9 +15,11 @@ class PasswordWatcher (private val passwordEditText: EditText) : TextWatcher {
         } else if (check.contains(";") ||
             check.contains("\n") ||
             check.contains("\"") ||
+            check.contains("`") ||
+            check.contains("|") ||
             check.contains(" ")) {
             // show an error message
-            passwordEditText.error = "Field can't contain ; \\n  \" or space"
+            passwordEditText.error = "Field can't contain ; \\n  \" ` | or space"
         } else if (check.length > 40) {
             // show an error message
             passwordEditText.error = "Maximum of 40 characters"

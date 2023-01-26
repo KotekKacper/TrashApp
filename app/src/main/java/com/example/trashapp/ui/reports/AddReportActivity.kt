@@ -126,7 +126,6 @@ class AddReportActivity : AppCompatActivity() {
                         trashType = (trashTypeEditText.text.toString()),
                         collectionDate = collectionDateEditText.text.toString(),
                     ), id)
-                    finish()
                 } else{
                     Toast.makeText(this, "Invalid report data", Toast.LENGTH_SHORT).show()
                 }

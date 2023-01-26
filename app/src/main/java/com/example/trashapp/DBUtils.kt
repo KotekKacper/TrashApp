@@ -507,26 +507,37 @@ object DBUtils {
     }
 
     fun addReport(context: Context, adding: Boolean, trash: Trash, id: String = ""){
+        val funSend : String
         if(adding) {
-            val funSend = "addTrash"
-            var dataToSend =
-                "'${trash.localization}', '${trash.userLoginReport}', '${trash.trashSize}'"
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val response = service.getJson(dataToSend, funSend)
-                    withContext(Dispatchers.Main) {
-                        val json = response.body()?.string()
-                        Log.i("ServerSQL", json.toString())
-                        if (checkForError(context, json.toString())) {
-                            return@withContext
-                        }
-
-                        Toast.makeText(context, "Report was added!", Toast.LENGTH_SHORT).show()
+            funSend = "addReport"
+        } else {
+            funSend = "updateReport"
+        }
+        var dataToSend =
+            "'${trash.localization}', '${trash.userLoginReport}', '${trash.trashSize}'"
+        dataToSend = dataToSend.plus("|")
+        if(!adding) {
+            dataToSend = dataToSend.plus("|${id}")
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
                     }
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        Log.e("ServerSQL", e.toString())
+                    (context as Activity).finish()
+                    if (adding){
+                        Toast.makeText(context, "Report added successfully!", Toast.LENGTH_SHORT).show()
+                    } else{
+                        Toast.makeText(context, "Report updated successfully!", Toast.LENGTH_SHORT).show()
                     }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
                 }
             }
         }

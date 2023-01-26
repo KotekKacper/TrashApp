@@ -24,6 +24,8 @@ class AddPointActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_point)
 
+
+
         val extras = intent.extras;
         if (extras != null) {
             adding = false

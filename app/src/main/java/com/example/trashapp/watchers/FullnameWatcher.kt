@@ -11,9 +11,11 @@ class FullnameWatcher (private val fullnameEditText: EditText) : TextWatcher {
         val check = editable.toString()
         if (check.contains(";") ||
             check.contains("\n") ||
-            check.contains("\"")) {
+            check.contains("\"") ||
+            check.contains("`") ||
+            check.contains("|")) {
             // show an error message
-            fullnameEditText.error = "Field can't contain ; \\n or \""
+            fullnameEditText.error = "Field can't contain ; \\n ` | or \""
         } else if (check.length > 40) {
             // show an error message
             fullnameEditText.error = "Maximum of 40 characters"
