@@ -3,10 +3,7 @@ package com.example.trashapp
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.net.Uri
-import android.text.SpannableStringBuilder
 import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -35,9 +32,6 @@ import org.osmdroid.views.overlay.ItemizedIconOverlay
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus
 import org.osmdroid.views.overlay.OverlayItem
 import retrofit2.Retrofit
-import java.time.Clock
-import java.time.LocalDateTime
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -991,6 +985,51 @@ object DBUtils {
         }
         return userExists
     }
+
+    fun getActiveTrashCount(context: Context, binding: FragmentAccountBinding){
+        val funSend = "callActiveTrash"
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson("active", funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
+                    binding.activeCount.text = json
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+    }
+
+    fun getArchiveTrashCount(context: Context, binding: FragmentAccountBinding){
+        val funSend = "callArchiveTrash"
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson("archive", funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
+                    binding.archiveCount.text = json
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+    }
+
+
+
 
     private fun addIconsToMap(context: Context, map: MapView, items: ArrayList<OverlayItem>, collectedItems: ArrayList<String>) {
         for (item in items) {

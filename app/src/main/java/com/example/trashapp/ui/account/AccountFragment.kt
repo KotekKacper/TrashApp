@@ -1,6 +1,5 @@
 package com.example.trashapp.ui.account
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,18 +7,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.trashapp.DBUtils
 import com.example.trashapp.LoginActivity
-import com.example.trashapp.MainActivity
-import com.example.trashapp.R
-import com.example.trashapp.classes.User
 import com.example.trashapp.databinding.FragmentAccountBinding
-import com.example.trashapp.watchers.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -46,6 +38,8 @@ class AccountFragment : Fragment() {
 
         val preferences = this.activity?.getSharedPreferences("credentials", Context.MODE_PRIVATE)
 
+        binding.textAccountLogin.text = preferences?.getString("login", "user login")
+
         binding.buttonAccountLogOut.setOnClickListener {
             val editor = preferences!!.edit()
             editor.putString("login", "")
@@ -55,44 +49,8 @@ class AccountFragment : Fragment() {
             activity?.finish()
         }
 
-        // TODO - count archive trash function
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-
-                withContext(Dispatchers.Main) {
-
-//                    Log.i("ServerSQL", json.toString())
-//                    if (DBUtils.checkForError(context!!, json.toString())) {
-//                        return@withContext
-//                    }
-                    binding.archiveCount.text = "5"
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Log.e("ServerSQL", e.toString())
-                }
-            }
-        }
-
-        // TODO - count active trash function
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-
-                withContext(Dispatchers.Main) {
-
-//                    Log.i("ServerSQL", json.toString())
-//                    if (DBUtils.checkForError(context!!, json.toString())) {
-//                        return@withContext
-//                    }
-                    binding.activeCount.text = "2"
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Log.e("ServerSQL", e.toString())
-                }
-            }
-        }
-
+        context?.let { DBUtils.getActiveTrashCount(it, binding) }
+        context?.let { DBUtils.getArchiveTrashCount(it, binding) }
 
         return root
     }
