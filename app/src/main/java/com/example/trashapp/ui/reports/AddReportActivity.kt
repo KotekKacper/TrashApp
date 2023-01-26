@@ -1,8 +1,12 @@
 package com.example.trashapp.ui.reports
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.SpannableString
 import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -22,6 +26,29 @@ class AddReportActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_report)
+
+        val tx1 = this.findViewById<TextView>(R.id.textReportLoginReported)
+        val s1 = SpannableString(tx1.text.toString()+" *")
+        s1.setSpan(
+            ForegroundColorSpan(Color.RED),
+            s1.length-1, s1.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        tx1.text = s1
+
+        val tx2 = this.findViewById<TextView>(R.id.textReportLocalization)
+        val s2 = SpannableString(tx2.text.toString()+" *")
+        s2.setSpan(
+            ForegroundColorSpan(Color.RED),
+            s2.length-1, s2.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        tx2.text = s2
+
+        val tx3 = this.findViewById<TextView>(R.id.textReportCreationDate)
+        val s3 = SpannableString(tx3.text.toString()+" *")
+        s3.setSpan(
+            ForegroundColorSpan(Color.RED),
+            s3.length-1, s3.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        tx3.text = s3
+
+
 
         val extras = intent.extras;
         if (extras != null) {

@@ -1,11 +1,16 @@
 package com.example.trashapp.ui.companies
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.SpannableString
 import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.example.trashapp.DBUtils
@@ -20,6 +25,27 @@ class AddCompanyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_company)
+
+        val tx1 = this.findViewById<TextView>(R.id.textCompanyNIP)
+        val s1 = SpannableString(tx1.text.toString()+" *")
+        s1.setSpan(
+            ForegroundColorSpan(Color.RED),
+            s1.length-1, s1.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        tx1.text = s1
+
+        val tx2 = this.findViewById<TextView>(R.id.textCompanyEmail)
+        val s2 = SpannableString(tx2.text.toString()+" *")
+        s2.setSpan(
+            ForegroundColorSpan(Color.RED),
+            s2.length-1, s2.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        tx2.text = s2
+
+        val tx3 = this.findViewById<TextView>(R.id.textCompanyPhone)
+        val s3 = SpannableString(tx3.text.toString()+" *")
+        s3.setSpan(
+            ForegroundColorSpan(Color.RED),
+            s3.length-1, s3.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        tx3.text = s3
 
         val extras = intent.extras;
         if (extras != null) {

@@ -1,13 +1,14 @@
 package com.example.trashapp.ui.workers
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.SpannableString
 import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.util.Log
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
 import androidx.core.view.isVisible
 import com.example.trashapp.DBUtils
 import com.example.trashapp.R
@@ -22,6 +23,52 @@ class AddWorkerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_worker)
+
+        val tx1 = this.findViewById<TextView>(R.id.textWorkerFullName)
+        val s1 = SpannableString(tx1.text.toString()+" *")
+        s1.setSpan(
+            ForegroundColorSpan(Color.RED),
+            s1.length-1, s1.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        tx1.text = s1
+
+        val tx2 = this.findViewById<TextView>(R.id.textWorkerBirthDate)
+        val s2 = SpannableString(tx2.text.toString()+" *")
+        s2.setSpan(
+            ForegroundColorSpan(Color.RED),
+            s2.length-1, s2.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        tx2.text = s2
+
+        val tx3 = this.findViewById<TextView>(R.id.textWorkerJobStartTime)
+        val s3 = SpannableString(tx3.text.toString()+" *")
+        s3.setSpan(
+            ForegroundColorSpan(Color.RED),
+            s3.length-1, s3.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        tx3.text = s3
+
+        val tx4 = this.findViewById<TextView>(R.id.textWorkerJobEndTime)
+        val s4 = SpannableString(tx4.text.toString()+" *")
+        s4.setSpan(
+            ForegroundColorSpan(Color.RED),
+            s4.length-1, s4.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        tx4.text = s4
+
+        val tx5 = this.findViewById<TextView>(R.id.textWorkerCompanyNip)
+        val s5 = SpannableString(tx5.text.toString()+" *")
+        s5.setSpan(
+            ForegroundColorSpan(Color.RED),
+            s5.length-1, s5.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        tx5.text = s5
+
+        val tx6 = this.findViewById<TextView>(R.id.textWorkerVehicleId)
+        val s6 = SpannableString(tx6.text.toString()+" *")
+        s6.setSpan(
+            ForegroundColorSpan(Color.RED),
+            s6.length-1, s6.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        tx6.text = s6
+
+
+
+
 
         val extras = intent.extras;
         if (extras != null) {
