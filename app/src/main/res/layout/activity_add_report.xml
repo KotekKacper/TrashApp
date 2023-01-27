@@ -5,7 +5,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
     <LinearLayout
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -70,14 +69,32 @@
             android:textAlignment="center"
             android:textSize="20sp"
             android:text="Report date (yyyy-MM-dd HH:mm:ss.S)" />
-        <EditText
-            android:id="@+id/editTextTextReportCreationDate"
+<!--        <EditText-->
+<!--            android:id="@+id/editTextTextReportCreationDate"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:ems="10"-->
+<!--            android:inputType="textPersonName"-->
+<!--            android:hint="date" />-->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="date" />
+            android:orientation="horizontal">
+            <DatePicker
+                android:id="@+id/datePickerReportCreationDate"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner" />
+            <TimePicker
+                android:id="@+id/timePickerReportCreationDate"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:timePickerMode="spinner" />
+
+        </LinearLayout>
+
 
 
         <TextView

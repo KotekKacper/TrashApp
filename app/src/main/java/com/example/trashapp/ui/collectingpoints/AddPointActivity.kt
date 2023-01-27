@@ -111,7 +111,6 @@ class AddPointActivity : AppCompatActivity() {
                         trashId = ArrayList(trashHereEditText.text.toString().split(","))
                     ), loc
                 )
-                finish()
             } else{
                 Toast.makeText(this, "Invalid collecting point data", Toast.LENGTH_SHORT).show()
             }

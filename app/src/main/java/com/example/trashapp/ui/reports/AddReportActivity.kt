@@ -8,10 +8,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.view.isVisible
 import com.example.trashapp.DBUtils
 import com.example.trashapp.R
@@ -19,10 +16,14 @@ import com.example.trashapp.classes.Trash
 import com.example.trashapp.watchers.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class AddReportActivity : AppCompatActivity() {
     private var adding = true
     private var id = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_report)
@@ -61,8 +62,10 @@ class AddReportActivity : AppCompatActivity() {
                     SpannableStringBuilder(extras.getString("latitude"))
                 this.findViewById<EditText>(R.id.editTextTextReportLocalizationLon).text =
                     SpannableStringBuilder(extras.getString("longitude"))
-                this.findViewById<EditText>(R.id.editTextTextReportCreationDate).text =
-                    SpannableStringBuilder(extras.getString("reportDate"))
+                val curDate = LocalDateTime.parse(extras.getString("reportDate"),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S"))
+                this.findViewById<DatePicker>(R.id.datePickerReportCreationDate)
+                    .updateDate(curDate.year, curDate.monthValue, curDate.dayOfMonth)
                 try {
                     this.findViewById<EditText>(R.id.editTextTextReportTrashSize).text =
                         when (extras.getString("trashSize")) {
@@ -109,11 +112,14 @@ class AddReportActivity : AppCompatActivity() {
             val longitudeWatcher = LongitudeWatcher(longitudeEditText)
             longitudeEditText.addTextChangedListener(longitudeWatcher)
 
-            val creationDateEditText = this.findViewById<EditText>(R.id.editTextTextReportCreationDate)
-            val creationDateWatcher = DateWatcher(creationDateEditText)
-            creationDateEditText.addTextChangedListener(creationDateWatcher)
+//            val creationDatePicker = this.findViewById<EditText>(R.id.datePickerReportCreationDate)
+//            val creationDateWatcher = DateWatcher(creationDatePicker)
+//            creationDateEditText.addTextChangedListener(creationDateWatcher)
 
-            val trashSizeEditText = this.findViewById<EditText>(R.id.editTextTextReportTrashSize)
+            val creationTimePicker = findViewById<TimePicker>(R.id.timePickerReportCreationDate)
+            creationTimePicker.setIs24HourView(true)
+
+        val trashSizeEditText = this.findViewById<EditText>(R.id.editTextTextReportTrashSize)
             val trashSizeWatcher = SizeWatcher(trashSizeEditText)
             trashSizeEditText.addTextChangedListener(trashSizeWatcher)
 
@@ -141,14 +147,14 @@ class AddReportActivity : AppCompatActivity() {
                 if (loginReportedEditText.error == null && loginReportedEditText.text.toString() != "" &&
                         latitudeEditText.error == null && latitudeEditText.text.toString() != "" &&
                         longitudeEditText.error == null && longitudeEditText.text.toString() != "" &&
-                        creationDateEditText.error == null && creationDateEditText.text.toString() != "" &&
+//                        creationDateEditText.error == null && creationDateEditText.text.toString() != "" &&
                         trashSizeEditText.error == null && trashTypeEditText.error == null &&
                         collectionDateEditText.error == null && firstEditText.error == null &&
                         secondEditText.error == null && thirdEditText.error == null){
                     DBUtils.addReport(this, adding,
                         Trash(localization = arrayListOf(
                         latitudeEditText.text.toString(), longitudeEditText.text.toString()).joinToString(","),
-                        creationDate = creationDateEditText.text.toString(),
+                        creationDate = "2000-12-12 12:12:12:1",  //creationDateEditText.text.toString(),
                         userLoginReport = loginReportedEditText.text.toString(),
                         trashType = (trashTypeEditText.text.toString()),
                         collectionDate = collectionDateEditText.text.toString(),

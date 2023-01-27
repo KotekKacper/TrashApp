@@ -177,7 +177,17 @@ object DBUtils {
     }
 
     fun getGroups(context: Context, recyclerView: RecyclerView, username: String){
-        val funSend = "getAllGroups"
+        val funSend = "getGroups"
+
+        val elements = ArrayList<String>()
+        elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
+        elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.phone");
+        elements.add("${Tab.USER}.fullname");elements.add("${Tab.USER}.country");
+        elements.add("${Tab.USER}.city");elements.add("${Tab.USER}.street");
+        elements.add("${Tab.USER}.post_code");elements.add("${Tab.ROLE}.role_name")
+
+        val dataToSend = elements.joinToString(separator = ", ")
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = service.getJson(username, funSend)
@@ -564,6 +574,7 @@ object DBUtils {
                         return@withContext
                     }
                     Toast.makeText(context, "Group added successfully!", Toast.LENGTH_SHORT).show()
+                    (context as Activity).finish()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -595,8 +606,8 @@ object DBUtils {
                     if (checkForError(context, json.toString())) {
                         return@withContext
                     }
-
                     Toast.makeText(context, "Action was done successfully!", Toast.LENGTH_SHORT).show()
+                    (context as Activity).finish()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -642,6 +653,8 @@ object DBUtils {
                     if (checkForError(context, json.toString())) {
                         return@withContext
                     }
+                    Toast.makeText(context, "Action was done successfully!", Toast.LENGTH_SHORT).show()
+                    (context as Activity).finish()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {

@@ -86,7 +86,6 @@ class AddGroupActivity : AppCompatActivity() {
                             latitudeEditText.text.toString(), longitudeEditText.text.toString()).joinToString(",")
                     ), id
                 )
-                finish()
             } else{
                 Toast.makeText(this, "Invalid group data", Toast.LENGTH_SHORT).show()
             }

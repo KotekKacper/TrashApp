@@ -229,7 +229,6 @@ class AddUserActivity : AppCompatActivity() {
                         roles = ArrayList(findViewById<EditText>(R.id.editTextUserAccountRole).text.toString().split(","))
                     ), login
                 )
-                finish()
             } else{
                 Toast.makeText(this, "Invalid user data", Toast.LENGTH_SHORT).show()
             }
