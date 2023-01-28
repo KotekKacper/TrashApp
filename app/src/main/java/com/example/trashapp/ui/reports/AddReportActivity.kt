@@ -14,15 +14,17 @@ import com.example.trashapp.DBUtils
 import com.example.trashapp.R
 import com.example.trashapp.classes.Trash
 import com.example.trashapp.watchers.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
 class AddReportActivity : AppCompatActivity() {
     private var adding = true
     private var id = ""
+    private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")
+    val zoneId = ZoneId.systemDefault()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,10 +64,13 @@ class AddReportActivity : AppCompatActivity() {
                     SpannableStringBuilder(extras.getString("latitude"))
                 this.findViewById<EditText>(R.id.editTextTextReportLocalizationLon).text =
                     SpannableStringBuilder(extras.getString("longitude"))
-                val curDate = LocalDateTime.parse(extras.getString("reportDate"),
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S"))
+                val curDate = LocalDateTime.parse(extras.getString("reportDate"), formatter)
                 this.findViewById<DatePicker>(R.id.datePickerReportCreationDate)
                     .updateDate(curDate.year, curDate.monthValue, curDate.dayOfMonth)
+                val creationTimePicker = this.findViewById<TimePicker>(R.id.timePickerReportCreationDate)
+                creationTimePicker.hour = curDate.hour
+                creationTimePicker.minute = curDate.minute
+
                 try {
                     this.findViewById<EditText>(R.id.editTextTextReportTrashSize).text =
                         when (extras.getString("trashSize")) {
@@ -83,8 +88,12 @@ class AddReportActivity : AppCompatActivity() {
                     Log.e("IntentExtras", e.toString())
                 }
                 if (extras.getString("collectionDate") != null) {
-                    this.findViewById<EditText>(R.id.editTextTextReportCollectionDate).text =
-                        SpannableStringBuilder(extras.getString("collectionDate"))
+                    val colDate = LocalDateTime.parse(extras.getString("collectionDate"), formatter)
+                    this.findViewById<DatePicker>(R.id.datePickerReportCollectionDate)
+                        .updateDate(colDate.year, colDate.monthValue, colDate.dayOfMonth)
+                    val collectionTimePicker = this.findViewById<TimePicker>(R.id.timePickerReportCollectionDate)
+                    collectionTimePicker.hour = colDate.hour
+                    collectionTimePicker.minute = colDate.minute
                     when (extras.getString("collectedBy")) {
                         "user" -> this.findViewById<EditText>(R.id.editTextTextReportLoginCollected).text =
                             SpannableStringBuilder(extras.getString("collectedVal"))
@@ -100,75 +109,86 @@ class AddReportActivity : AppCompatActivity() {
         }
 
 
-            val loginReportedEditText = this.findViewById<EditText>(R.id.editTextTextReportLoginReported)
-            val loginReportedWatcher = LoginWatcher(loginReportedEditText)
-            loginReportedEditText.addTextChangedListener(loginReportedWatcher)
+        val loginReportedEditText = this.findViewById<EditText>(R.id.editTextTextReportLoginReported)
+        val loginReportedWatcher = LoginWatcher(loginReportedEditText)
+        loginReportedEditText.addTextChangedListener(loginReportedWatcher)
 
-            val latitudeEditText = this.findViewById<EditText>(R.id.editTextTextReportLocalizationLat)
-            val latitudeWatcher = LatitudeWatcher(latitudeEditText)
-            latitudeEditText.addTextChangedListener(latitudeWatcher)
+        val latitudeEditText = this.findViewById<EditText>(R.id.editTextTextReportLocalizationLat)
+        val latitudeWatcher = LatitudeWatcher(latitudeEditText)
+        latitudeEditText.addTextChangedListener(latitudeWatcher)
 
-            val longitudeEditText = this.findViewById<EditText>(R.id.editTextTextReportLocalizationLon)
-            val longitudeWatcher = LongitudeWatcher(longitudeEditText)
-            longitudeEditText.addTextChangedListener(longitudeWatcher)
+        val longitudeEditText = this.findViewById<EditText>(R.id.editTextTextReportLocalizationLon)
+        val longitudeWatcher = LongitudeWatcher(longitudeEditText)
+        longitudeEditText.addTextChangedListener(longitudeWatcher)
 
-//            val creationDatePicker = this.findViewById<EditText>(R.id.datePickerReportCreationDate)
-//            val creationDateWatcher = DateWatcher(creationDatePicker)
-//            creationDateEditText.addTextChangedListener(creationDateWatcher)
-
-            val creationTimePicker = findViewById<TimePicker>(R.id.timePickerReportCreationDate)
-            creationTimePicker.setIs24HourView(true)
+        val creationDatePicker = findViewById<DatePicker>(R.id.datePickerReportCreationDate)
+        val creationTimePicker = findViewById<TimePicker>(R.id.timePickerReportCreationDate)
+        creationTimePicker.setIs24HourView(true)
 
         val trashSizeEditText = this.findViewById<EditText>(R.id.editTextTextReportTrashSize)
-            val trashSizeWatcher = SizeWatcher(trashSizeEditText)
-            trashSizeEditText.addTextChangedListener(trashSizeWatcher)
+        val trashSizeWatcher = SizeWatcher(trashSizeEditText)
+        trashSizeEditText.addTextChangedListener(trashSizeWatcher)
 
-            val trashTypeEditText = this.findViewById<EditText>(R.id.editTextTextReportTrashType)
-            val trashTypeWatcher = ListWatcher(trashTypeEditText)
-            trashTypeEditText.addTextChangedListener(trashTypeWatcher)
+        val trashTypeEditText = this.findViewById<EditText>(R.id.editTextTextReportTrashType)
+        val trashTypeWatcher = ListWatcher(trashTypeEditText)
+        trashTypeEditText.addTextChangedListener(trashTypeWatcher)
 
-            val collectionDateEditText = this.findViewById<EditText>(R.id.editTextTextReportCollectionDate)
-            val collectionDateWatcher = DateWatcher(collectionDateEditText)
-            collectionDateEditText.addTextChangedListener(collectionDateWatcher)
+        val collectionDatePicker = findViewById<DatePicker>(R.id.datePickerReportCollectionDate)
+        val collectionTimePicker = findViewById<TimePicker>(R.id.timePickerReportCollectionDate)
+        collectionTimePicker.setIs24HourView(true)
 
-            val firstEditText = findViewById<EditText>(R.id.editTextTextReportLoginCollected)
-            firstEditText.addTextChangedListener(LoginWatcher(firstEditText, obligatory = false))
-            val secondEditText = findViewById<EditText>(R.id.editTextTextReportVehicleCollected)
-            secondEditText.addTextChangedListener(IdWatcher(secondEditText))
-            val thirdEditText = findViewById<EditText>(R.id.editTextTextReportCrewCollected)
-            thirdEditText.addTextChangedListener(IdWatcher(thirdEditText))
 
-            firstEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
-            secondEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
-            thirdEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
+        val firstEditText = findViewById<EditText>(R.id.editTextTextReportLoginCollected)
+        firstEditText.addTextChangedListener(LoginWatcher(firstEditText, obligatory = false))
+        val secondEditText = findViewById<EditText>(R.id.editTextTextReportVehicleCollected)
+        secondEditText.addTextChangedListener(IdWatcher(secondEditText))
+        val thirdEditText = findViewById<EditText>(R.id.editTextTextReportCrewCollected)
+        thirdEditText.addTextChangedListener(IdWatcher(thirdEditText))
 
-            val applyButton = findViewById<Button>(R.id.buttonReportConfirm)
-            applyButton.setOnClickListener{
-                if (loginReportedEditText.error == null && loginReportedEditText.text.toString() != "" &&
-                        latitudeEditText.error == null && latitudeEditText.text.toString() != "" &&
-                        longitudeEditText.error == null && longitudeEditText.text.toString() != "" &&
+        firstEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
+        secondEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
+        thirdEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
+
+
+        val applyButton = findViewById<Button>(R.id.buttonReportConfirm)
+        applyButton.setOnClickListener{
+            if (loginReportedEditText.error == null && loginReportedEditText.text.toString() != "" &&
+                    latitudeEditText.error == null && latitudeEditText.text.toString() != "" &&
+                    longitudeEditText.error == null && longitudeEditText.text.toString() != "" &&
 //                        creationDateEditText.error == null && creationDateEditText.text.toString() != "" &&
-                        trashSizeEditText.error == null && trashTypeEditText.error == null &&
-                        collectionDateEditText.error == null && firstEditText.error == null &&
-                        secondEditText.error == null && thirdEditText.error == null){
-                    DBUtils.addReport(this, adding,
-                        Trash(localization = arrayListOf(
-                        latitudeEditText.text.toString(), longitudeEditText.text.toString()).joinToString(","),
-                        creationDate = "2000-12-12 12:12:12:1",  //creationDateEditText.text.toString(),
-                        userLoginReport = loginReportedEditText.text.toString(),
-                        trashType = (trashTypeEditText.text.toString()),
-                        collectionDate = collectionDateEditText.text.toString(),
-                    ), id)
-                } else{
-                    Toast.makeText(this, "Invalid report data", Toast.LENGTH_SHORT).show()
-                }
+                    trashSizeEditText.error == null && trashTypeEditText.error == null &&
+//                        collectionDateEditText.error == null && firstEditText.error == null &&
+                    secondEditText.error == null && thirdEditText.error == null){
+                val crTime = ZonedDateTime.of(creationDatePicker.year,
+                                                     creationDatePicker.month,
+                                                     creationDatePicker.dayOfMonth,
+                                                     creationTimePicker.hour,
+                                                     creationTimePicker.minute,
+                                                     0, 0, zoneId)
+                val colTime = ZonedDateTime.of(collectionDatePicker.year,
+                    collectionDatePicker.month,
+                    collectionDatePicker.dayOfMonth,
+                    collectionTimePicker.hour,
+                    collectionTimePicker.minute,
+                    0, 0, zoneId)
+                DBUtils.addReport(this, adding,
+                    Trash(localization = arrayListOf(
+                    latitudeEditText.text.toString(), longitudeEditText.text.toString()).joinToString(","),
+                    creationDate = crTime.format(formatter),
+                    userLoginReport = loginReportedEditText.text.toString(),
+                    trashType = (trashTypeEditText.text.toString()),
+                    collectionDate = colTime.format(formatter),
+                ), id)
+            } else{
+                Toast.makeText(this, "Invalid report data", Toast.LENGTH_SHORT).show()
             }
-            val cancelButton = findViewById<Button>(R.id.buttonReportCancel)
-            cancelButton.setOnClickListener {
-                finish()
-            }
+        }
+        val cancelButton = findViewById<Button>(R.id.buttonReportCancel)
+        cancelButton.setOnClickListener {
+            finish()
+        }
 
-            val deleteButton = findViewById<Button>(R.id.buttonReportDelete)
+        val deleteButton = findViewById<Button>(R.id.buttonReportDelete)
         if (extras != null) {
             deleteButton.setOnClickListener {
                 DBUtils.deleteReport(this, id)
