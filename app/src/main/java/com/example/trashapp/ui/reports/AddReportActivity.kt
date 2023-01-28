@@ -72,12 +72,13 @@ class AddReportActivity : AppCompatActivity() {
                 creationTimePicker.minute = curDate.minute
 
                 try {
-                    this.findViewById<EditText>(R.id.editTextTextReportTrashSize).text =
+                    this.findViewById<Spinner>(R.id.spinnerReportTrashSize).setSelection(
                         when (extras.getString("trashSize")) {
-                            "1" -> SpannableStringBuilder("small")
-                            "2" -> SpannableStringBuilder("medium")
-                            else -> SpannableStringBuilder("big")
+                            "Small" -> 0
+                            "Medium" -> 1
+                            else -> 2
                         }
+                    )
                 } catch (e: Exception) {
                     Log.e("IntentExtras", e.toString())
                 }
@@ -125,9 +126,10 @@ class AddReportActivity : AppCompatActivity() {
         val creationTimePicker = findViewById<TimePicker>(R.id.timePickerReportCreationDate)
         creationTimePicker.setIs24HourView(true)
 
-        val trashSizeEditText = this.findViewById<EditText>(R.id.editTextTextReportTrashSize)
-        val trashSizeWatcher = SizeWatcher(trashSizeEditText)
-        trashSizeEditText.addTextChangedListener(trashSizeWatcher)
+//        val trashSizeEditText = this.findViewById<EditText>(R.id.editTextTextReportTrashSize)
+//        val trashSizeWatcher = SizeWatcher(trashSizeEditText)
+//        trashSizeEditText.addTextChangedListener(trashSizeWatcher)
+        val trashSizeSpinner = this.findViewById<Spinner>(R.id.spinnerReportTrashSize)
 
         val trashTypeEditText = this.findViewById<EditText>(R.id.editTextTextReportTrashType)
         val trashTypeWatcher = ListWatcher(trashTypeEditText)
@@ -156,17 +158,17 @@ class AddReportActivity : AppCompatActivity() {
                     latitudeEditText.error == null && latitudeEditText.text.toString() != "" &&
                     longitudeEditText.error == null && longitudeEditText.text.toString() != "" &&
 //                        creationDateEditText.error == null && creationDateEditText.text.toString() != "" &&
-                    trashSizeEditText.error == null && trashTypeEditText.error == null &&
+//                    trashSizeEditText.error == null && trashTypeEditText.error == null &&
 //                        collectionDateEditText.error == null && firstEditText.error == null &&
                     secondEditText.error == null && thirdEditText.error == null){
                 val crTime = ZonedDateTime.of(creationDatePicker.year,
-                                                     creationDatePicker.month,
+                                                     creationDatePicker.month+1,
                                                      creationDatePicker.dayOfMonth,
                                                      creationTimePicker.hour,
                                                      creationTimePicker.minute,
                                                      0, 0, zoneId)
                 val colTime = ZonedDateTime.of(collectionDatePicker.year,
-                    collectionDatePicker.month,
+                    collectionDatePicker.month+1,
                     collectionDatePicker.dayOfMonth,
                     collectionTimePicker.hour,
                     collectionTimePicker.minute,
@@ -178,6 +180,7 @@ class AddReportActivity : AppCompatActivity() {
                     userLoginReport = loginReportedEditText.text.toString(),
                     trashType = (trashTypeEditText.text.toString()),
                     collectionDate = colTime.format(formatter),
+                        trashSize = trashSizeSpinner.selectedItem.toString()
                 ), id)
             } else{
                 Toast.makeText(this, "Invalid report data", Toast.LENGTH_SHORT).show()

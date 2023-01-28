@@ -7,7 +7,7 @@ data class Trash(
     var id: String? = null,
     var localization: String,
     var creationDate: String,
-    var trashSize: Int? = null,
+    var trashSize: String? = null,
     var vehicleId: Int? = null,
     var userLoginReport: String? = null,
     var cleaningCrewId: Int? = null,

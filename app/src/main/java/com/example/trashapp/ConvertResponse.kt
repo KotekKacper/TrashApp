@@ -112,7 +112,7 @@ object ConvertResponse {
                         id = attributes[0],
                         localization = attributes[1],
                         creationDate = attributes[2],
-                        trashSize = attributes[3].toInt(),
+                        trashSize = attributes[3],
                         images = drawableArray
                     )
                 )
@@ -175,7 +175,7 @@ object ConvertResponse {
                         localization = attributes[1],
                         creationDate = attributes[2],
 
-                        trashSize = attributes[3]?.toInt(),
+                        trashSize = attributes[3],
                         collectionDate = attributes[4],
                         userLoginReport =  attributes[5],
                         trashType = attributes[6]

@@ -86,8 +86,6 @@
                 android:timePickerMode="spinner" />
         </LinearLayout>
 
-
-
         <TextView
             android:id="@+id/textReportTrashSize"
             android:layout_width="match_parent"
@@ -97,16 +95,15 @@
             android:layout_marginEnd="8dp"
             android:textAlignment="center"
             android:textSize="20sp"
-            android:text="Trash size (small, medium, big)" />
-        <EditText
-            android:id="@+id/editTextTextReportTrashSize"
+            android:text="Trash size" />
+        <Spinner
+            android:id="@+id/spinnerReportTrashSize"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="trash size" />
-
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="8dp"
+            android:entries="@array/size_options" />
 
         <TextView
             android:id="@+id/textReportTrashType"
