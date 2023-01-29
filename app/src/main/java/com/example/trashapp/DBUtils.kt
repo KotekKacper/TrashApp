@@ -607,11 +607,15 @@ object DBUtils {
         }
     }
 
-    fun addGroup(context: Context, adding: Boolean, group: Group, id: String = "", user_login: String = ""){
+    fun addGroup(context: Context, adding: Boolean, group: Group, id: String = ""){
+        var dataToSend = "'${context.getSharedPreferences("credentials",Context.MODE_PRIVATE).getString("login","")}', '${group.name}'|"
         var funSend: String
         if (adding) funSend = "addGroup"
-        else  funSend = "updateGroup"
-        var dataToSend = "'${user_login}', '${group.name}'|"
+        else {
+            funSend = "updateGroup"
+            dataToSend = "'${context.getSharedPreferences("credentials",Context.MODE_PRIVATE).getString("login","")}', ${id}|"
+        }
+
         val elements = ArrayList<String>()
         elements.add("${Tab.CLEAN_CREW}.crew_name");elements.add("${Tab.CLEAN_CREW}.meet_date")
         elements.add("${Tab.CLEAN_CREW}.meeting_localization")
@@ -926,7 +930,7 @@ object DBUtils {
                     if (checkForError(context, json.toString())) {
                         return@withContext
                     }
-                    Toast.makeText(context, "Group ${id} was deleted.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Group was successfully deleted.", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
