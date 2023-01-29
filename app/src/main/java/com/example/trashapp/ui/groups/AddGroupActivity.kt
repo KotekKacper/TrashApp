@@ -1,5 +1,6 @@
 package com.example.trashapp.ui.groups
 
+import android.content.Context
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -84,7 +85,7 @@ class AddGroupActivity : AppCompatActivity() {
                         meetingDate = meetingDateEditText.text.toString(),
                         meetingLoc = arrayListOf(
                             latitudeEditText.text.toString(), longitudeEditText.text.toString()).joinToString(",")
-                    ), id
+                    ), id,
                 )
             } else{
                 Toast.makeText(this, "Invalid group data", Toast.LENGTH_SHORT).show()

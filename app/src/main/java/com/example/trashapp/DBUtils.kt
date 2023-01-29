@@ -52,7 +52,7 @@ import kotlin.collections.ArrayList
 object DBUtils {
 
     val retrofit = Retrofit.Builder()
-        .baseUrl("http://10.0.2.2:8888/")
+        .baseUrl("http://192.168.1.11:8888/")
         .build()
     val service = retrofit.create(ServerApiService::class.java)
     val imgService = retrofit.create(ImageUploadApi::class.java)
@@ -219,11 +219,7 @@ object DBUtils {
         val funSend = "getGroups"
 
         val elements = ArrayList<String>()
-        elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
-        elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.phone");
-        elements.add("${Tab.USER}.fullname");elements.add("${Tab.USER}.country");
-        elements.add("${Tab.USER}.city");elements.add("${Tab.USER}.street");
-        elements.add("${Tab.USER}.post_code");elements.add("${Tab.ROLE}.role_name")
+        elements.add("${Tab.USER}.login");
 
         val dataToSend = elements.joinToString(separator = ", ")
 
@@ -611,16 +607,16 @@ object DBUtils {
         }
     }
 
-    fun addGroup(context: Context, adding: Boolean, group: Group, id: String = ""){
+    fun addGroup(context: Context, adding: Boolean, group: Group, id: String = "", user_login: String = ""){
         var funSend: String
         if (adding) funSend = "addGroup"
         else  funSend = "updateGroup"
-
+        var dataToSend = "'${user_login}', '${group.name}'|"
         val elements = ArrayList<String>()
         elements.add("${Tab.CLEAN_CREW}.crew_name");elements.add("${Tab.CLEAN_CREW}.meet_date")
         elements.add("${Tab.CLEAN_CREW}.meeting_localization")
-        var dataToSend = elements.joinToString(separator = ", ")
-        dataToSend = dataToSend.plus("\n")
+        dataToSend = dataToSend.plus(elements.joinToString(separator = ", "))
+        dataToSend = dataToSend.plus("|")
         dataToSend = dataToSend.plus("'${group.name}', '${group.meetingDate}', '${group.meetingLoc}'")
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -631,8 +627,14 @@ object DBUtils {
                     if (checkForError(context, json.toString())) {
                         return@withContext
                     }
-                    Toast.makeText(context, "Group added successfully!", Toast.LENGTH_SHORT).show()
+
                     (context as Activity).finish()
+
+                    if (adding){
+                        Toast.makeText(context, "Group was added successfully!", Toast.LENGTH_SHORT).show()
+                    } else{
+                        Toast.makeText(context, "Group was updated successfully!", Toast.LENGTH_SHORT).show()
+                    }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
