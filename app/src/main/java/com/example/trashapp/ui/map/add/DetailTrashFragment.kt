@@ -52,7 +52,7 @@ class DetailTrashFragment : Fragment() {
 
         binding.textviewLocation.text = givenPosition[0]+", "+givenPosition[1]
 
-        val sizes = arrayOf("small", "medium", "big")
+        val sizes = arrayOf("Small", "Medium", "Big")
         binding.dropdownSize.adapter = context?.let {
             ArrayAdapter<String>(
                 it, androidx.transition.R.layout.support_simple_spinner_dropdown_item, sizes)
@@ -75,9 +75,6 @@ class DetailTrashFragment : Fragment() {
                     activity!!.getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "")!!
                 )
             }
-            Toast.makeText(context, "Trash reported", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(context, MainActivity::class.java))
-            activity?.finishAffinity()
         }
     }
 

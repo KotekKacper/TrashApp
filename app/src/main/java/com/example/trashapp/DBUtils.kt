@@ -3,6 +3,10 @@ package com.example.trashapp
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
@@ -28,21 +32,31 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.ItemizedIconOverlay
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus
 import org.osmdroid.views.overlay.OverlayItem
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
+import java.io.ByteArrayOutputStream
 import kotlin.collections.ArrayList
 
 
 object DBUtils {
 
-    public val retrofit = Retrofit.Builder()
+    val retrofit = Retrofit.Builder()
         .baseUrl("http://10.0.2.2:8888/")
         .build()
-    public val service = retrofit.create(ServerApiService::class.java)
+    val service = retrofit.create(ServerApiService::class.java)
+    val imgService = retrofit.create(ImageUploadApi::class.java)
+    val imgDownService = retrofit.create(ImageDownloadApi::class.java)
 
     fun checkForError(context: Context, output: String): Boolean{
         if (output.startsWith("ERROR")){
@@ -136,15 +150,36 @@ object DBUtils {
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                var reportsArray = arrayListOf<Trash>()
                 val response = service.getJson(dataToSend, funSend)
                 withContext(Dispatchers.Main) {
                     val json = response.body()?.string()
                     Log.i("ServerSQL", json.toString())
-                    if (checkForError(context, json.toString())){
+                    if (checkForError(context, json.toString())) {
                         return@withContext
                     }
-
-                    val reportsArray = json?.let { convertUserReports(json.toString()) }
+                    reportsArray = json?.let { convertUserReports(json.toString()) }!!
+                }
+                    for (report in reportsArray!!){
+                        while (true){
+                            val images = arrayListOf<Drawable>()
+                            var imgNumber = 1
+                            try{
+                                val response = imgDownService.getImages(report.id!!, imgNumber.toString())
+                                val imageBytes = response.execute().body()?.bytes()
+                                val bitmap = imageBytes?.let { BitmapFactory.decodeByteArray(imageBytes, 0, it.size) }
+                                report.images?.add(BitmapDrawable(context.resources, bitmap))
+                                images.add(BitmapDrawable(context.resources, bitmap))
+                            } catch (e: Exception) {
+                                withContext(Dispatchers.Main) {
+                                    Log.e("ServerSQL", e.toString())
+                                }
+                                break
+                            }
+                            imgNumber++
+                        }
+                    }
+                withContext(Dispatchers.Main) {
                     val adapter = ReportItemAdapter(reportsArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(context, AddReportActivity::class.java)
@@ -456,22 +491,43 @@ object DBUtils {
     fun addTrash(context: Context, pos: GeoPoint, chosen_imgs : ArrayList<Uri>, size: String, user_login_report: String? = null, vehicle_id: Int? = null, user_login: String? = null, crew_id:Int? = null){
         val funSend = "addTrash"
         var dataToSend = "'${pos.toDoubleString()}', '${user_login_report}', '${TrashSize.valueOf(size.uppercase()).intValue}'"
-//        for(img in chosen_imgs) {
-//            val dbHelper = DatabaseHelper(context)
-//            val db = dbHelper.writableDatabase
-//            try {
-//                //TODO - improve to add element with all given properties and to prevent sql injection
-//                //dataToSend = dataToSend.plus("|${context.contentResolver.openInputStream(img)?.readBytes().toString()}")
-//                val sqlString: String =
-//                    "INSERT INTO ${Tab.IMAGE} (content, mime_type, trash_id) " + "VALUES (${context.contentResolver.openInputStream(img)?.readBytes()},'png', '${pos.toDoubleString()}')"
-//                val statement = db.compileStatement(sqlString)
-//                statement.executeInsert()
-//                db.close()
-//
-//            } catch (ex: Exception) {
-//                Log.w("addTrash : Exception : ", ex.message.toString())
-//            }
-//        }
+        for(img in chosen_imgs) {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val uri = RequestBody.create(MediaType.parse("text/plain"), "10")
+
+                    val contentResolver = context.contentResolver
+                    val imageStream = contentResolver.openInputStream(img)
+                    val bitmap = BitmapFactory.decodeStream(imageStream)
+                    val byteArrayOutputStream = ByteArrayOutputStream()
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+                    val imageBytes = byteArrayOutputStream.toByteArray()
+                    val requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageBytes)
+                    val image = MultipartBody.Part.createFormData("image", "image.jpg", requestFile)
+
+                    val response = imgService.uploadImage(uri, image)
+                    response.enqueue(object : Callback<ResponseBody> {
+                        override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                            if (response.isSuccessful) {
+                                // Handle success
+                                Toast.makeText(context, "Image uploaded!", Toast.LENGTH_SHORT).show()
+                            } else {
+                                // Handle failure
+                                Toast.makeText(context, "Image uploading failed", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            // Handle failure
+                            Toast.makeText(context, "Image uploading failed dramatically", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Log.e("ServerSQL", e.toString())
+                    }
+                }
+            }
+        }
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = service.getJson(dataToSend, funSend)
@@ -481,7 +537,7 @@ object DBUtils {
                     if (checkForError(context, json.toString())){
                         return@withContext
                     }
-
+                    (context as Activity).finish()
                     Toast.makeText(context, "Thank You for report!", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
@@ -524,11 +580,9 @@ object DBUtils {
             funSend = "updateReport"
         }
         var dataToSend =
-            "'${trash.localization}', '${trash.userLoginReport}', '${trash.trashSize}'"
-        dataToSend = dataToSend.plus("|")
-        if(!adding) {
-            dataToSend = dataToSend.plus("|${id}")
-        }
+            "'${trash.userLoginReport}', '${trash.localization}', '${trash.creationDate}'" +
+            "'${trash.trashSize}', '${trash.trashType}', '${trash.creationDate}'"//, '${trash.user/vehicle/crew}'" //
+        dataToSend = dataToSend.plus("|${id}")
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = service.getJson(dataToSend, funSend)

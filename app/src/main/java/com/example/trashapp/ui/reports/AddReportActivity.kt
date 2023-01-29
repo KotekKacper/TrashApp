@@ -24,7 +24,7 @@ class AddReportActivity : AppCompatActivity() {
     private var adding = true
     private var id = ""
     private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")
-    val zoneId = ZoneId.systemDefault()
+    private val zoneId = ZoneId.systemDefault()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -174,13 +174,15 @@ class AddReportActivity : AppCompatActivity() {
                     collectionTimePicker.minute,
                     0, 0, zoneId)
                 DBUtils.addReport(this, adding,
-                    Trash(localization = arrayListOf(
-                    latitudeEditText.text.toString(), longitudeEditText.text.toString()).joinToString(","),
-                    creationDate = crTime.format(formatter),
-                    userLoginReport = loginReportedEditText.text.toString(),
-                    trashType = (trashTypeEditText.text.toString()),
-                    collectionDate = colTime.format(formatter),
-                        trashSize = trashSizeSpinner.selectedItem.toString()
+                    Trash(
+                        userLoginReport = loginReportedEditText.text.toString(),
+                        localization = arrayListOf(
+                            latitudeEditText.text.toString(), longitudeEditText.text.toString())
+                            .joinToString(","),
+                        creationDate = crTime.format(formatter),
+                        trashSize = trashSizeSpinner.selectedItem.toString(),
+                        trashType = (trashTypeEditText.text.toString()),
+                        collectionDate = colTime.format(formatter)
                 ), id)
             } else{
                 Toast.makeText(this, "Invalid report data", Toast.LENGTH_SHORT).show()
