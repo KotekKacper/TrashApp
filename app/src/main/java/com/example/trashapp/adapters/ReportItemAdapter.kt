@@ -33,7 +33,9 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mData?.get(position)
         if (item!!.images != null){
-            holder.imageView.setImageDrawable(item.images!![0])
+            if (item.images?.isNotEmpty()!!){
+                holder.imageView.setImageDrawable(item.images!![0])
+            }
         }
 
         holder.itemView.setOnClickListener {

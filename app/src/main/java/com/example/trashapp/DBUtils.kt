@@ -161,24 +161,28 @@ object DBUtils {
                     reportsArray = json?.let { convertUserReports(json.toString()) }!!
                 }
                     for (report in reportsArray!!){
-                        while (true){
-                            val images = arrayListOf<Drawable>()
-                            var imgNumber = 1
+                        val images = arrayListOf<Drawable>()
+//                        while (true){
+                            var imgNumber = 0
                             try{
                                 val response = imgDownService.getImages(report.id!!, imgNumber.toString())
                                 val imageBytes = response.execute().body()?.bytes()
-                                val bitmap = imageBytes?.let { BitmapFactory.decodeByteArray(imageBytes, 0, it.size) }
-                                report.images?.add(BitmapDrawable(context.resources, bitmap))
-                                images.add(BitmapDrawable(context.resources, bitmap))
+                                if (imageBytes!!.size > 1){
+                                    val bitmap = imageBytes.let { BitmapFactory.decodeByteArray(imageBytes, 0, it.size) }
+                                    report.images?.add(BitmapDrawable(context.resources, bitmap))
+                                    images.add(BitmapDrawable(context.resources, bitmap))
+                                }
                             } catch (e: Exception) {
                                 withContext(Dispatchers.Main) {
                                     Log.e("ServerSQL", e.toString())
                                 }
                                 break
                             }
-                            imgNumber++
-                        }
+//                            imgNumber++
+//                        }
+                        report.images = images
                     }
+
                 withContext(Dispatchers.Main) {
                     val adapter = ReportItemAdapter(reportsArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
