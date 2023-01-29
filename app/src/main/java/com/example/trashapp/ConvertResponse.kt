@@ -105,15 +105,12 @@ object ConvertResponse {
                 val imageBytes = imageString.toByteArray()
                 val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
                 val drawableImage = BitmapDrawable(bitmap)
-                val drawableArray = ArrayList<Drawable>()
-                drawableArray.add(drawableImage)
                 out.add(
                     Trash(
                         id = attributes[0],
                         localization = attributes[1],
                         creationDate = attributes[2],
-                        trashSize = attributes[3],
-                        images = drawableArray
+                        trashSize = attributes[3]
                     )
                 )
             }
@@ -169,6 +166,11 @@ object ConvertResponse {
 //                    val drawableImage = BitmapDrawable(bitmap)
 //                    drawableArray.add(drawableImage)
 //                }
+                var imgs = arrayListOf<String>()
+                if (attributes[7] != ""){
+                    imgs = ArrayList(attributes[7].split(","))
+                }
+
                 out.add(
                     Trash(
                         id = attributes[0],
@@ -178,8 +180,8 @@ object ConvertResponse {
                         trashSize = attributes[3],
                         collectionDate = attributes[4],
                         userLoginReport =  attributes[5],
-                        trashType = attributes[6]
-                        //images = drawableArray
+                        trashType = attributes[6],
+                        images = imgs
                     )
                 )
             }

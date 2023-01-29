@@ -13,7 +13,7 @@ data class Trash(
     var cleaningCrewId: Int? = null,
     var userLogin: String? = null,
     var collectionDate: String? = null,
-    var images: ArrayList<Drawable>? = null,
+    var images: ArrayList<String>? = null,
     var trashType: String? = null
 )
 

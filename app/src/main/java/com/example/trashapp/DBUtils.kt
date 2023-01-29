@@ -57,6 +57,8 @@ object DBUtils {
     val service = retrofit.create(ServerApiService::class.java)
     val imgService = retrofit.create(ImageUploadApi::class.java)
     val imgDownService = retrofit.create(ImageDownloadApi::class.java)
+    val imgDownByIdService = retrofit.create(ImageDownloadByIdApi::class.java)
+
 
     fun checkForError(context: Context, output: String): Boolean{
         if (output.startsWith("ERROR")){
@@ -160,28 +162,6 @@ object DBUtils {
                     }
                     reportsArray = json?.let { convertUserReports(json.toString()) }!!
                 }
-//                    for (report in reportsArray!!){
-//                        val images = arrayListOf<Drawable>()
-////                        while (true){
-//                            var imgNumber = 0
-//                            try{
-//                                val response = imgDownService.getImages(report.id!!, imgNumber.toString())
-//                                val imageBytes = response.execute().body()?.bytes()
-//                                if (imageBytes!!.size > 1){
-//                                    val bitmap = imageBytes.let { BitmapFactory.decodeByteArray(imageBytes, 0, it.size) }
-//                                    report.images?.add(BitmapDrawable(context.resources, bitmap))
-//                                    images.add(BitmapDrawable(context.resources, bitmap))
-//                                }
-//                            } catch (e: Exception) {
-//                                withContext(Dispatchers.Main) {
-//                                    Log.e("ServerSQL", e.toString())
-//                                }
-//                                break
-//                            }
-////                            imgNumber++
-////                        }
-//                        report.images = images
-//                    }
 
                 withContext(Dispatchers.Main) {
                     val adapter = ReportItemAdapter(reportsArray, object : OnItemClickListener {
@@ -201,6 +181,9 @@ object DBUtils {
                             intent.putExtra("collectionDate",reportsArray?.get(position)?.collectionDate)
                             intent.putExtra("collectedBy", "user")
                             intent.putExtra("collectedVal", reportsArray?.get(position)?.userLoginReport?.toString())
+                            if (reportsArray?.get(position)?.images?.size!! > 0){
+                                intent.putExtra("images", reportsArray?.get(position)?.images?.joinToString(","))
+                            }
                             context.startActivity(intent)
                         }
                     })

@@ -10,8 +10,11 @@ import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.widget.*
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.DBUtils
 import com.example.trashapp.R
+import com.example.trashapp.adapters.ImageItemAdapter
 import com.example.trashapp.classes.Trash
 import com.example.trashapp.watchers.*
 import java.time.LocalDateTime
@@ -25,6 +28,7 @@ class AddReportActivity : AppCompatActivity() {
     private var id = ""
     private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")
     private val zoneId = ZoneId.systemDefault()
+    private var imageIDs = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,21 +92,32 @@ class AddReportActivity : AppCompatActivity() {
                 } catch (e: Exception) {
                     Log.e("IntentExtras", e.toString())
                 }
-                if (extras.getString("collectionDate") != null) {
-                    val colDate = LocalDateTime.parse(extras.getString("collectionDate"), formatter)
-                    this.findViewById<DatePicker>(R.id.datePickerReportCollectionDate)
-                        .updateDate(colDate.year, colDate.monthValue, colDate.dayOfMonth)
-                    val collectionTimePicker = this.findViewById<TimePicker>(R.id.timePickerReportCollectionDate)
-                    collectionTimePicker.hour = colDate.hour
-                    collectionTimePicker.minute = colDate.minute
-                    when (extras.getString("collectedBy")) {
-                        "user" -> this.findViewById<EditText>(R.id.editTextTextReportLoginCollected).text =
-                            SpannableStringBuilder(extras.getString("collectedVal"))
-                        "crew" -> this.findViewById<EditText>(R.id.editTextTextReportCrewCollected).text =
-                            SpannableStringBuilder(extras.getString("collectedVal"))
-                        "vehicle" -> this.findViewById<EditText>(R.id.editTextTextReportVehicleCollected).text =
-                            SpannableStringBuilder(extras.getString("collectedVal"))
+                try {
+                    if (extras.getString("collectionDate") != null) {
+                        val colDate =
+                            LocalDateTime.parse(extras.getString("collectionDate"), formatter)
+                        this.findViewById<DatePicker>(R.id.datePickerReportCollectionDate)
+                            .updateDate(colDate.year, colDate.monthValue, colDate.dayOfMonth)
+                        val collectionTimePicker =
+                            this.findViewById<TimePicker>(R.id.timePickerReportCollectionDate)
+                        collectionTimePicker.hour = colDate.hour
+                        collectionTimePicker.minute = colDate.minute
+                        when (extras.getString("collectedBy")) {
+                            "user" -> this.findViewById<EditText>(R.id.editTextTextReportLoginCollected).text =
+                                SpannableStringBuilder(extras.getString("collectedVal"))
+                            "crew" -> this.findViewById<EditText>(R.id.editTextTextReportCrewCollected).text =
+                                SpannableStringBuilder(extras.getString("collectedVal"))
+                            "vehicle" -> this.findViewById<EditText>(R.id.editTextTextReportVehicleCollected).text =
+                                SpannableStringBuilder(extras.getString("collectedVal"))
+                        }
                     }
+                }  catch (e: Exception) {
+                    Log.e("IntentExtras", e.toString())
+                }
+                try {
+                    imageIDs = ArrayList(extras.getString("images")!!.split(","))
+                } catch (e: Exception) {
+                    Log.e("IntentExtras", e.toString())
                 }
             } catch (e: Exception) {
                 Log.e("IntentExtras", e.toString())
@@ -150,6 +165,15 @@ class AddReportActivity : AppCompatActivity() {
         firstEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
         secondEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
         thirdEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
+
+
+        if (imageIDs.size > 0){
+            Log.e("ImageIDs", imageIDs.joinToString(","))
+            val recyclerView = this.findViewById<RecyclerView>(R.id.recyclerViewImages)
+            recyclerView.layoutManager = LinearLayoutManager(this)
+            val adapter = ImageItemAdapter(imageIDs)
+            recyclerView.adapter = adapter
+        }
 
 
         val applyButton = findViewById<Button>(R.id.buttonReportConfirm)
