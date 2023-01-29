@@ -8,12 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.*
-import com.example.trashapp.classes.Group
 import kotlinx.coroutines.*
-import retrofit2.Retrofit
 
 class ImageItemAdapter(private val mData: ArrayList<String>?
 ) :
@@ -22,6 +20,11 @@ RecyclerView.Adapter<ImageItemAdapter.ViewHolder>() {
         val view: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_image, parent, false)
         return ViewHolder(view)
+    }
+
+    fun removeItem(position: Int) {
+        mData?.removeAt(position)
+        notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -53,7 +56,31 @@ RecyclerView.Adapter<ImageItemAdapter.ViewHolder>() {
         }
 
         holder.button.setOnClickListener {
-            //TODO - implement deletion of an image
+            val sqlFun = "deleteImage"
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    try{
+                        val response = DBUtils.service.getJson(item.toString(), sqlFun)
+                        withContext(Dispatchers.Main) {
+                            val json = response.body()?.string()
+                            Log.i("ServerSQL", json.toString())
+                            if (DBUtils.checkForError(holder.itemView.context, json.toString())){
+                                return@withContext
+                            }
+                            removeItem(position)
+                            Toast.makeText(holder.itemView.context, "Image deleted", Toast.LENGTH_SHORT).show()
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            Log.e("ServerSQL-Image", e.toString())
+                        }
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Log.e("ServerSQL-Image", e.toString())
+                    }
+                }
+            }
         }
 
     }
