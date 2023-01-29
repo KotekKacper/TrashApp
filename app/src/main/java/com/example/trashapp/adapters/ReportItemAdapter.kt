@@ -1,6 +1,9 @@
 package com.example.trashapp.adapters
 
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,16 +11,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.trashapp.LocalizationToAddress
-import com.example.trashapp.NominatimApiService
-import com.example.trashapp.R
+import com.example.trashapp.*
 import com.example.trashapp.classes.Trash
-import com.example.trashapp.OnItemClickListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import retrofit2.Retrofit
+import java.time.Duration
 
 
 class ReportItemAdapter(private val mData: ArrayList<Trash>?,
@@ -32,26 +30,54 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mData?.get(position)
-        if (item!!.images != null){
-            if (item.images?.isNotEmpty()!!){
-                holder.imageView.setImageDrawable(item.images!![0])
+
+        CoroutineScope(Dispatchers.IO).launch {
+        try {
+                try{
+                    delay((10+(5*position)).toLong())
+                    val response = DBUtils.imgDownService.getImages(item?.id!!, "0")
+                    val imageBytes = response.execute().body()?.bytes()
+                    if (imageBytes!!.size > 1){
+                        val bitmap = imageBytes.let { BitmapFactory.decodeByteArray(imageBytes, 0, it.size) }
+                        withContext(Dispatchers.Main){
+                            val image = BitmapDrawable(holder.itemView.context.resources, bitmap)
+                            holder.imageView.setImageDrawable(image)
+                        }
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Log.e("ServerSQL-Image", e.toString())
+                    }
+                }
+            } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                Log.e("ServerSQL-Image", e.toString())
             }
         }
+        }
+
+
+
+//        if (item!!.images != null){
+//            if (item.images?.isNotEmpty()!!){
+//                holder.imageView.setImageDrawable(item.images!![0])
+//            }
+//        }
 
         holder.itemView.setOnClickListener {
             listener.onItemClick(position)
         }
 
-        holder.textView1.text = item.creationDate.toString().subSequence(0,10)
+        holder.textView1.text = item?.creationDate.toString().subSequence(0,10)
 
-        val loc = item.localization.split(",")
+        val loc = item?.localization?.split(",")
         val retrofit = Retrofit.Builder()
             .baseUrl("https://nominatim.openstreetmap.org/")
             .build()
         val service = retrofit.create(NominatimApiService::class.java)
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = service.getReverseJson(loc[0], loc[1], "json")
+                val response = service.getReverseJson(loc!![0], loc[1], "json")
                 withContext(Dispatchers.Main) {
                     val json = response.body()?.string()
                     val addrString = LocalizationToAddress.getAddress(json)
@@ -65,7 +91,7 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?,
             }
         }
 
-        if (item.collectionDate == null){
+        if (item?.collectionDate == null){
             holder.textView3.text = "Not collected"
             holder.textView3.setTextColor(Color.RED)
         }

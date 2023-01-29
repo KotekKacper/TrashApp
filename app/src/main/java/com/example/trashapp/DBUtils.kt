@@ -160,28 +160,28 @@ object DBUtils {
                     }
                     reportsArray = json?.let { convertUserReports(json.toString()) }!!
                 }
-                    for (report in reportsArray!!){
-                        val images = arrayListOf<Drawable>()
-//                        while (true){
-                            var imgNumber = 0
-                            try{
-                                val response = imgDownService.getImages(report.id!!, imgNumber.toString())
-                                val imageBytes = response.execute().body()?.bytes()
-                                if (imageBytes!!.size > 1){
-                                    val bitmap = imageBytes.let { BitmapFactory.decodeByteArray(imageBytes, 0, it.size) }
-                                    report.images?.add(BitmapDrawable(context.resources, bitmap))
-                                    images.add(BitmapDrawable(context.resources, bitmap))
-                                }
-                            } catch (e: Exception) {
-                                withContext(Dispatchers.Main) {
-                                    Log.e("ServerSQL", e.toString())
-                                }
-                                break
-                            }
-//                            imgNumber++
-//                        }
-                        report.images = images
-                    }
+//                    for (report in reportsArray!!){
+//                        val images = arrayListOf<Drawable>()
+////                        while (true){
+//                            var imgNumber = 0
+//                            try{
+//                                val response = imgDownService.getImages(report.id!!, imgNumber.toString())
+//                                val imageBytes = response.execute().body()?.bytes()
+//                                if (imageBytes!!.size > 1){
+//                                    val bitmap = imageBytes.let { BitmapFactory.decodeByteArray(imageBytes, 0, it.size) }
+//                                    report.images?.add(BitmapDrawable(context.resources, bitmap))
+//                                    images.add(BitmapDrawable(context.resources, bitmap))
+//                                }
+//                            } catch (e: Exception) {
+//                                withContext(Dispatchers.Main) {
+//                                    Log.e("ServerSQL", e.toString())
+//                                }
+//                                break
+//                            }
+////                            imgNumber++
+////                        }
+//                        report.images = images
+//                    }
 
                 withContext(Dispatchers.Main) {
                     val adapter = ReportItemAdapter(reportsArray, object : OnItemClickListener {
