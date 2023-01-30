@@ -1,8 +1,12 @@
 package com.example.trashapp.ui.reports
 
+import android.content.ClipData
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -29,6 +33,8 @@ class AddReportActivity : AppCompatActivity() {
     private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")
     private val zoneId = ZoneId.systemDefault()
     private var imageIDs = ArrayList<String>()
+    private val PICK_IMG = 110;
+    val chosen_imgs : ArrayList<Uri> = ArrayList<Uri>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -167,6 +173,14 @@ class AddReportActivity : AppCompatActivity() {
         thirdEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
 
 
+
+        findViewById<Button>(R.id.buttonReportLoadImg).setOnClickListener {
+            chosen_imgs.clear()
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            startActivityForResult(intent, PICK_IMG)
+        }
+
         if (imageIDs.size > 0){
             Log.e("ImageIDs", imageIDs.joinToString(","))
             val recyclerView = this.findViewById<RecyclerView>(R.id.recyclerViewImages)
@@ -207,7 +221,7 @@ class AddReportActivity : AppCompatActivity() {
                         trashSize = trashSizeSpinner.selectedItem.toString(),
                         trashType = (trashTypeEditText.text.toString()),
                         collectionDate = colTime.format(formatter)
-                ), id)
+                ), id, chosen_imgs)
             } else{
                 Toast.makeText(this, "Invalid report data", Toast.LENGTH_SHORT).show()
             }
@@ -227,4 +241,43 @@ class AddReportActivity : AppCompatActivity() {
             deleteButton.isVisible = false
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode === PICK_IMG && resultCode === RESULT_OK && null != data) {
+            // Get the Images from data
+            chosen_imgs.clear()
+            getImagesFromData(data)
+        } else {
+            // show this if no image is selected
+            Toast.makeText(this, "You haven't picked any image", Toast.LENGTH_LONG).show()
+            findViewById<Button>(R.id.buttonReportLoadImg).setText("ADD FROM FILES")
+        }
+    }
+
+    private fun getImagesFromData(data: Intent) {
+        if (data.getClipData() != null) {
+            val mClipData: ClipData = data.getClipData()!!
+            val cout: Int = data.getClipData()!!.getItemCount()
+            for (i in 0 until cout) {
+                // adding imageuri in array
+                val imageurl: Uri = data.getClipData()!!.getItemAt(i).getUri()
+                chosen_imgs.add(imageurl)
+                if (chosen_imgs.size == 1){
+                    findViewById<Button>(R.id.buttonReportLoadImg)
+                        .setText(chosen_imgs.size.toString()+" image chosen to add")
+                }
+                else{
+                    findViewById<Button>(R.id.buttonReportLoadImg)
+                        .setText(chosen_imgs.size.toString()+" images chosen to add")
+                }
+            }
+        } else {
+            val imageurl: Uri = data.getData()!!
+            chosen_imgs.add(imageurl)
+        }
+    }
+
+
 }

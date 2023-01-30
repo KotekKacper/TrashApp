@@ -476,45 +476,10 @@ object DBUtils {
 
 
     fun addTrash(context: Context, pos: GeoPoint, chosen_imgs : ArrayList<Uri>, size: String, user_login_report: String? = null, vehicle_id: Int? = null, user_login: String? = null, crew_id:Int? = null){
+        var addedTrashId = ""
+
         val funSend = "addTrash"
         var dataToSend = "'${pos.toDoubleString()}', '${user_login_report}', '${TrashSize.valueOf(size.uppercase()).intValue}'"
-        for(img in chosen_imgs) {
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val uri = RequestBody.create(MediaType.parse("text/plain"), "10")
-
-                    val contentResolver = context.contentResolver
-                    val imageStream = contentResolver.openInputStream(img)
-                    val bitmap = BitmapFactory.decodeStream(imageStream)
-                    val byteArrayOutputStream = ByteArrayOutputStream()
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
-                    val imageBytes = byteArrayOutputStream.toByteArray()
-                    val requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageBytes)
-                    val image = MultipartBody.Part.createFormData("image", "image.jpg", requestFile)
-
-                    val response = imgService.uploadImage(uri, image)
-                    response.enqueue(object : Callback<ResponseBody> {
-                        override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                            if (response.isSuccessful) {
-                                // Handle success
-                                Toast.makeText(context, "Image uploaded!", Toast.LENGTH_SHORT).show()
-                            } else {
-                                // Handle failure
-                                Toast.makeText(context, "Image uploading failed", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                            // Handle failure
-                            Toast.makeText(context, "Image uploading failed dramatically", Toast.LENGTH_SHORT).show()
-                        }
-                    })
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        Log.e("ServerSQL", e.toString())
-                    }
-                }
-            }
-        }
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = service.getJson(dataToSend, funSend)
@@ -524,8 +489,46 @@ object DBUtils {
                     if (checkForError(context, json.toString())){
                         return@withContext
                     }
+                    addedTrashId = json.toString()
                     (context as Activity).finish()
                     Toast.makeText(context, "Thank You for report!", Toast.LENGTH_SHORT).show()
+                    for(img in chosen_imgs) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                val uri = RequestBody.create(MediaType.parse("text/plain"), addedTrashId)
+
+                                val contentResolver = context.contentResolver
+                                val imageStream = contentResolver.openInputStream(img)
+                                val bitmap = BitmapFactory.decodeStream(imageStream)
+                                val byteArrayOutputStream = ByteArrayOutputStream()
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+                                val imageBytes = byteArrayOutputStream.toByteArray()
+                                val requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageBytes)
+                                val image = MultipartBody.Part.createFormData("image", "image.jpg", requestFile)
+
+                                val response = imgService.uploadImage(uri, image)
+                                response.enqueue(object : Callback<ResponseBody> {
+                                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                                        if (response.isSuccessful) {
+                                            // Handle success
+                                            Toast.makeText(context, "Image uploaded!", Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            // Handle failure
+                                            Toast.makeText(context, "Image uploading failed", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                                        // Handle failure
+                                        Toast.makeText(context, "Image uploading failed dramatically", Toast.LENGTH_SHORT).show()
+                                    }
+                                })
+                            } catch (e: Exception) {
+                                withContext(Dispatchers.Main) {
+                                    Log.e("ServerSQL", e.toString())
+                                }
+                            }
+                        }
+                    }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -559,7 +562,9 @@ object DBUtils {
         }
     }
 
-    fun addReport(context: Context, adding: Boolean, trash: Trash, id: String = ""){
+    fun addReport(context: Context, adding: Boolean, trash: Trash, id: String = "", chosen_imgs: ArrayList<Uri>){
+        var addedTrashId = id
+
         val funSend : String
         if(adding) {
             funSend = "addReport"
@@ -579,11 +584,51 @@ object DBUtils {
                     if (checkForError(context, json.toString())) {
                         return@withContext
                     }
-                    (context as Activity).finish()
                     if (adding){
                         Toast.makeText(context, "Report added successfully!", Toast.LENGTH_SHORT).show()
                     } else{
                         Toast.makeText(context, "Report updated successfully!", Toast.LENGTH_SHORT).show()
+                    }
+                    if (adding){
+                        addedTrashId = json.toString()
+                    }
+                    CoroutineScope(Dispatchers.IO).launch {
+                        for(img in chosen_imgs) {
+                            try {
+                                val uri = RequestBody.create(MediaType.parse("text/plain"), addedTrashId)
+
+                                val contentResolver = context.contentResolver
+                                val imageStream = contentResolver.openInputStream(img)
+                                val bitmap = BitmapFactory.decodeStream(imageStream)
+                                val byteArrayOutputStream = ByteArrayOutputStream()
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+                                val imageBytes = byteArrayOutputStream.toByteArray()
+                                val requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageBytes)
+                                val image = MultipartBody.Part.createFormData("image", "image.jpg", requestFile)
+
+                                val response = imgService.uploadImage(uri, image)
+                                response.enqueue(object : Callback<ResponseBody> {
+                                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                                        if (response.isSuccessful) {
+                                            // Handle success
+                                            Toast.makeText(context, "Image uploaded!", Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            // Handle failure
+                                            Toast.makeText(context, "Image uploading failed", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                                        // Handle failure
+                                        Toast.makeText(context, "Image uploading failed dramatically", Toast.LENGTH_SHORT).show()
+                                    }
+                                })
+                            } catch (e: Exception) {
+                                withContext(Dispatchers.Main) {
+                                    Log.e("ServerSQL", e.toString())
+                                }
+                            }
+                        }
+                        (context as Activity).finish()
                     }
                 }
             } catch (e: Exception) {

@@ -198,6 +198,12 @@
             android:textSize="20sp"
             android:text="Images attached" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewImages"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
         <Button
             android:id="@+id/buttonReportLoadImg"
             android:layout_width="wrap_content"
@@ -205,12 +211,6 @@
             android:layout_marginBottom="30dp"
             android:layout_marginTop="15dp"
             android:text="Add from files"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewImages"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
 
         <LinearLayout
