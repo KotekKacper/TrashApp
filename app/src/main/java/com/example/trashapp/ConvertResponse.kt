@@ -75,10 +75,10 @@ object ConvertResponse {
         return out
     }
     fun convertGroups(str: String) : ArrayList<Group> {
-        val points = str.split("\n")
+        val points = str.split("|")
         val out: ArrayList<Group> = arrayListOf()
         for (point in points){
-            if(!point.isEmpty() && point !="\n") {
+            if(!point.isEmpty() && point !="|") {
                 val attributes = point.split(";")
                 out.add(
                     Group(
