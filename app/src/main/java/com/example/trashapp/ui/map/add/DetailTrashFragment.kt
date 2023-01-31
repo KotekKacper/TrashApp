@@ -71,8 +71,8 @@ class DetailTrashFragment : Fragment() {
                     it1,
                     GeoPoint(givenPosition[0].toDouble(), givenPosition[1].toDouble()),
                     chosen_imgs,
-                    binding.dropdownSize.selectedItem.toString(),
-                    activity!!.getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "")!!
+                    binding.dropdownSize.selectedItem.toString()
+
                 )
             }
         }
