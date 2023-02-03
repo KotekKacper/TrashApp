@@ -1,5 +1,7 @@
 package com.example.trashapp.adapters
 
+import android.app.AlertDialog
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
@@ -10,7 +12,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.example.trashapp.*
 import com.example.trashapp.classes.Trash
 import kotlinx.coroutines.*
@@ -103,6 +107,16 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?,
 
     override fun getItemCount(): Int {
         return mData!!.size
+    }
+
+    fun sortByCreationDateAscending(context: Context) {
+        mData?.sortWith(compareBy({ it.creationDate }))
+        notifyDataSetChanged()
+    }
+
+    fun sortByCreationDateDescending(context: Context) {
+        mData?.sortWith(compareByDescending({ it.creationDate }))
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

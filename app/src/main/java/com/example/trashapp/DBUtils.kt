@@ -1,6 +1,7 @@
 package com.example.trashapp
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -52,7 +53,7 @@ import kotlin.collections.ArrayList
 object DBUtils {
 
     val retrofit = Retrofit.Builder()
-        .baseUrl("http://192.168.1.11:8888/")
+        .baseUrl("http://10.0.2.2:8888/")
         .build()
     val service = retrofit.create(ServerApiService::class.java)
     val imgService = retrofit.create(ImageUploadApi::class.java)
@@ -142,6 +143,8 @@ object DBUtils {
         return items
     }
 
+    var reportsAdapter = ReportItemAdapter(arrayListOf(), object: OnItemClickListener{
+        override fun onItemClick(position: Int) {}})
     fun getReports(context: Context, recyclerView: RecyclerView, username: String) {
         val funSend = "getReports"
 
@@ -164,7 +167,7 @@ object DBUtils {
                 }
 
                 withContext(Dispatchers.Main) {
-                    val adapter = ReportItemAdapter(reportsArray, object : OnItemClickListener {
+                    reportsAdapter = ReportItemAdapter(reportsArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(context, AddReportActivity::class.java)
                             intent.putExtra("id", reportsArray?.get(position)?.id.toString())
@@ -187,7 +190,7 @@ object DBUtils {
                             context.startActivity(intent)
                         }
                     })
-                    recyclerView.adapter = adapter
+                    recyclerView.adapter = reportsAdapter
 
                 }
             } catch (e: Exception) {
