@@ -76,7 +76,8 @@ class AddReportActivity : AppCompatActivity() {
                     SpannableStringBuilder(extras.getString("longitude"))
                 val curDate = LocalDateTime.parse(extras.getString("reportDate"), formatter)
                 this.findViewById<DatePicker>(R.id.datePickerReportCreationDate)
-                    .updateDate(curDate.year, curDate.monthValue, curDate.dayOfMonth)
+                    .updateDate(curDate.year, curDate.monthValue-1, curDate.dayOfMonth)
+                Log.i("Date", curDate.toString())
                 val creationTimePicker = this.findViewById<TimePicker>(R.id.timePickerReportCreationDate)
                 creationTimePicker.hour = curDate.hour
                 creationTimePicker.minute = curDate.minute

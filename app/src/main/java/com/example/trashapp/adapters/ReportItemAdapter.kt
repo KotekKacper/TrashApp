@@ -35,6 +35,7 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mData?.get(position)
 
+        // loading first image associated with the report
         CoroutineScope(Dispatchers.IO).launch {
         try {
                 try{
@@ -59,14 +60,6 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?,
             }
         }
         }
-
-
-
-//        if (item!!.images != null){
-//            if (item.images?.isNotEmpty()!!){
-//                holder.imageView.setImageDrawable(item.images!![0])
-//            }
-//        }
 
         holder.itemView.setOnClickListener {
             listener.onItemClick(position)

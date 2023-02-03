@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.ConvertResponse.convertAllUsers
 import com.example.trashapp.ConvertResponse.convertCollectionPoints
 import com.example.trashapp.ConvertResponse.convertCompanies
+import com.example.trashapp.ConvertResponse.convertFromSize
 import com.example.trashapp.ConvertResponse.convertGroups
 import com.example.trashapp.ConvertResponse.convertUserReports
 import com.example.trashapp.ConvertResponse.convertVehicles
@@ -179,8 +180,8 @@ object DBUtils {
                                 reportsArray?.get(position)?.localization?.split(",")?.get(1)
                             )
                             intent.putExtra("reportDate", reportsArray?.get(position)?.creationDate)
-                            intent.putExtra("trashSize", reportsArray?.get(position)?.trashSize.toString())
-                            intent.putExtra("trashTypes", reportsArray?.get(position)?.trashType?.toString())
+                            intent.putExtra("trashSize", reportsArray?.get(position)?.trashSize)
+                            intent.putExtra("trashTypes", reportsArray?.get(position)?.trashType)
                             intent.putExtra("collectionDate",reportsArray?.get(position)?.collectionDate)
                             intent.putExtra("collectedBy", "user")
                             intent.putExtra("collectedVal", reportsArray?.get(position)?.userLoginReport?.toString())
@@ -571,8 +572,8 @@ object DBUtils {
             funSend = "updateReport"
         }
         var dataToSend =
-            "'${trash.userLoginReport}', '${trash.localization}', '${trash.creationDate}'" +
-            "'${trash.trashSize}', '${trash.trashType}', '${trash.creationDate}'"//, '${trash.user/vehicle/crew}'" //
+            "'${trash.userLoginReport}', '${trash.localization}', '${trash.creationDate}'," +
+            "'${convertFromSize(trash.trashSize!!)}', '${trash.trashType}', '${trash.creationDate}'"//, '${trash.user/vehicle/crew}'" //
         dataToSend = dataToSend.plus("|${id}")
         CoroutineScope(Dispatchers.IO).launch {
             try {
