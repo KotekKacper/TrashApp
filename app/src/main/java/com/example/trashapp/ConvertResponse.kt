@@ -82,9 +82,10 @@ object ConvertResponse {
                 out.add(
                     TrashCollectingPoint(
                         localization = attributes[0],
-                                busEmpty = attributes[1].toBoolean(),
+                                busEmpty = attributes[1] == "1",
                                 processingType = attributes[2],
-                                trashId = attributes[3].split("-")
+                                trashId = attributes[3].split("-"),
+                                trashType = ArrayList(attributes[4].split(","))
                     )
                 )
             }

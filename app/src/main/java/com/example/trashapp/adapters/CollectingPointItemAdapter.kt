@@ -37,6 +37,7 @@ class CollectingPointItemAdapter(private val mData: ArrayList<TrashCollectingPoi
         }
 
         val loc = item!!.localization.split(",")
+        holder.textView1.text = "("+"%.3f".format(loc!![0].toDouble())+","+"%.3f".format(loc!![1].toDouble())+")"
         val retrofit = Retrofit.Builder()
             .baseUrl("https://nominatim.openstreetmap.org/")
             .build()
