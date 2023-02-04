@@ -54,7 +54,7 @@ import kotlin.collections.ArrayList
 object DBUtils {
 
     val retrofit = Retrofit.Builder()
-        .baseUrl("http://10.0.2.2:8888/")
+        .baseUrl("http://192.168.1.11:8888/")
         .build()
     val service = retrofit.create(ServerApiService::class.java)
     val imgService = retrofit.create(ImageUploadApi::class.java)
@@ -778,13 +778,13 @@ object DBUtils {
         {
             funSend = "updateUser"
             val elements = ArrayList<String>()
-            elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
-            elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.phone");elements.add("${Tab.USER}.fullname");
-            elements.add("${Tab.USER}.country");elements.add("${Tab.USER}.city");elements.add("${Tab.USER}.district");
-            elements.add("${Tab.USER}.street");elements.add("${Tab.USER}.flat_number");elements.add("${Tab.USER}.post_code");
+            elements.add("${Tab.USER}.login = '${user.login}'");elements.add("${Tab.USER}.password = '${user.password}'")
+            elements.add("${Tab.USER}.email = '${user.email}'");elements.add("${Tab.USER}.phone = '${user.phone}'");elements.add("${Tab.USER}.fullname = '${user.fullname}'");
+            elements.add("${Tab.USER}.country = '${user.country}'");elements.add("${Tab.USER}.city = '${user.city}'");elements.add("${Tab.USER}.district = '${user.district}'");
+            elements.add("${Tab.USER}.street = '${user.street}'");elements.add("${Tab.USER}.flat_number = '${user.flatNumber}'");elements.add("${Tab.USER}.post_code = '${user.postCode}'");
             dataToSend = elements.joinToString(separator = ", ")
             dataToSend = dataToSend.plus("|")
-            dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}', '${user.phone}', '${user.fullname}', '${user.country}', '${user.city}', '${user.district}', '${user.street}', '${user.flatNumber}', '${user.postCode}'")
+            dataToSend = dataToSend.plus("${Tab.USER}.login = '${login}'")
         }
         CoroutineScope(Dispatchers.IO).launch {
             try {
