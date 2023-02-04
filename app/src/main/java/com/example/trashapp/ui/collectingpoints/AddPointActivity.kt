@@ -37,6 +37,12 @@ class AddPointActivity : AppCompatActivity() {
             s2.length-1, s2.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         tx2.text = s2
 
+        val tx3 = this.findViewById<TextView>(R.id.textPointProcessingType)
+        val s3 = SpannableString(tx3.text.toString()+" *")
+        s3.setSpan(ForegroundColorSpan(Color.RED),
+            s3.length-1, s3.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        tx3.text = s3
+
         val extras = intent.extras;
         if (extras != null) {
             adding = false
@@ -92,7 +98,8 @@ class AddPointActivity : AppCompatActivity() {
         trashTypesEditText.addTextChangedListener(ListWatcher(trashTypesEditText))
 
         val trashHereEditText = this.findViewById<EditText>(R.id.editTextPointTrashCollectedHere)
-        trashHereEditText.addTextChangedListener(ListWatcher(trashHereEditText))
+        trashHereEditText.isEnabled = false
+//        trashHereEditText.addTextChangedListener(ListWatcher(trashHereEditText))
 
         val applyButton = findViewById<Button>(R.id.buttonPointConfirm)
         applyButton.setOnClickListener{
