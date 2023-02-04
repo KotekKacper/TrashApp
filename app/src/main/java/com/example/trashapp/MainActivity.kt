@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -17,11 +18,12 @@ import com.example.trashapp.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SortButtonCallback {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 1
+    lateinit var sortButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +32,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.appBarMain.toolbar)
+
+        sortButton = binding.appBarMain.toolbar.findViewById<ImageButton>(R.id.sortButton)
+        sortButton.setOnClickListener {
+            // Call the function in the current fragment using the callback interface
+            supportFragmentManager.fragments.lastOrNull()?.let { fragment ->
+                (fragment as? SortButtonCallback)?.onSortButtonClicked()
+            }
+        }
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
@@ -75,5 +85,9 @@ class MainActivity : AppCompatActivity() {
                 permissionsToRequest.toTypedArray(),
                 REQUEST_PERMISSIONS_REQUEST_CODE)
         }
+    }
+
+    override fun onSortButtonClicked() {
+        TODO("Implemented in fragments")
     }
 }

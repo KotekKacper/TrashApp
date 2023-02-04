@@ -1,6 +1,7 @@
 package com.example.trashapp
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.ConvertResponse.convertAllUsers
 import com.example.trashapp.ConvertResponse.convertCollectionPoints
 import com.example.trashapp.ConvertResponse.convertCompanies
+import com.example.trashapp.ConvertResponse.convertFromSize
 import com.example.trashapp.ConvertResponse.convertGroups
 import com.example.trashapp.ConvertResponse.convertUserReports
 import com.example.trashapp.ConvertResponse.convertVehicles
@@ -52,7 +54,7 @@ import kotlin.collections.ArrayList
 object DBUtils {
 
     val retrofit = Retrofit.Builder()
-        .baseUrl("http://192.168.1.11:8888/")
+        .baseUrl("http://10.0.2.2:8888/")
         .build()
     val service = retrofit.create(ServerApiService::class.java)
     val imgService = retrofit.create(ImageUploadApi::class.java)
@@ -142,12 +144,16 @@ object DBUtils {
         return items
     }
 
+    var reportsAdapter = ReportItemAdapter(arrayListOf(), object: OnItemClickListener{
+        override fun onItemClick(position: Int) {}})
     fun getReports(context: Context, recyclerView: RecyclerView, username: String) {
         val funSend = "getReports"
 
         var elements = ArrayList<String>()
-        elements.add("${Tab.TRASH}.id");elements.add("${Tab.TRASH}.localization");elements.add("${Tab.TRASH}.creation_date");
+        elements.add("${Tab.TRASH}.id");elements.add("${Tab.TRASH}.localization");elements.add("${Tab.TRASH}.creation_date")
         elements.add("${Tab.TRASH}.trash_size");elements.add("${Tab.TRASH}.collection_date");elements.add("${Tab.TRASH}.user_login_report")
+        elements.add("${Tab.TRASH}.user_login");elements.add("${Tab.TRASH}.vehicle_id");elements.add("${Tab.TRASH}.cleaningcrew_id");
+        elements.add("${Tab.TRASH}.collection_localization")
         val dataToSend = elements.joinToString(separator = ", ").plus("|${username}")
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -164,7 +170,7 @@ object DBUtils {
                 }
 
                 withContext(Dispatchers.Main) {
-                    val adapter = ReportItemAdapter(reportsArray, object : OnItemClickListener {
+                    reportsAdapter = ReportItemAdapter(reportsArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(context, AddReportActivity::class.java)
                             intent.putExtra("id", reportsArray?.get(position)?.id.toString())
@@ -176,18 +182,30 @@ object DBUtils {
                                 reportsArray?.get(position)?.localization?.split(",")?.get(1)
                             )
                             intent.putExtra("reportDate", reportsArray?.get(position)?.creationDate)
-                            intent.putExtra("trashSize", reportsArray?.get(position)?.trashSize.toString())
-                            intent.putExtra("trashTypes", reportsArray?.get(position)?.trashType?.toString())
+                            intent.putExtra("trashSize", reportsArray?.get(position)?.trashSize)
+                            intent.putExtra("trashTypes", reportsArray?.get(position)?.trashType)
                             intent.putExtra("collectionDate",reportsArray?.get(position)?.collectionDate)
-                            intent.putExtra("collectedBy", "user")
-                            intent.putExtra("collectedVal", reportsArray?.get(position)?.userLoginReport?.toString())
+                            intent.putExtra("loginCollected", reportsArray?.get(position)?.userLogin)
+                            intent.putExtra("vehicleIdCollected", reportsArray?.get(position)?.vehicleId)
+                            intent.putExtra("crewIdCollected", reportsArray?.get(position)?.cleaningCrewId)
+                            if (reportsArray?.get(position)?.collectingPoint?.contains(",") == true) {
+                                intent.putExtra("pointLatitude",
+                                    reportsArray?.get(position)?.collectingPoint?.split(",")?.get(0)
+                                )
+                                intent.putExtra("pointLongitude",
+                                    reportsArray?.get(position)?.collectingPoint?.split(",")?.get(1)
+                                )
+                            } else {
+                                intent.putExtra("pointLatitude", "")
+                                intent.putExtra("pointLongitude", "")
+                            }
                             if (reportsArray?.get(position)?.images?.size!! > 0){
                                 intent.putExtra("images", reportsArray?.get(position)?.images?.joinToString(","))
                             }
                             context.startActivity(intent)
                         }
                     })
-                    recyclerView.adapter = adapter
+                    recyclerView.adapter = reportsAdapter
 
                 }
             } catch (e: Exception) {
@@ -567,9 +585,40 @@ object DBUtils {
         } else {
             funSend = "updateReport"
         }
-        var dataToSend =
-            "'${trash.userLoginReport}', '${trash.localization}', '${trash.creationDate}'" +
-            "'${trash.trashSize}', '${trash.trashType}', '${trash.creationDate}'"//, '${trash.user/vehicle/crew}'" //
+        val elements = ArrayList<String>()
+        elements.add("${Tab.TRASH}.user_login_report");elements.add("${Tab.TRASH}.localization")
+        elements.add("${Tab.TRASH}.creation_date");elements.add("${Tab.TRASH}.trash_size");
+        elements.add("${Tab.TRASH}.trash_types");
+        Log.i("Trash", trash.userLogin + trash.vehicleId + trash.cleaningCrewId)
+        if (trash.userLogin!!.isNotEmpty()){
+            elements.add("${Tab.TRASH}.user_login")
+        } else if (trash.vehicleId!!.isNotEmpty()){
+            elements.add("${Tab.TRASH}.vehicle_id")
+        } else if (trash.cleaningCrewId!!.isNotEmpty()){
+            elements.add("${Tab.TRASH}.cleaningcrew_id")
+        }
+        if (trash.userLogin!!.isNotEmpty() || trash.vehicleId!!.isNotEmpty() || trash.cleaningCrewId!!.isNotEmpty()){
+            elements.add("${Tab.TRASH}.collection_date")
+            elements.add("${Tab.TRASH}.collection_localization")
+        }
+        var dataToSend = elements.joinToString(separator = ",")
+        dataToSend = dataToSend.plus("|")
+        dataToSend = dataToSend.plus(
+            "${trash.userLoginReport}`${trash.localization}`${trash.creationDate}`" +
+            "${convertFromSize(trash.trashSize!!)}`${trash.trashType?.uppercase()}")
+
+        if (trash.userLogin!!.isNotEmpty()){
+            dataToSend = dataToSend.plus("`${trash.userLogin}")
+        } else if (trash.vehicleId!!.isNotEmpty()){
+            dataToSend = dataToSend.plus("`${trash.vehicleId}")
+        } else if (trash.cleaningCrewId!!.isNotEmpty()){
+            dataToSend = dataToSend.plus("`${trash.cleaningCrewId}")
+        }
+        if (trash.userLogin!!.isNotEmpty() || trash.vehicleId!!.isNotEmpty() || trash.cleaningCrewId!!.isNotEmpty()){
+            dataToSend = dataToSend.plus("`${trash.collectionDate}")
+            dataToSend = dataToSend.plus("`${trash.collectingPoint}")
+        }
+
         dataToSend = dataToSend.plus("|${id}")
         CoroutineScope(Dispatchers.IO).launch {
             try {

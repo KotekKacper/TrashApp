@@ -76,7 +76,8 @@ class AddReportActivity : AppCompatActivity() {
                     SpannableStringBuilder(extras.getString("longitude"))
                 val curDate = LocalDateTime.parse(extras.getString("reportDate"), formatter)
                 this.findViewById<DatePicker>(R.id.datePickerReportCreationDate)
-                    .updateDate(curDate.year, curDate.monthValue, curDate.dayOfMonth)
+                    .updateDate(curDate.year, curDate.monthValue-1, curDate.dayOfMonth)
+                Log.i("Date", curDate.toString())
                 val creationTimePicker = this.findViewById<TimePicker>(R.id.timePickerReportCreationDate)
                 creationTimePicker.hour = curDate.hour
                 creationTimePicker.minute = curDate.minute
@@ -108,14 +109,20 @@ class AddReportActivity : AppCompatActivity() {
                             this.findViewById<TimePicker>(R.id.timePickerReportCollectionDate)
                         collectionTimePicker.hour = colDate.hour
                         collectionTimePicker.minute = colDate.minute
-                        when (extras.getString("collectedBy")) {
-                            "user" -> this.findViewById<EditText>(R.id.editTextTextReportLoginCollected).text =
-                                SpannableStringBuilder(extras.getString("collectedVal"))
-                            "crew" -> this.findViewById<EditText>(R.id.editTextTextReportCrewCollected).text =
-                                SpannableStringBuilder(extras.getString("collectedVal"))
-                            "vehicle" -> this.findViewById<EditText>(R.id.editTextTextReportVehicleCollected).text =
-                                SpannableStringBuilder(extras.getString("collectedVal"))
+                        if (extras.getString("loginCollected") != "null"){
+                            this.findViewById<EditText>(R.id.editTextTextReportLoginCollected).text =
+                                SpannableStringBuilder(extras.getString("loginCollected"))
+                        } else if (extras.getString("vehicleIdCollected") != "null"){
+                            this.findViewById<EditText>(R.id.editTextTextReportVehicleCollected).text =
+                                SpannableStringBuilder(extras.getString("vehicleIdCollected"))
+                        } else if (extras.getString("crewIdCollected") != "null"){
+                            this.findViewById<EditText>(R.id.editTextTextReportCrewCollected).text =
+                                SpannableStringBuilder(extras.getString("crewIdCollected"))
                         }
+                        this.findViewById<EditText>(R.id.editTextTextReportPointLat).text =
+                            SpannableStringBuilder(extras.getString("pointLatitude"))
+                        this.findViewById<EditText>(R.id.editTextTextReportPointLon).text =
+                            SpannableStringBuilder(extras.getString("pointLongitude"))
                     }
                 }  catch (e: Exception) {
                     Log.e("IntentExtras", e.toString())
@@ -147,9 +154,6 @@ class AddReportActivity : AppCompatActivity() {
         val creationTimePicker = findViewById<TimePicker>(R.id.timePickerReportCreationDate)
         creationTimePicker.setIs24HourView(true)
 
-//        val trashSizeEditText = this.findViewById<EditText>(R.id.editTextTextReportTrashSize)
-//        val trashSizeWatcher = SizeWatcher(trashSizeEditText)
-//        trashSizeEditText.addTextChangedListener(trashSizeWatcher)
         val trashSizeSpinner = this.findViewById<Spinner>(R.id.spinnerReportTrashSize)
 
         val trashTypeEditText = this.findViewById<EditText>(R.id.editTextTextReportTrashType)
@@ -164,14 +168,29 @@ class AddReportActivity : AppCompatActivity() {
         val firstEditText = findViewById<EditText>(R.id.editTextTextReportLoginCollected)
         firstEditText.addTextChangedListener(LoginWatcher(firstEditText, obligatory = false))
         val secondEditText = findViewById<EditText>(R.id.editTextTextReportVehicleCollected)
-        secondEditText.addTextChangedListener(IdWatcher(secondEditText))
+        secondEditText.addTextChangedListener(IdOptionalWatcher(secondEditText))
         val thirdEditText = findViewById<EditText>(R.id.editTextTextReportCrewCollected)
-        thirdEditText.addTextChangedListener(IdWatcher(thirdEditText))
+        thirdEditText.addTextChangedListener(IdOptionalWatcher(thirdEditText))
 
         firstEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
         secondEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
         thirdEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
 
+        val pointLatEditText = findViewById<EditText>(R.id.editTextTextReportPointLat)
+        pointLatEditText.addTextChangedListener(LatitudeWatcher(pointLatEditText, true))
+        val pointLonEditText = findViewById<EditText>(R.id.editTextTextReportPointLon)
+        pointLonEditText.addTextChangedListener(LongitudeWatcher(pointLonEditText, true))
+
+        pointLatEditText.addTextChangedListener(OptioncalCPWatcher(firstEditText,
+            secondEditText, thirdEditText, pointLatEditText, pointLonEditText))
+        pointLonEditText.addTextChangedListener(OptioncalCPWatcher(firstEditText,
+            secondEditText, thirdEditText, pointLatEditText, pointLonEditText))
+        firstEditText.addTextChangedListener(OptioncalCPWatcher(firstEditText,
+            secondEditText, thirdEditText, pointLatEditText, pointLonEditText))
+        secondEditText.addTextChangedListener(OptioncalCPWatcher(firstEditText,
+            secondEditText, thirdEditText, pointLatEditText, pointLonEditText))
+        thirdEditText.addTextChangedListener(OptioncalCPWatcher(firstEditText,
+            secondEditText, thirdEditText, pointLatEditText, pointLonEditText))
 
 
         findViewById<Button>(R.id.buttonReportLoadImg).setOnClickListener {
@@ -219,8 +238,14 @@ class AddReportActivity : AppCompatActivity() {
                             .joinToString(","),
                         creationDate = crTime.format(formatter),
                         trashSize = trashSizeSpinner.selectedItem.toString(),
-                        trashType = (trashTypeEditText.text.toString()),
-                        collectionDate = colTime.format(formatter)
+                        trashType = trashTypeEditText.text.toString(),
+                        userLogin = firstEditText.text.toString(),
+                        vehicleId = secondEditText.text.toString(),
+                        cleaningCrewId = thirdEditText.text.toString(),
+                        collectionDate = colTime.format(formatter),
+                        collectingPoint = arrayListOf(
+                            pointLatEditText.text.toString(), pointLonEditText.text.toString())
+                            .joinToString(",")
                 ), id, chosen_imgs)
             } else{
                 Toast.makeText(this, "Invalid report data", Toast.LENGTH_SHORT).show()
