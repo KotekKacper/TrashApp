@@ -68,6 +68,7 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?,
         holder.textView1.text = item?.creationDate.toString().subSequence(0,10)
 
         val loc = item?.localization?.split(",")
+        holder.textView2.text = "("+"%.3f".format(loc!![0].toDouble())+","+"%.3f".format(loc!![1].toDouble())+")"
         val retrofit = Retrofit.Builder()
             .baseUrl("https://nominatim.openstreetmap.org/")
             .build()
@@ -88,7 +89,9 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?,
             }
         }
 
-        if (item?.collectionDate == null){
+        item?.collectionDate?.let { Log.i("Date", it) }
+
+        if (item?.collectionDate == null || item?.collectionDate == "null"){
             holder.textView3.text = "Not collected"
             holder.textView3.setTextColor(Color.RED)
         }

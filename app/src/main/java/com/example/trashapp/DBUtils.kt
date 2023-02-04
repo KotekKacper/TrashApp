@@ -590,7 +590,8 @@ object DBUtils {
         dataToSend = dataToSend.plus("|")
         dataToSend = dataToSend.plus(
             "${trash.userLoginReport}`${trash.localization}`${trash.creationDate}`" +
-            "${convertFromSize(trash.trashSize!!)}`${trash.trashType}")
+            "${convertFromSize(trash.trashSize!!)}`${trash.trashType?.uppercase()}")
+
         if (trash.userLogin!!.isNotEmpty()){
             dataToSend = dataToSend.plus("`${trash.userLogin}")
         } else if (trash.vehicleId!!.isNotEmpty()){

@@ -148,9 +148,6 @@ class AddReportActivity : AppCompatActivity() {
         val creationTimePicker = findViewById<TimePicker>(R.id.timePickerReportCreationDate)
         creationTimePicker.setIs24HourView(true)
 
-//        val trashSizeEditText = this.findViewById<EditText>(R.id.editTextTextReportTrashSize)
-//        val trashSizeWatcher = SizeWatcher(trashSizeEditText)
-//        trashSizeEditText.addTextChangedListener(trashSizeWatcher)
         val trashSizeSpinner = this.findViewById<Spinner>(R.id.spinnerReportTrashSize)
 
         val trashTypeEditText = this.findViewById<EditText>(R.id.editTextTextReportTrashType)
