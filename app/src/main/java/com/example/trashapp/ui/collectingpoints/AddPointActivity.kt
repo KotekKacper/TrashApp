@@ -37,7 +37,7 @@ class AddPointActivity : AppCompatActivity() {
             s2.length-1, s2.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         tx2.text = s2
 
-        val tx3 = this.findViewById<TextView>(R.id.textPointProcessingType)
+        val tx3 = this.findViewById<TextView>(R.id.textPointTrashTypes)
         val s3 = SpannableString(tx3.text.toString()+" *")
         s3.setSpan(ForegroundColorSpan(Color.RED),
             s3.length-1, s3.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
