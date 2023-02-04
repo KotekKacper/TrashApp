@@ -84,7 +84,8 @@ object ConvertResponse {
                         localization = attributes[0],
                                 busEmpty = attributes[1].toBoolean(),
                                 processingType = attributes[2],
-                                trashId = attributes[3].split("-")
+                                trashId = attributes[3].split("-"),
+                                trashType = ArrayList(attributes[4].split(","))
                     )
                 )
             }
