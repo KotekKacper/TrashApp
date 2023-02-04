@@ -1,23 +1,25 @@
 package com.example.trashapp.adapters
 
+import android.app.AlertDialog
+import android.content.Context
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.trashapp.LocalizationToAddress
-import com.example.trashapp.NominatimApiService
-import com.example.trashapp.R
+import androidx.recyclerview.widget.RecyclerView.Recycler
+import com.example.trashapp.*
 import com.example.trashapp.classes.Trash
-import com.example.trashapp.OnItemClickListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import retrofit2.Retrofit
+import java.time.Duration
 
 
 class ReportItemAdapter(private val mData: ArrayList<Trash>?,
@@ -32,26 +34,48 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mData?.get(position)
-        if (item!!.images != null){
-            if (item.images?.isNotEmpty()!!){
-                holder.imageView.setImageDrawable(item.images!![0])
+
+        // loading first image associated with the report
+        CoroutineScope(Dispatchers.IO).launch {
+        try {
+                try{
+                    delay((10+(5*position)).toLong())
+                    val response = DBUtils.imgDownService.getImages(item?.id!!, "0")
+                    val imageBytes = response.execute().body()?.bytes()
+                    if (imageBytes!!.size > 1){
+                        val bitmap = imageBytes.let { BitmapFactory.decodeByteArray(imageBytes, 0, it.size) }
+                        withContext(Dispatchers.Main){
+                            val image = BitmapDrawable(holder.itemView.context.resources, bitmap)
+                            holder.imageView.setImageDrawable(image)
+                        }
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Log.e("ServerSQL-Image", e.toString())
+                    }
+                }
+            } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                Log.e("ServerSQL-Image", e.toString())
             }
+        }
         }
 
         holder.itemView.setOnClickListener {
             listener.onItemClick(position)
         }
 
-        holder.textView1.text = item.creationDate.toString().subSequence(0,10)
+        holder.textView1.text = item?.creationDate.toString().subSequence(0,10)
 
-        val loc = item.localization.split(",")
+        val loc = item?.localization?.split(",")
+        holder.textView2.text = "("+"%.3f".format(loc!![0].toDouble())+","+"%.3f".format(loc!![1].toDouble())+")"
         val retrofit = Retrofit.Builder()
             .baseUrl("https://nominatim.openstreetmap.org/")
             .build()
         val service = retrofit.create(NominatimApiService::class.java)
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = service.getReverseJson(loc[0], loc[1], "json")
+                val response = service.getReverseJson(loc!![0], loc[1], "json")
                 withContext(Dispatchers.Main) {
                     val json = response.body()?.string()
                     val addrString = LocalizationToAddress.getAddress(json)
@@ -65,7 +89,9 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?,
             }
         }
 
-        if (item.collectionDate == null){
+        item?.collectionDate?.let { Log.i("Date", it) }
+
+        if (item?.collectionDate == null || item?.collectionDate == "null"){
             holder.textView3.text = "Not collected"
             holder.textView3.setTextColor(Color.RED)
         }
@@ -77,6 +103,16 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?,
 
     override fun getItemCount(): Int {
         return mData!!.size
+    }
+
+    fun sortByCreationDateAscending(context: Context) {
+        mData?.sortWith(compareBy({ it.creationDate }))
+        notifyDataSetChanged()
+    }
+
+    fun sortByCreationDateDescending(context: Context) {
+        mData?.sortWith(compareByDescending({ it.creationDate }))
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -12,6 +12,23 @@ import java.time.format.DateTimeFormatter
 
 object ConvertResponse {
     var formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")
+
+    fun convertToSize(str: String): String{
+        return when(str){
+            "0" -> "Small"
+            "1" -> "Medium"
+            else -> "Big"
+        }
+    }
+
+    fun convertFromSize(str: String): String{
+        return when(str){
+            "Small" -> "0"
+            "Medium" -> "1"
+            else -> "2"
+        }
+    }
+
     fun convertCompanies(str: String) : ArrayList<CleaningCompany> {
         val companies = str.split("\n")
         val out: ArrayList<CleaningCompany> = arrayListOf()
@@ -105,15 +122,12 @@ object ConvertResponse {
                 val imageBytes = imageString.toByteArray()
                 val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
                 val drawableImage = BitmapDrawable(bitmap)
-                val drawableArray = ArrayList<Drawable>()
-                drawableArray.add(drawableImage)
                 out.add(
                     Trash(
                         id = attributes[0],
                         localization = attributes[1],
                         creationDate = attributes[2],
-                        trashSize = attributes[3],
-                        images = drawableArray
+                        trashSize = convertToSize(attributes[3])
                     )
                 )
             }
@@ -161,25 +175,21 @@ object ConvertResponse {
         for (point in points){
             if(!point.isEmpty()) {
                 val attributes = point.split(";")
-//                val drawableArray = ArrayList<Drawable>()
-//                val imageString = attributes[5]
-//                if(!imageString.equals("null")) {
-//                    val imageBytes = imageString.toByteArray()
-//                    val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-//                    val drawableImage = BitmapDrawable(bitmap)
-//                    drawableArray.add(drawableImage)
-//                }
+                var imgs = arrayListOf<String>()
+                if (attributes[7] != ""){
+                    imgs = ArrayList(attributes[7].split(","))
+                }
+
                 out.add(
                     Trash(
                         id = attributes[0],
                         localization = attributes[1],
                         creationDate = attributes[2],
-
-                        trashSize = attributes[3],
+                        trashSize = convertToSize(attributes[3]),
                         collectionDate = attributes[4],
                         userLoginReport =  attributes[5],
-                        trashType = attributes[6]
-                        //images = drawableArray
+                        trashType = attributes[6],
+                        images = imgs
                     )
                 )
             }
