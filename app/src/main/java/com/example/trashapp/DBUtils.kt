@@ -1,6 +1,7 @@
 package com.example.trashapp
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.ConvertResponse.convertAllUsers
 import com.example.trashapp.ConvertResponse.convertCollectionPoints
 import com.example.trashapp.ConvertResponse.convertCompanies
+import com.example.trashapp.ConvertResponse.convertFromSize
 import com.example.trashapp.ConvertResponse.convertGroups
 import com.example.trashapp.ConvertResponse.convertUserReports
 import com.example.trashapp.ConvertResponse.convertVehicles
@@ -52,11 +54,13 @@ import kotlin.collections.ArrayList
 object DBUtils {
 
     val retrofit = Retrofit.Builder()
-        .baseUrl("http://192.168.1.11:8888/")
+        .baseUrl("http://10.0.2.2:8888/")
         .build()
     val service = retrofit.create(ServerApiService::class.java)
     val imgService = retrofit.create(ImageUploadApi::class.java)
     val imgDownService = retrofit.create(ImageDownloadApi::class.java)
+    val imgDownByIdService = retrofit.create(ImageDownloadByIdApi::class.java)
+
 
     fun checkForError(context: Context, output: String): Boolean{
         if (output.startsWith("ERROR")){
@@ -140,6 +144,8 @@ object DBUtils {
         return items
     }
 
+    var reportsAdapter = ReportItemAdapter(arrayListOf(), object: OnItemClickListener{
+        override fun onItemClick(position: Int) {}})
     fun getReports(context: Context, recyclerView: RecyclerView, username: String) {
         val funSend = "getReports"
 
@@ -160,31 +166,9 @@ object DBUtils {
                     }
                     reportsArray = json?.let { convertUserReports(json.toString()) }!!
                 }
-                    for (report in reportsArray!!){
-                        val images = arrayListOf<Drawable>()
-//                        while (true){
-                            var imgNumber = 0
-                            try{
-                                val response = imgDownService.getImages(report.id!!, imgNumber.toString())
-                                val imageBytes = response.execute().body()?.bytes()
-                                if (imageBytes!!.size > 1){
-                                    val bitmap = imageBytes.let { BitmapFactory.decodeByteArray(imageBytes, 0, it.size) }
-                                    report.images?.add(BitmapDrawable(context.resources, bitmap))
-                                    images.add(BitmapDrawable(context.resources, bitmap))
-                                }
-                            } catch (e: Exception) {
-                                withContext(Dispatchers.Main) {
-                                    Log.e("ServerSQL", e.toString())
-                                }
-                                break
-                            }
-//                            imgNumber++
-//                        }
-                        report.images = images
-                    }
 
                 withContext(Dispatchers.Main) {
-                    val adapter = ReportItemAdapter(reportsArray, object : OnItemClickListener {
+                    reportsAdapter = ReportItemAdapter(reportsArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(context, AddReportActivity::class.java)
                             intent.putExtra("id", reportsArray?.get(position)?.id.toString())
@@ -196,15 +180,18 @@ object DBUtils {
                                 reportsArray?.get(position)?.localization?.split(",")?.get(1)
                             )
                             intent.putExtra("reportDate", reportsArray?.get(position)?.creationDate)
-                            intent.putExtra("trashSize", reportsArray?.get(position)?.trashSize.toString())
-                            intent.putExtra("trashTypes", reportsArray?.get(position)?.trashType?.toString())
+                            intent.putExtra("trashSize", reportsArray?.get(position)?.trashSize)
+                            intent.putExtra("trashTypes", reportsArray?.get(position)?.trashType)
                             intent.putExtra("collectionDate",reportsArray?.get(position)?.collectionDate)
                             intent.putExtra("collectedBy", "user")
                             intent.putExtra("collectedVal", reportsArray?.get(position)?.userLoginReport?.toString())
+                            if (reportsArray?.get(position)?.images?.size!! > 0){
+                                intent.putExtra("images", reportsArray?.get(position)?.images?.joinToString(","))
+                            }
                             context.startActivity(intent)
                         }
                     })
-                    recyclerView.adapter = adapter
+                    recyclerView.adapter = reportsAdapter
 
                 }
             } catch (e: Exception) {
@@ -489,45 +476,10 @@ object DBUtils {
 
 
     fun addTrash(context: Context, pos: GeoPoint, chosen_imgs : ArrayList<Uri>, size: String, user_login_report: String? = null, vehicle_id: Int? = null, user_login: String? = null, crew_id:Int? = null){
+        var addedTrashId = ""
+
         val funSend = "addTrash"
         var dataToSend = "'${pos.toDoubleString()}', '${user_login_report}', '${TrashSize.valueOf(size.uppercase()).intValue}'"
-        for(img in chosen_imgs) {
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val uri = RequestBody.create(MediaType.parse("text/plain"), "10")
-
-                    val contentResolver = context.contentResolver
-                    val imageStream = contentResolver.openInputStream(img)
-                    val bitmap = BitmapFactory.decodeStream(imageStream)
-                    val byteArrayOutputStream = ByteArrayOutputStream()
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
-                    val imageBytes = byteArrayOutputStream.toByteArray()
-                    val requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageBytes)
-                    val image = MultipartBody.Part.createFormData("image", "image.jpg", requestFile)
-
-                    val response = imgService.uploadImage(uri, image)
-                    response.enqueue(object : Callback<ResponseBody> {
-                        override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                            if (response.isSuccessful) {
-                                // Handle success
-                                Toast.makeText(context, "Image uploaded!", Toast.LENGTH_SHORT).show()
-                            } else {
-                                // Handle failure
-                                Toast.makeText(context, "Image uploading failed", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                            // Handle failure
-                            Toast.makeText(context, "Image uploading failed dramatically", Toast.LENGTH_SHORT).show()
-                        }
-                    })
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        Log.e("ServerSQL", e.toString())
-                    }
-                }
-            }
-        }
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = service.getJson(dataToSend, funSend)
@@ -537,8 +489,46 @@ object DBUtils {
                     if (checkForError(context, json.toString())){
                         return@withContext
                     }
+                    addedTrashId = json.toString()
                     (context as Activity).finish()
                     Toast.makeText(context, "Thank You for report!", Toast.LENGTH_SHORT).show()
+                    for(img in chosen_imgs) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                val uri = RequestBody.create(MediaType.parse("text/plain"), addedTrashId)
+
+                                val contentResolver = context.contentResolver
+                                val imageStream = contentResolver.openInputStream(img)
+                                val bitmap = BitmapFactory.decodeStream(imageStream)
+                                val byteArrayOutputStream = ByteArrayOutputStream()
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+                                val imageBytes = byteArrayOutputStream.toByteArray()
+                                val requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageBytes)
+                                val image = MultipartBody.Part.createFormData("image", "image.jpg", requestFile)
+
+                                val response = imgService.uploadImage(uri, image)
+                                response.enqueue(object : Callback<ResponseBody> {
+                                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                                        if (response.isSuccessful) {
+                                            // Handle success
+                                            Toast.makeText(context, "Image uploaded!", Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            // Handle failure
+                                            Toast.makeText(context, "Image uploading failed", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                                        // Handle failure
+                                        Toast.makeText(context, "Image uploading failed dramatically", Toast.LENGTH_SHORT).show()
+                                    }
+                                })
+                            } catch (e: Exception) {
+                                withContext(Dispatchers.Main) {
+                                    Log.e("ServerSQL", e.toString())
+                                }
+                            }
+                        }
+                    }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -572,16 +562,49 @@ object DBUtils {
         }
     }
 
-    fun addReport(context: Context, adding: Boolean, trash: Trash, id: String = ""){
+    fun addReport(context: Context, adding: Boolean, trash: Trash, id: String = "", chosen_imgs: ArrayList<Uri>){
+        var addedTrashId = id
+
         val funSend : String
         if(adding) {
             funSend = "addReport"
         } else {
             funSend = "updateReport"
         }
-        var dataToSend =
-            "'${trash.userLoginReport}', '${trash.localization}', '${trash.creationDate}'" +
-            "'${trash.trashSize}', '${trash.trashType}', '${trash.creationDate}'"//, '${trash.user/vehicle/crew}'" //
+        val elements = ArrayList<String>()
+        elements.add("${Tab.TRASH}.user_login_report");elements.add("${Tab.TRASH}.localization")
+        elements.add("${Tab.TRASH}.creation_date");elements.add("${Tab.TRASH}.trash_size");
+        elements.add("${Tab.TRASH}.trash_types");
+        Log.i("Trash", trash.userLogin + trash.vehicleId + trash.cleaningCrewId)
+        if (trash.userLogin!!.isNotEmpty()){
+            elements.add("${Tab.TRASH}.user_login")
+        } else if (trash.vehicleId!!.isNotEmpty()){
+            elements.add("${Tab.TRASH}.vehicle_id")
+        } else if (trash.cleaningCrewId!!.isNotEmpty()){
+            elements.add("${Tab.TRASH}.cleaningcrew_id")
+        }
+        if (trash.userLogin!!.isNotEmpty() || trash.vehicleId!!.isNotEmpty() || trash.cleaningCrewId!!.isNotEmpty()){
+            elements.add("${Tab.TRASH}.collection_date")
+            elements.add("${Tab.TRASH}.collection_localization")
+        }
+        var dataToSend = elements.joinToString(separator = ",")
+        dataToSend = dataToSend.plus("|")
+        dataToSend = dataToSend.plus(
+            "${trash.userLoginReport}`${trash.localization}`${trash.creationDate}`" +
+            "${convertFromSize(trash.trashSize!!)}`${trash.trashType?.uppercase()}")
+
+        if (trash.userLogin!!.isNotEmpty()){
+            dataToSend = dataToSend.plus("`${trash.userLogin}")
+        } else if (trash.vehicleId!!.isNotEmpty()){
+            dataToSend = dataToSend.plus("`${trash.vehicleId}")
+        } else if (trash.cleaningCrewId!!.isNotEmpty()){
+            dataToSend = dataToSend.plus("`${trash.cleaningCrewId}`")
+        }
+        if (trash.userLogin!!.isNotEmpty() || trash.vehicleId!!.isNotEmpty() || trash.cleaningCrewId!!.isNotEmpty()){
+            dataToSend = dataToSend.plus("`${trash.collectionDate}")
+            dataToSend = dataToSend.plus("`${trash.collectingPoint}")
+        }
+
         dataToSend = dataToSend.plus("|${id}")
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -592,11 +615,51 @@ object DBUtils {
                     if (checkForError(context, json.toString())) {
                         return@withContext
                     }
-                    (context as Activity).finish()
                     if (adding){
                         Toast.makeText(context, "Report added successfully!", Toast.LENGTH_SHORT).show()
                     } else{
                         Toast.makeText(context, "Report updated successfully!", Toast.LENGTH_SHORT).show()
+                    }
+                    if (adding){
+                        addedTrashId = json.toString()
+                    }
+                    CoroutineScope(Dispatchers.IO).launch {
+                        for(img in chosen_imgs) {
+                            try {
+                                val uri = RequestBody.create(MediaType.parse("text/plain"), addedTrashId)
+
+                                val contentResolver = context.contentResolver
+                                val imageStream = contentResolver.openInputStream(img)
+                                val bitmap = BitmapFactory.decodeStream(imageStream)
+                                val byteArrayOutputStream = ByteArrayOutputStream()
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+                                val imageBytes = byteArrayOutputStream.toByteArray()
+                                val requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageBytes)
+                                val image = MultipartBody.Part.createFormData("image", "image.jpg", requestFile)
+
+                                val response = imgService.uploadImage(uri, image)
+                                response.enqueue(object : Callback<ResponseBody> {
+                                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                                        if (response.isSuccessful) {
+                                            // Handle success
+                                            Toast.makeText(context, "Image uploaded!", Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            // Handle failure
+                                            Toast.makeText(context, "Image uploading failed", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                                        // Handle failure
+                                        Toast.makeText(context, "Image uploading failed dramatically", Toast.LENGTH_SHORT).show()
+                                    }
+                                })
+                            } catch (e: Exception) {
+                                withContext(Dispatchers.Main) {
+                                    Log.e("ServerSQL", e.toString())
+                                }
+                            }
+                        }
+                        (context as Activity).finish()
                     }
                 }
             } catch (e: Exception) {

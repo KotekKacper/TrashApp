@@ -5,7 +5,7 @@ import android.text.TextWatcher
 import android.widget.EditText
 import java.util.regex.Pattern
 
-class LongitudeWatcher(private val longitudeEditText: EditText) : TextWatcher {
+class LongitudeWatcher(private val longitudeEditText: EditText, private val optional: Boolean = false) : TextWatcher {
 
     private val longitudePattern = "-?(180|((1[0-7]\\d)|([1-9]?\\d))(\\.\\d+)?)"
 
@@ -18,7 +18,7 @@ class LongitudeWatcher(private val longitudeEditText: EditText) : TextWatcher {
         val phoneNumber = editable.toString()
         val pattern = Pattern.compile(longitudePattern)
         val matcher = pattern.matcher(phoneNumber)
-        if (!matcher.matches()) {
+        if (!matcher.matches() && !(check.isEmpty() && optional)) {
             longitudeEditText.error = "Invalid longitude"
         } else if (check.length > 40) {
             // show an error message

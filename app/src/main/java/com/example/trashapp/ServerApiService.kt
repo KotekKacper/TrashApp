@@ -25,3 +25,8 @@ interface ImageDownloadApi {
     @GET("/api/image-download")
     fun getImages(@Query("trash-id") trashId: String, @Query("img-number") imgNumber: String): Call<ResponseBody>
 }
+
+interface ImageDownloadByIdApi {
+    @GET("/api/image-download-by-id")
+    fun getImages(@Query("image-id") trashId: String): Call<ResponseBody>
+}
