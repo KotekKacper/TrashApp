@@ -605,7 +605,7 @@ object DBUtils {
         dataToSend = dataToSend.plus("|")
         dataToSend = dataToSend.plus(
             "${trash.userLoginReport}`${trash.localization}`${trash.creationDate}`" +
-            "${convertFromSize(trash.trashSize!!)}`${trash.trashType?.uppercase()}")
+            "${convertFromSize(trash.trashSize!!)}`${trash.trashType?.uppercase()?.trimEnd(',')}")
 
         if (trash.userLogin!!.isNotEmpty()){
             dataToSend = dataToSend.plus("`${trash.userLogin}")
@@ -740,7 +740,7 @@ object DBUtils {
         dataToSend = dataToSend.plus("|")
         dataToSend = dataToSend.plus("${point.localization}`${if (point.busEmpty == true) "1" else "0"}`${point.processingType}")
         dataToSend = dataToSend.plus("|${localization}")
-        dataToSend = dataToSend.plus("|${point.trashType?.joinToString(",")}")
+        dataToSend = dataToSend.plus("|${point.trashType?.joinToString(",")?.uppercase()?.trimEnd(',')}")
         dataToSend = dataToSend.plus("|${point.trashId?.joinToString(",")}")
         Log.i("DataToSend", dataToSend)
         CoroutineScope(Dispatchers.IO).launch {
