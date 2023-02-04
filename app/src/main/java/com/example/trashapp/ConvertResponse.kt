@@ -175,11 +175,6 @@ object ConvertResponse {
         for (point in points){
             if(!point.isEmpty()) {
                 val attributes = point.split(";")
-                var imgs = arrayListOf<String>()
-                if (attributes[7] != ""){
-                    imgs = ArrayList(attributes[7].split(","))
-                }
-
                 out.add(
                     Trash(
                         id = attributes[0],
@@ -188,8 +183,12 @@ object ConvertResponse {
                         trashSize = convertToSize(attributes[3]),
                         collectionDate = attributes[4],
                         userLoginReport =  attributes[5],
-                        trashType = attributes[6],
-                        images = imgs
+                        userLogin = attributes[6],
+                        vehicleId = attributes[7],
+                        cleaningCrewId = attributes[8],
+                        collectingPoint = attributes[9],
+                        trashType = attributes[10],
+                        images = arrayListOf()
                     )
                 )
             }

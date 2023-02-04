@@ -14,7 +14,7 @@ class OptioncalCPWatcher (private val editTextA: EditText, private val editTextB
             Lon.isEnabled = false
         } else {
             Lat.isEnabled = true
-            Lat.isEnabled = true
+            Lon.isEnabled = true
         }
     }
 

@@ -150,8 +150,10 @@ object DBUtils {
         val funSend = "getReports"
 
         var elements = ArrayList<String>()
-        elements.add("${Tab.TRASH}.id");elements.add("${Tab.TRASH}.localization");elements.add("${Tab.TRASH}.creation_date");
+        elements.add("${Tab.TRASH}.id");elements.add("${Tab.TRASH}.localization");elements.add("${Tab.TRASH}.creation_date")
         elements.add("${Tab.TRASH}.trash_size");elements.add("${Tab.TRASH}.collection_date");elements.add("${Tab.TRASH}.user_login_report")
+        elements.add("${Tab.TRASH}.user_login");elements.add("${Tab.TRASH}.vehicle_id");elements.add("${Tab.TRASH}.cleaningcrew_id");
+        elements.add("${Tab.TRASH}.collection_localization")
         val dataToSend = elements.joinToString(separator = ", ").plus("|${username}")
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -183,8 +185,15 @@ object DBUtils {
                             intent.putExtra("trashSize", reportsArray?.get(position)?.trashSize)
                             intent.putExtra("trashTypes", reportsArray?.get(position)?.trashType)
                             intent.putExtra("collectionDate",reportsArray?.get(position)?.collectionDate)
-                            intent.putExtra("collectedBy", "user")
-                            intent.putExtra("collectedVal", reportsArray?.get(position)?.userLoginReport?.toString())
+                            intent.putExtra("loginCollected", reportsArray?.get(position)?.userLogin)
+                            intent.putExtra("vehicleIdCollected", reportsArray?.get(position)?.vehicleId)
+                            intent.putExtra("crewIdCollected", reportsArray?.get(position)?.cleaningCrewId)
+                            intent.putExtra("pointLatitude",
+                                reportsArray?.get(position)?.collectingPoint?.split(",")?.get(0)
+                            )
+                            intent.putExtra("pointLongitude",
+                                reportsArray?.get(position)?.collectingPoint?.split(",")?.get(1)
+                            )
                             if (reportsArray?.get(position)?.images?.size!! > 0){
                                 intent.putExtra("images", reportsArray?.get(position)?.images?.joinToString(","))
                             }
@@ -598,7 +607,7 @@ object DBUtils {
         } else if (trash.vehicleId!!.isNotEmpty()){
             dataToSend = dataToSend.plus("`${trash.vehicleId}")
         } else if (trash.cleaningCrewId!!.isNotEmpty()){
-            dataToSend = dataToSend.plus("`${trash.cleaningCrewId}`")
+            dataToSend = dataToSend.plus("`${trash.cleaningCrewId}")
         }
         if (trash.userLogin!!.isNotEmpty() || trash.vehicleId!!.isNotEmpty() || trash.cleaningCrewId!!.isNotEmpty()){
             dataToSend = dataToSend.plus("`${trash.collectionDate}")
