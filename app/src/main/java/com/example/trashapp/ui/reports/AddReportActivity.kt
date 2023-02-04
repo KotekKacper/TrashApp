@@ -109,13 +109,15 @@ class AddReportActivity : AppCompatActivity() {
                             this.findViewById<TimePicker>(R.id.timePickerReportCollectionDate)
                         collectionTimePicker.hour = colDate.hour
                         collectionTimePicker.minute = colDate.minute
-                        when (extras.getString("collectedBy")) {
-                            "user" -> this.findViewById<EditText>(R.id.editTextTextReportLoginCollected).text =
-                                SpannableStringBuilder(extras.getString("collectedVal"))
-                            "crew" -> this.findViewById<EditText>(R.id.editTextTextReportCrewCollected).text =
-                                SpannableStringBuilder(extras.getString("collectedVal"))
-                            "vehicle" -> this.findViewById<EditText>(R.id.editTextTextReportVehicleCollected).text =
-                                SpannableStringBuilder(extras.getString("collectedVal"))
+                        if (extras.getString("loginCollected") != "null"){
+                            this.findViewById<EditText>(R.id.editTextTextReportLoginCollected).text =
+                                SpannableStringBuilder(extras.getString("loginCollected"))
+                        } else if (extras.getString("vehicleIdCollected") != "null"){
+                            this.findViewById<EditText>(R.id.editTextTextReportVehicleCollected).text =
+                                SpannableStringBuilder(extras.getString("vehicleIdCollected"))
+                        } else if (extras.getString("crewIdCollected") != "null"){
+                            this.findViewById<EditText>(R.id.editTextTextReportCrewCollected).text =
+                                SpannableStringBuilder(extras.getString("crewIdCollected"))
                         }
                     }
                 }  catch (e: Exception) {
