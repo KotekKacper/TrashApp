@@ -170,6 +170,21 @@ class AddReportActivity : AppCompatActivity() {
         secondEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
         thirdEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
 
+        val pointLatEditText = findViewById<EditText>(R.id.editTextTextReportPointLat)
+        pointLatEditText.addTextChangedListener(LatitudeWatcher(pointLatEditText, true))
+        val pointLonEditText = findViewById<EditText>(R.id.editTextTextReportPointLon)
+        pointLonEditText.addTextChangedListener(LongitudeWatcher(pointLonEditText, true))
+
+        pointLatEditText.addTextChangedListener(OptioncalCPWatcher(firstEditText,
+            secondEditText, thirdEditText, pointLatEditText, pointLonEditText))
+        pointLonEditText.addTextChangedListener(OptioncalCPWatcher(firstEditText,
+            secondEditText, thirdEditText, pointLatEditText, pointLonEditText))
+        firstEditText.addTextChangedListener(OptioncalCPWatcher(firstEditText,
+            secondEditText, thirdEditText, pointLatEditText, pointLonEditText))
+        secondEditText.addTextChangedListener(OptioncalCPWatcher(firstEditText,
+            secondEditText, thirdEditText, pointLatEditText, pointLonEditText))
+        thirdEditText.addTextChangedListener(OptioncalCPWatcher(firstEditText,
+            secondEditText, thirdEditText, pointLatEditText, pointLonEditText))
 
 
         findViewById<Button>(R.id.buttonReportLoadImg).setOnClickListener {
@@ -221,7 +236,10 @@ class AddReportActivity : AppCompatActivity() {
                         userLogin = firstEditText.text.toString(),
                         vehicleId = secondEditText.text.toString(),
                         cleaningCrewId = thirdEditText.text.toString(),
-                        collectionDate = colTime.format(formatter)
+                        collectionDate = colTime.format(formatter),
+                        collectingPoint = arrayListOf(
+                            pointLatEditText.text.toString(), pointLonEditText.text.toString())
+                            .joinToString(",")
                 ), id, chosen_imgs)
             } else{
                 Toast.makeText(this, "Invalid report data", Toast.LENGTH_SHORT).show()

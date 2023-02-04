@@ -14,7 +14,8 @@ data class Trash(
     var userLogin: String? = null,
     var collectionDate: String? = null,
     var images: ArrayList<String>? = null,
-    var trashType: String? = null
+    var trashType: String? = null,
+    var collectingPoint: String? = null
 )
 
 enum class TrashSize(val intValue:Int?) {

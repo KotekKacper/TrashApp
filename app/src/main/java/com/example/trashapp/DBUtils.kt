@@ -585,6 +585,7 @@ object DBUtils {
         }
         if (trash.userLogin!!.isNotEmpty() || trash.vehicleId!!.isNotEmpty() || trash.cleaningCrewId!!.isNotEmpty()){
             elements.add("${Tab.TRASH}.collection_date")
+            elements.add("${Tab.TRASH}.collection_localization")
         }
         var dataToSend = elements.joinToString(separator = ",")
         dataToSend = dataToSend.plus("|")
@@ -601,6 +602,7 @@ object DBUtils {
         }
         if (trash.userLogin!!.isNotEmpty() || trash.vehicleId!!.isNotEmpty() || trash.cleaningCrewId!!.isNotEmpty()){
             dataToSend = dataToSend.plus("`${trash.collectionDate}")
+            dataToSend = dataToSend.plus("`${trash.collectingPoint}")
         }
 
         dataToSend = dataToSend.plus("|${id}")
