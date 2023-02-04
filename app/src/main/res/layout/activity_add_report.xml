@@ -175,7 +175,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="textPersonName"
+            android:inputType="numberDecimal"
             android:hint="vehicle id" />
         <EditText
             android:id="@+id/editTextTextReportCrewCollected"
@@ -183,7 +183,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="textPersonName"
+            android:inputType="numberDecimal"
             android:hint="crew id" />
 
         <TextView

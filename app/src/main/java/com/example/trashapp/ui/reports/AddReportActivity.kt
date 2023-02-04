@@ -119,6 +119,10 @@ class AddReportActivity : AppCompatActivity() {
                             this.findViewById<EditText>(R.id.editTextTextReportCrewCollected).text =
                                 SpannableStringBuilder(extras.getString("crewIdCollected"))
                         }
+                        this.findViewById<EditText>(R.id.editTextTextReportPointLat).text =
+                            SpannableStringBuilder(extras.getString("pointLatitude"))
+                        this.findViewById<EditText>(R.id.editTextTextReportPointLon).text =
+                            SpannableStringBuilder(extras.getString("pointLongitude"))
                     }
                 }  catch (e: Exception) {
                     Log.e("IntentExtras", e.toString())

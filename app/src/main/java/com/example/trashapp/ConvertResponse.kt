@@ -186,7 +186,8 @@ object ConvertResponse {
                         userLogin = attributes[6],
                         vehicleId = attributes[7],
                         cleaningCrewId = attributes[8],
-                        trashType = attributes[9],
+                        collectingPoint = attributes[9],
+                        trashType = attributes[10],
                         images = arrayListOf()
                     )
                 )
