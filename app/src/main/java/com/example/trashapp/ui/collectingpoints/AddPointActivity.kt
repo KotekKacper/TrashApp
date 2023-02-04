@@ -74,8 +74,13 @@ class AddPointActivity : AppCompatActivity() {
                     Log.e("IntentExtras", e.toString())
                 }
                 try {
-                    this.findViewById<EditText>(R.id.editTextPointTrashCollectedHere).text =
-                        SpannableStringBuilder(extras.getString("trashIds"))
+                    if (extras.getString("trashIds") != "null"){
+                        this.findViewById<EditText>(R.id.editTextPointTrashCollectedHere).text =
+                            SpannableStringBuilder(extras.getString("trashIds"))
+                    } else{
+                        this.findViewById<EditText>(R.id.editTextPointTrashCollectedHere).text =
+                            SpannableStringBuilder("No trash in here")
+                    }
                 } catch (e: Exception) {
                     Log.e("IntentExtras", e.toString())
                 }
