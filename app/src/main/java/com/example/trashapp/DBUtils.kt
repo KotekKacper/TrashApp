@@ -727,17 +727,22 @@ object DBUtils {
     }
 
     fun addCollectingPoint(context: Context, adding: Boolean, point: TrashCollectingPoint, localization: String = ""){
-        var funSend = "addCollectingPoint"
+        var funSend: String
         if(adding) {
             funSend = "addCollectingPoint"}
-        else funSend = "updateCollectingPoint"
+        else {
+            funSend = "updateCollectingPoint"
+        }
         val elements = ArrayList<String>()
-        elements.add("${Tab.TRASH_COLLECT_POINT}.localization");elements.add("${Tab.TRASH_COLLECT_POINT}.busEmpty")
-        elements.add("${Tab.TRASH_COLLECT_POINT}.processingType");elements.add("${Tab.TRASH_COLLECT_POINT}.trashType")
-        elements.add("${Tab.TRASH_COLLECT_POINT}.trashId")
-        var dataToSend = elements.joinToString(separator = ", ")
+        elements.add("${Tab.TRASH_COLLECT_POINT}.localization");elements.add("${Tab.TRASH_COLLECT_POINT}.bus_empty")
+        elements.add("${Tab.TRASH_COLLECT_POINT}.processing_type");
+        var dataToSend = elements.joinToString(separator = ",")
         dataToSend = dataToSend.plus("|")
-        dataToSend = dataToSend.plus("'${point.localization}', '${point.busEmpty}', '${point.processingType}' - '${point.trashType}', '${point.trashId}'")
+        dataToSend = dataToSend.plus("${point.localization}`${if (point.busEmpty == true) "1" else "0"}`${point.processingType}")
+        dataToSend = dataToSend.plus("|${localization}")
+        dataToSend = dataToSend.plus("|${point.trashType?.joinToString(",")}")
+        dataToSend = dataToSend.plus("|${point.trashId?.joinToString(",")}")
+        Log.i("DataToSend", dataToSend)
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = service.getJson(dataToSend, funSend)
@@ -747,8 +752,12 @@ object DBUtils {
                     if (checkForError(context, json.toString())) {
                         return@withContext
                     }
-                    Toast.makeText(context, "Action was done successfully!", Toast.LENGTH_SHORT).show()
                     (context as Activity).finish()
+                    if (adding){
+                        Toast.makeText(context, "Point was added successfully!", Toast.LENGTH_SHORT).show()
+                    } else{
+                        Toast.makeText(context, "Point was updated successfully!", Toast.LENGTH_SHORT).show()
+                    }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
