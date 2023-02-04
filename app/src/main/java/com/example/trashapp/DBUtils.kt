@@ -188,12 +188,17 @@ object DBUtils {
                             intent.putExtra("loginCollected", reportsArray?.get(position)?.userLogin)
                             intent.putExtra("vehicleIdCollected", reportsArray?.get(position)?.vehicleId)
                             intent.putExtra("crewIdCollected", reportsArray?.get(position)?.cleaningCrewId)
-                            intent.putExtra("pointLatitude",
-                                reportsArray?.get(position)?.collectingPoint?.split(",")?.get(0)
-                            )
-                            intent.putExtra("pointLongitude",
-                                reportsArray?.get(position)?.collectingPoint?.split(",")?.get(1)
-                            )
+                            if (reportsArray?.get(position)?.collectingPoint?.contains(",") == true) {
+                                intent.putExtra("pointLatitude",
+                                    reportsArray?.get(position)?.collectingPoint?.split(",")?.get(0)
+                                )
+                                intent.putExtra("pointLongitude",
+                                    reportsArray?.get(position)?.collectingPoint?.split(",")?.get(1)
+                                )
+                            } else {
+                                intent.putExtra("pointLatitude", "")
+                                intent.putExtra("pointLongitude", "")
+                            }
                             if (reportsArray?.get(position)?.images?.size!! > 0){
                                 intent.putExtra("images", reportsArray?.get(position)?.images?.joinToString(","))
                             }
