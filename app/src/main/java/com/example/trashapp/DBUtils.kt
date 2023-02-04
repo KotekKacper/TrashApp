@@ -571,9 +571,37 @@ object DBUtils {
         } else {
             funSend = "updateReport"
         }
-        var dataToSend =
-            "'${trash.userLoginReport}', '${trash.localization}', '${trash.creationDate}'," +
-            "'${convertFromSize(trash.trashSize!!)}', '${trash.trashType}', '${trash.creationDate}'"//, '${trash.user/vehicle/crew}'" //
+        val elements = ArrayList<String>()
+        elements.add("${Tab.TRASH}.user_login_report");elements.add("${Tab.TRASH}.localization")
+        elements.add("${Tab.TRASH}.creation_date");elements.add("${Tab.TRASH}.trash_size");
+        elements.add("${Tab.TRASH}.trash_types");
+        Log.i("Trash", trash.userLogin + trash.vehicleId + trash.cleaningCrewId)
+        if (trash.userLogin!!.isNotEmpty()){
+            elements.add("${Tab.TRASH}.user_login")
+        } else if (trash.vehicleId!!.isNotEmpty()){
+            elements.add("${Tab.TRASH}.vehicle_id")
+        } else if (trash.cleaningCrewId!!.isNotEmpty()){
+            elements.add("${Tab.TRASH}.cleaningcrew_id")
+        }
+        if (trash.userLogin!!.isNotEmpty() || trash.vehicleId!!.isNotEmpty() || trash.cleaningCrewId!!.isNotEmpty()){
+            elements.add("${Tab.TRASH}.collection_date")
+        }
+        var dataToSend = elements.joinToString(separator = ",")
+        dataToSend = dataToSend.plus("|")
+        dataToSend = dataToSend.plus(
+            "${trash.userLoginReport}`${trash.localization}`${trash.creationDate}`" +
+            "${convertFromSize(trash.trashSize!!)}`${trash.trashType}")
+        if (trash.userLogin!!.isNotEmpty()){
+            dataToSend = dataToSend.plus("`${trash.userLogin}")
+        } else if (trash.vehicleId!!.isNotEmpty()){
+            dataToSend = dataToSend.plus("`${trash.vehicleId}")
+        } else if (trash.cleaningCrewId!!.isNotEmpty()){
+            dataToSend = dataToSend.plus("`${trash.cleaningCrewId}`")
+        }
+        if (trash.userLogin!!.isNotEmpty() || trash.vehicleId!!.isNotEmpty() || trash.cleaningCrewId!!.isNotEmpty()){
+            dataToSend = dataToSend.plus("`${trash.collectionDate}")
+        }
+
         dataToSend = dataToSend.plus("|${id}")
         CoroutineScope(Dispatchers.IO).launch {
             try {

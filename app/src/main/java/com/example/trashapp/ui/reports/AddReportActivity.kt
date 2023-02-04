@@ -165,9 +165,9 @@ class AddReportActivity : AppCompatActivity() {
         val firstEditText = findViewById<EditText>(R.id.editTextTextReportLoginCollected)
         firstEditText.addTextChangedListener(LoginWatcher(firstEditText, obligatory = false))
         val secondEditText = findViewById<EditText>(R.id.editTextTextReportVehicleCollected)
-        secondEditText.addTextChangedListener(IdWatcher(secondEditText))
+        secondEditText.addTextChangedListener(IdOptionalWatcher(secondEditText))
         val thirdEditText = findViewById<EditText>(R.id.editTextTextReportCrewCollected)
-        thirdEditText.addTextChangedListener(IdWatcher(thirdEditText))
+        thirdEditText.addTextChangedListener(IdOptionalWatcher(thirdEditText))
 
         firstEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
         secondEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
@@ -220,7 +220,10 @@ class AddReportActivity : AppCompatActivity() {
                             .joinToString(","),
                         creationDate = crTime.format(formatter),
                         trashSize = trashSizeSpinner.selectedItem.toString(),
-                        trashType = (trashTypeEditText.text.toString()),
+                        trashType = trashTypeEditText.text.toString(),
+                        userLogin = firstEditText.text.toString(),
+                        vehicleId = secondEditText.text.toString(),
+                        cleaningCrewId = thirdEditText.text.toString(),
                         collectionDate = colTime.format(formatter)
                 ), id, chosen_imgs)
             } else{
