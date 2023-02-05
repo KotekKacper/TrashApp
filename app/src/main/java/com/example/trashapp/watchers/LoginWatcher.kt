@@ -13,13 +13,14 @@ class LoginWatcher (private val loginEditText: EditText, private val obligatory:
                 // show an error message
                 loginEditText.error = "Field can't be empty"
             } else if (check.contains(";") ||
-                       check.contains("\n") ||
-                       check.contains("\"") ||
+                        check.contains(",") ||
+                        check.contains("\n") ||
+                        check.contains("\"") ||
                         check.contains("`") ||
                         check.contains("|") ||
                         check.contains(" ")) {
                 // show an error message
-                loginEditText.error = "Field can't contain ; \\n \" ` | or space"
+                loginEditText.error = "Field can't contain , ; \\n \" ` | or space"
             } else if (check.length > 40) {
                 // show an error message
                 loginEditText.error = "Maximum of 40 characters"

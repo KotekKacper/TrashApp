@@ -14,10 +14,7 @@ import androidx.core.view.isVisible
 import com.example.trashapp.DBUtils
 import com.example.trashapp.R
 import com.example.trashapp.classes.Group
-import com.example.trashapp.watchers.DateWatcher
-import com.example.trashapp.watchers.LatitudeWatcher
-import com.example.trashapp.watchers.LoginWatcher
-import com.example.trashapp.watchers.LongitudeWatcher
+import com.example.trashapp.watchers.*
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -86,8 +83,8 @@ class AddGroupActivity : AppCompatActivity() {
         val longitudeEditText = this.findViewById<EditText>(R.id.editTextGroupLongitude)
         longitudeEditText.addTextChangedListener(LongitudeWatcher(longitudeEditText, true))
 
-
-
+        val membersEditText = this.findViewById<EditText>(R.id.editTextTextGroupMembers)
+        membersEditText.addTextChangedListener(LoginListWatcher(membersEditText))
 
         val applyButton = findViewById<Button>(R.id.buttonGroupConfirm)
         applyButton.setOnClickListener{
@@ -104,7 +101,8 @@ class AddGroupActivity : AppCompatActivity() {
                         id = "-1", name = crewNameEditText.text.toString(),
                         meetingDate = meetTime.format(formatter),
                         meetingLoc = arrayListOf(
-                            latitudeEditText.text.toString(), longitudeEditText.text.toString()).joinToString(",")
+                            latitudeEditText.text.toString(), longitudeEditText.text.toString()).joinToString(","),
+                        users = membersEditText.text.toString().trimEnd(',')
                     ), id
                 )
             } else{
