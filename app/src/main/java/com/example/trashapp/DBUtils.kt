@@ -216,6 +216,8 @@ object DBUtils {
         }
     }
 
+    var groupsAdapter = GroupItemAdapter(arrayListOf(), object: OnItemClickListener{
+        override fun onItemClick(position: Int) {}})
     fun getGroups(context: Context, recyclerView: RecyclerView, username: String){
         val funSend = "getGroups"
 
@@ -231,7 +233,7 @@ object DBUtils {
                     val json = response.body()?.string()
                     Log.i("ServerSQL", json.toString())
                     val groupsArray = json?.let { convertGroups(json.toString()) }
-                    val adapter = GroupItemAdapter(groupsArray, object : OnItemClickListener {
+                    groupsAdapter = GroupItemAdapter(groupsArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(context, AddGroupActivity::class.java)
                             intent.putExtra("id", groupsArray?.get(position)?.id)
@@ -254,7 +256,7 @@ object DBUtils {
                             context.startActivity(intent)
                         }
                     })
-                    recyclerView.adapter = adapter
+                    recyclerView.adapter = groupsAdapter
 
                 }
             } catch (e: Exception) {
@@ -265,6 +267,8 @@ object DBUtils {
         }
     }
 
+    var pointsAdapter = CollectingPointItemAdapter(arrayListOf(), object: OnItemClickListener{
+        override fun onItemClick(position: Int) {}})
     fun getCollectingPoints(context: Context, recyclerView: RecyclerView) {
 
         val funSend = "getCollectingPoints"
@@ -284,7 +288,7 @@ object DBUtils {
                     }
 
                     val pointsArray = json?.let { convertCollectionPoints(json.toString()) }
-                    val adapter = CollectingPointItemAdapter(pointsArray, object : OnItemClickListener {
+                    pointsAdapter = CollectingPointItemAdapter(pointsArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(context, AddPointActivity::class.java)
                             intent.putExtra("latitude",
@@ -300,7 +304,7 @@ object DBUtils {
                             context.startActivity(intent)
                         }
                     })
-                    recyclerView.adapter = adapter
+                    recyclerView.adapter = pointsAdapter
 
                 }
             } catch (e: Exception) {
@@ -311,6 +315,8 @@ object DBUtils {
         }
     }
 
+    var usersAdapter = UserItemAdapter(arrayListOf(), object: OnItemClickListener{
+        override fun onItemClick(position: Int) {}})
     fun getUsers(context: Context, recyclerView: RecyclerView){
         val funSend = "getUsers"
 
@@ -334,7 +340,7 @@ object DBUtils {
                     }
 
                     val usersArray = json?.let { convertAllUsers(json.toString()) }
-                    val adapter = UserItemAdapter(usersArray, object : OnItemClickListener {
+                    usersAdapter = UserItemAdapter(usersArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(context, AddUserActivity::class.java)
                             intent.putExtra("login", usersArray?.get(position)?.login)
@@ -354,7 +360,7 @@ object DBUtils {
                             )
                             context.startActivity(intent)
                         }})
-                    recyclerView.adapter = adapter
+                    recyclerView.adapter = usersAdapter
 
                 }
             } catch (e: Exception) {
@@ -365,6 +371,8 @@ object DBUtils {
         }
     }
 
+    var companiesAdapter = CompanyItemAdapter(arrayListOf(), object: OnItemClickListener{
+        override fun onItemClick(position: Int) {}})
     fun getCompanies(context: Context, recyclerView: RecyclerView){
         val funSend = "getCompanies"
 
@@ -384,7 +392,7 @@ object DBUtils {
                     }
 
                     val companiesArray = json?.let { convertCompanies(json.toString()) }
-                    val adapter = CompanyItemAdapter(companiesArray, object : OnItemClickListener {
+                    companiesAdapter = CompanyItemAdapter(companiesArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(context, AddCompanyActivity::class.java)
                             intent.putExtra("nip", companiesArray?.get(position)?.NIP)
@@ -399,7 +407,7 @@ object DBUtils {
                             intent.putExtra("postCode", companiesArray?.get(position)?.postCode)
                             context.startActivity(intent)
                         }})
-                    recyclerView.adapter = adapter
+                    recyclerView.adapter = companiesAdapter
 
                 }
             } catch (e: Exception) {
@@ -410,6 +418,8 @@ object DBUtils {
         }
     }
 
+    var vehiclesAdapter = VehicleItemAdapter(arrayListOf(), object: OnItemClickListener{
+        override fun onItemClick(position: Int) {}})
     fun getVehicles(context: Context, recyclerView: RecyclerView){
         val funSend = "getVehicles"
 
@@ -429,7 +439,7 @@ object DBUtils {
                     }
 
                     val vehiclesArray = json?.let { convertVehicles(json.toString()) }
-                    val adapter = VehicleItemAdapter(vehiclesArray, object : OnItemClickListener {
+                    vehiclesAdapter = VehicleItemAdapter(vehiclesArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(context, AddVehicleActivity::class.java)
                             intent.putExtra("id", vehiclesArray?.get(position)?.id)
@@ -443,7 +453,7 @@ object DBUtils {
                             )
                             context.startActivity(intent)
                         }})
-                    recyclerView.adapter = adapter
+                    recyclerView.adapter = vehiclesAdapter
 
                 }
             } catch (e: Exception) {
@@ -454,6 +464,8 @@ object DBUtils {
         }
     }
 
+    var workersAdapter = WorkerItemAdapter(arrayListOf(), object: OnItemClickListener{
+        override fun onItemClick(position: Int) {}})
     fun getWorkers(context: Context, recyclerView: RecyclerView){
         val funSend = "getWorkers"
 
@@ -473,7 +485,7 @@ object DBUtils {
                     }
 
                     val workersArray = json?.let { convertWorkers(json.toString()) }
-                    val adapter = WorkerItemAdapter(workersArray, object : OnItemClickListener {
+                    workersAdapter = WorkerItemAdapter(workersArray, object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(context, AddWorkerActivity::class.java)
                             intent.putExtra("fullname", workersArray?.get(position)?.fullname)
@@ -484,7 +496,7 @@ object DBUtils {
                             intent.putExtra("vehicleId", workersArray?.get(position)?.vehicleId)
                             context.startActivity(intent)
                         }})
-                    recyclerView.adapter = adapter
+                    recyclerView.adapter = workersAdapter
 
                 }
             } catch (e: Exception) {
