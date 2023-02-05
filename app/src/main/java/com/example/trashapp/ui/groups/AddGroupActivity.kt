@@ -9,10 +9,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.view.isVisible
 import com.example.trashapp.DBUtils
 import com.example.trashapp.R
@@ -21,10 +18,16 @@ import com.example.trashapp.watchers.DateWatcher
 import com.example.trashapp.watchers.LatitudeWatcher
 import com.example.trashapp.watchers.LoginWatcher
 import com.example.trashapp.watchers.LongitudeWatcher
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 class AddGroupActivity : AppCompatActivity() {
     private var adding = true
     private var id = ""
+    private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    private val zoneId = ZoneId.systemDefault()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_group)
@@ -46,8 +49,13 @@ class AddGroupActivity : AppCompatActivity() {
                 this.findViewById<EditText>(R.id.editTextGroupCrewName).text =
                     SpannableStringBuilder(extras.getString("crewName"))
                 try {
-                    this.findViewById<EditText>(R.id.editTextGroupMeetingDate).text =
-                        SpannableStringBuilder(extras.getString("meetingDate"))
+                    val curDate = LocalDateTime.parse(extras.getString("meetingDate"), formatter)
+                    this.findViewById<DatePicker>(R.id.datePickerGroupMeetDate)
+                        .updateDate(curDate.year, curDate.monthValue-1, curDate.dayOfMonth)
+                    Log.i("Date", curDate.toString())
+                    val creationTimePicker = this.findViewById<TimePicker>(R.id.timePickerGroupMeetDate)
+                    creationTimePicker.hour = curDate.hour
+                    creationTimePicker.minute = curDate.minute
                 } catch (e: Exception) {
                     Log.e("IntentExtras", e.toString())
                 }
@@ -64,8 +72,11 @@ class AddGroupActivity : AppCompatActivity() {
         val crewNameEditText = this.findViewById<EditText>(R.id.editTextGroupCrewName)
         crewNameEditText.addTextChangedListener(LoginWatcher(crewNameEditText))
 
-        val meetingDateEditText = this.findViewById<EditText>(R.id.editTextGroupMeetingDate)
-        meetingDateEditText.addTextChangedListener(DateWatcher(meetingDateEditText))
+//        val meetingDateEditText = this.findViewById<EditText>(R.id.editTextGroupMeetingDate)
+//        meetingDateEditText.addTextChangedListener(DateWatcher(meetingDateEditText))
+        val meetDatePicker = findViewById<DatePicker>(R.id.datePickerGroupMeetDate)
+        val meetTimePicker = findViewById<TimePicker>(R.id.timePickerGroupMeetDate)
+        meetTimePicker.setIs24HourView(true)
 
         val latitudeEditText = this.findViewById<EditText>(R.id.editTextGroupLatitude)
         latitudeEditText.addTextChangedListener(LatitudeWatcher(latitudeEditText))
@@ -77,12 +88,17 @@ class AddGroupActivity : AppCompatActivity() {
         val applyButton = findViewById<Button>(R.id.buttonGroupConfirm)
         applyButton.setOnClickListener{
             if (crewNameEditText.error == null && crewNameEditText.text.toString() != "" &&
-                meetingDateEditText.error == null &&
                 latitudeEditText.error == null && longitudeEditText.error == null){
+                val meetTime = ZonedDateTime.of(meetDatePicker.year,
+                    meetDatePicker.month+1,
+                    meetDatePicker.dayOfMonth,
+                    meetTimePicker.hour,
+                    meetTimePicker.minute,
+                    0, 0, zoneId)
                 DBUtils.addGroup(this, adding,
                     Group(
                         id = "-1", name = crewNameEditText.text.toString(),
-                        meetingDate = meetingDateEditText.text.toString(),
+                        meetingDate = meetTime.format(formatter),
                         meetingLoc = arrayListOf(
                             latitudeEditText.text.toString(), longitudeEditText.text.toString()).joinToString(",")
                     ), id
