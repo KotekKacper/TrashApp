@@ -63,6 +63,8 @@ class AddGroupActivity : AppCompatActivity() {
                     SpannableStringBuilder(extras.getString("latitude"))
                 this.findViewById<EditText>(R.id.editTextGroupLongitude).text =
                     SpannableStringBuilder(extras.getString("longitude"))
+                this.findViewById<EditText>(R.id.editTextTextGroupMembers).text =
+                    SpannableStringBuilder(extras.getString("groupMembers"))
 
             } catch (e: Exception) {
             Log.e("IntentExtras", e.toString())
@@ -83,6 +85,8 @@ class AddGroupActivity : AppCompatActivity() {
 
         val longitudeEditText = this.findViewById<EditText>(R.id.editTextGroupLongitude)
         longitudeEditText.addTextChangedListener(LongitudeWatcher(longitudeEditText, true))
+
+
 
 
         val applyButton = findViewById<Button>(R.id.buttonGroupConfirm)
