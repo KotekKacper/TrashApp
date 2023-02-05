@@ -39,14 +39,11 @@ class LoginActivity : AppCompatActivity() {
                 passwordEditText.error == null && passwordEditText.text.toString() != "") {
 
                 DBUtils.checkLogin(this, login, encryptedPassword)
-                    val preferences = getSharedPreferences("credentials", Context.MODE_PRIVATE)
-                    val editor = preferences.edit()
-                    editor.putString("login", login)
-                    editor.putString("password", encryptedPassword)
-                    editor.apply()
-
-
-
+                val preferences = getSharedPreferences("credentials", Context.MODE_PRIVATE)
+                val editor = preferences.edit()
+                editor.putString("login", login)
+                editor.putString("password", encryptedPassword)
+                editor.apply()
             } else {
                 Toast.makeText(this, "Invalid login data", Toast.LENGTH_SHORT).show()
             }
