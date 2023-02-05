@@ -7,10 +7,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.trashapp.DBUtils
 import com.example.trashapp.LoginActivity
+import com.example.trashapp.R
 import com.example.trashapp.databinding.FragmentAccountBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -53,6 +55,18 @@ class AccountFragment : Fragment() {
         context?.let { DBUtils.getArchiveTrashCount(it, binding) }
 
         return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        activity?.findViewById<ImageButton>(R.id.sortButton)?.visibility = View.GONE
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        activity?.findViewById<ImageButton>(R.id.sortButton)?.visibility = View.VISIBLE
     }
 
     override fun onDestroyView() {
