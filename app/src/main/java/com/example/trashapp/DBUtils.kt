@@ -1173,7 +1173,7 @@ object DBUtils {
     fun checkLogin(context: Context, username: String, password: String): Boolean {
         val funSend = "checkUserForLogin"
         var userExists = false
-        var dataToSend = "'${username}', '${Encryption.decrypt(password)}'"
+        var dataToSend = "${username}, ${Encryption.decrypt(password)}"
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -1185,9 +1185,16 @@ object DBUtils {
                         userExists = false
                         return@withContext
                     }
-                    if(json?.contains("1") == true){
-                    context.startActivity(Intent(context, MainActivity::class.java))
+                    if(json?.contains("0") == false){
+                        val preferences = context.getSharedPreferences("credentials", Context.MODE_PRIVATE)
+                        val editor = preferences.edit()
+
+                        editor.putString("role", json.toString().trimEnd(','))
+                        editor.apply()
+                        context.startActivity(Intent(context, MainActivity::class.java))
                         (context as Activity).finish()
+                    } else {
+                        Toast.makeText(context, "Incorrect login credentials", Toast.LENGTH_SHORT).show()
                     }
 
                 }

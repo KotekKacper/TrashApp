@@ -54,10 +54,11 @@ class MainActivity : AppCompatActivity(), SortButtonCallback {
             ), drawerLayout
         )
 
-        val role = "admin"
+        val role = getSharedPreferences("credentials", Context.MODE_PRIVATE)
+            .getString("role", "")?.split(",")?.sorted()?.get(0)
         val menu = navView.menu
         when (role){
-            "admin" -> {
+            "ADMIN" -> {
                 menu.findItem(R.id.nav_map).isVisible = true
                 menu.findItem(R.id.nav_reports).isVisible = true
                 menu.findItem(R.id.nav_reports).title = "All reports"
@@ -70,7 +71,7 @@ class MainActivity : AppCompatActivity(), SortButtonCallback {
                 menu.findItem(R.id.nav_workers).isVisible = true
                 menu.findItem(R.id.nav_account).isVisible = true
             }
-            "user" -> {
+            "USER" -> {
                 menu.findItem(R.id.nav_map).isVisible = true
                 menu.findItem(R.id.nav_reports).isVisible = true
                 menu.findItem(R.id.nav_reports).title = "Your reports"
