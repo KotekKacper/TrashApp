@@ -693,20 +693,19 @@ object DBUtils {
     }
 
     fun addGroup(context: Context, adding: Boolean, group: Group, id: String = ""){
-        var dataToSend = "'${context.getSharedPreferences("credentials",Context.MODE_PRIVATE).getString("login","")}', '${group.name}'|"
         var funSend: String
         if (adding) funSend = "addGroup"
         else {
             funSend = "updateGroup"
-            dataToSend = "'${context.getSharedPreferences("credentials",Context.MODE_PRIVATE).getString("login","")}', ${id}|"
         }
 
         val elements = ArrayList<String>()
         elements.add("${Tab.CLEAN_CREW}.crew_name");elements.add("${Tab.CLEAN_CREW}.meet_date")
         elements.add("${Tab.CLEAN_CREW}.meeting_localization")
-        dataToSend = dataToSend.plus(elements.joinToString(separator = ", "))
-        dataToSend = dataToSend.plus("|")
-        dataToSend = dataToSend.plus("'${group.name}', '${group.meetingDate}', '${group.meetingLoc}'")
+        var dataToSend = elements.joinToString(separator = ",")
+        dataToSend = dataToSend.plus("|${group.name}`${group.meetingDate}`${group.meetingLoc}")
+        dataToSend = dataToSend.plus("|${group.users}")
+        dataToSend = dataToSend.plus("|${id}")
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = service.getJson(dataToSend, funSend)
@@ -716,7 +715,6 @@ object DBUtils {
                     if (checkForError(context, json.toString())) {
                         return@withContext
                     }
-
                     (context as Activity).finish()
 
                     if (adding){
@@ -730,7 +728,6 @@ object DBUtils {
                     Log.e("ServerSQL", e.toString())
                 }
             }
-
         }
     }
 
