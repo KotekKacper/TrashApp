@@ -40,15 +40,23 @@
             android:layout_marginEnd="8dp"
             android:textAlignment="center"
             android:textSize="20sp"
-            android:text="Group Meeting Date \n (yyyy-MM-dd HH:mm:ss.S)" />
-        <EditText
-            android:id="@+id/editTextGroupMeetingDate"
+            android:text="Group Meeting Date" />
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="date" />
+            android:orientation="horizontal">
+            <DatePicker
+                android:id="@+id/datePickerGroupMeetDate"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner" />
+            <TimePicker
+                android:id="@+id/timePickerGroupMeetDate"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:timePickerMode="spinner" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textGroupLocalization"
@@ -59,14 +67,14 @@
             android:layout_marginEnd="8dp"
             android:textAlignment="center"
             android:textSize="20sp"
-            android:text="Group Localization" />
+            android:text="Group Meeting Localization" />
         <EditText
             android:id="@+id/editTextGroupLatitude"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="Group Latitude"
+            android:hint="group Latitude"
             android:inputType="numberDecimal" />
         <EditText
             android:id="@+id/editTextGroupLongitude"
@@ -74,8 +82,28 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="Group Longitude"
+            android:hint="group Longitude"
             android:inputType="numberDecimal" />
+
+        <TextView
+            android:id="@+id/textGroupMembers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="8dp"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:text="Group members (comma seperated)" />
+        <EditText
+            android:id="@+id/editTextTextGroupMembers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="group members" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
