@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.example.trashapp.*
+import com.example.trashapp.ConvertResponse.convertFromSize
 import com.example.trashapp.classes.Trash
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
@@ -112,6 +113,46 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?,
 
     fun sortByCreationDateDescending(context: Context) {
         mData?.sortWith(compareByDescending({ it.creationDate }))
+        notifyDataSetChanged()
+    }
+
+    fun sortByCollectionDateAscending(context: Context) {
+        mData?.sortWith(compareBy({ it.collectionDate }))
+        notifyDataSetChanged()
+    }
+
+    fun sortByCollectionDateDescending(context: Context) {
+        mData?.sortWith(compareByDescending({ it.collectionDate }))
+        notifyDataSetChanged()
+    }
+
+    fun sortBySizeAscending(context: Context) {
+        mData?.sortWith(compareBy({ convertFromSize(it.trashSize?: "Big") }))
+        notifyDataSetChanged()
+    }
+
+    fun sortBySizeDescending(context: Context) {
+        mData?.sortWith(compareByDescending({ convertFromSize(it.trashSize?: "Big") }))
+        notifyDataSetChanged()
+    }
+
+    fun sortByLatAscending(context: Context) {
+        mData?.sortWith(compareBy({ it.localization.split(",")[0].toDouble() }))
+        notifyDataSetChanged()
+    }
+
+    fun sortByLatDescending(context: Context) {
+        mData?.sortWith(compareByDescending({ it.localization.split(",")[0].toDouble() }))
+        notifyDataSetChanged()
+    }
+
+    fun sortByLonAscending(context: Context) {
+        mData?.sortWith(compareBy({ it.localization.split(",")[1].toDouble() }))
+        notifyDataSetChanged()
+    }
+
+    fun sortByLonDescending(context: Context) {
+        mData?.sortWith(compareByDescending({ it.localization.split(",")[1].toDouble() }))
         notifyDataSetChanged()
     }
 
