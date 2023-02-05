@@ -250,6 +250,7 @@ object DBUtils {
                                 intent.putExtra("latitude","")
                                 intent.putExtra("longitude","")
                             }
+                            intent.putExtra("groupMembers", groupsArray?.get(position)?.users)
                             context.startActivity(intent)
                         }
                     })
