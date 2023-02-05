@@ -75,7 +75,11 @@ class ReportsFragment : Fragment(), SortButtonCallback {
     }
 
     override fun onSortButtonClicked() {
-        val sortOptions = arrayOf("Creation date (oldest-newest)", "Creation date (newest-oldest)")
+        val sortOptions = arrayOf("Creation date (oldest-newest)","Creation date (newest-oldest)",
+            "Collection date (oldest-newest)","Collection date (newest-oldest)",
+            "Size (small-big)","Size (big-small)",
+            "Latitude (0-90)", "Latitue (90-0)",
+            "Longtitude (0-180)", "Longtitue (180-0)")
         val builder = AlertDialog.Builder(context)
         val adapter = DBUtils.reportsAdapter
         builder.setTitle("Sort by")
@@ -83,6 +87,14 @@ class ReportsFragment : Fragment(), SortButtonCallback {
                 when (which) {
                     0 -> adapter.sortByCreationDateAscending(context!!)
                     1 -> adapter.sortByCreationDateDescending(context!!)
+                    2 -> adapter.sortByCollectionDateAscending(context!!)
+                    3 -> adapter.sortByCollectionDateDescending(context!!)
+                    4 -> adapter.sortBySizeAscending(context!!)
+                    5 -> adapter.sortBySizeDescending(context!!)
+                    6 -> adapter.sortByLatAscending(context!!)
+                    7 -> adapter.sortByLatDescending(context!!)
+                    8 -> adapter.sortByLonAscending(context!!)
+                    9 -> adapter.sortByLonDescending(context!!)
                 }
             }
             .show()
