@@ -237,12 +237,19 @@ object DBUtils {
                             intent.putExtra("id", groupsArray?.get(position)?.id)
                             intent.putExtra("crewName", groupsArray?.get(position)?.name)
                             intent.putExtra("meetingDate", groupsArray?.get(position)?.meetingDate)
-                            intent.putExtra("latitude",
-                                groupsArray?.get(position)?.meetingLoc?.split(",")?.get(0)
-                            )
-                            intent.putExtra("longitude",
-                                groupsArray?.get(position)?.meetingLoc?.split(",")?.get(1)
-                            )
+                            if (groupsArray?.get(position)?.meetingLoc?.contains(",") == true) {
+                                intent.putExtra(
+                                    "latitude",
+                                    groupsArray?.get(position)?.meetingLoc?.split(",")?.get(0)
+                                )
+                                intent.putExtra(
+                                    "longitude",
+                                    groupsArray?.get(position)?.meetingLoc?.split(",")?.get(1)
+                                )
+                            } else {
+                                intent.putExtra("latitude","")
+                                intent.putExtra("longitude","")
+                            }
                             context.startActivity(intent)
                         }
                     })
