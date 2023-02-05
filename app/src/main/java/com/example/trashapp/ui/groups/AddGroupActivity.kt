@@ -79,10 +79,10 @@ class AddGroupActivity : AppCompatActivity() {
         meetTimePicker.setIs24HourView(true)
 
         val latitudeEditText = this.findViewById<EditText>(R.id.editTextGroupLatitude)
-        latitudeEditText.addTextChangedListener(LatitudeWatcher(latitudeEditText))
+        latitudeEditText.addTextChangedListener(LatitudeWatcher(latitudeEditText, true))
 
         val longitudeEditText = this.findViewById<EditText>(R.id.editTextGroupLongitude)
-        longitudeEditText.addTextChangedListener(LongitudeWatcher(longitudeEditText))
+        longitudeEditText.addTextChangedListener(LongitudeWatcher(longitudeEditText, true))
 
 
         val applyButton = findViewById<Button>(R.id.buttonGroupConfirm)
