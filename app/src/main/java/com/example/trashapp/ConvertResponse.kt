@@ -42,7 +42,11 @@ object ConvertResponse {
                         phone = attributes[2],
                         country = attributes[3],
                         city = attributes[4],
-                        street = attributes[5]
+                        district = attributes[5],
+                        street = attributes[6],
+                        flatNumber = attributes[7],
+                        postCode = attributes[8],
+                        houseNumber = attributes[9],
                     )
                 )
             }
