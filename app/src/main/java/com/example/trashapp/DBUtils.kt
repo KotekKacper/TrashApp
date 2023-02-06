@@ -48,6 +48,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import java.io.ByteArrayOutputStream
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -580,9 +583,19 @@ object DBUtils {
 
     fun collectTrash(context: Context, item: OverlayItem){
         val funSend = "updateTrash"
+        val user_login = context.getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "")
+        var date = Date()
+        var timestamp = Timestamp(date.time)
+        var stringCollectDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timestamp)
+        //var dataToSend = "collection_date = NOW() | ${Tab.TRASH}.localization = '${item.point.toString()}'"
 
-        var dataToSend = "collection_date = NOW() | ${Tab.TRASH}.localization = '${item.point.toString()}'"
+        val elements = ArrayList<String>()
+        elements.add("${Tab.TRASH}.user_login");elements.add("${Tab.TRASH}.collection_date");elements.add("${Tab.TRASH}.localization")
 
+        var dataToSend = elements.joinToString(separator = ",")
+        dataToSend = dataToSend.plus("|")
+        dataToSend = dataToSend.plus("${user_login}`${stringCollectDate}`${item.point.toString()}")
+        dataToSend = dataToSend.plus("|'${item.point.toString()}'")
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = service.getJson(dataToSend, funSend)
