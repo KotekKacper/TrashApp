@@ -509,12 +509,13 @@ object DBUtils {
     }
 
 
-    fun addTrash(context: Context, pos: GeoPoint, chosen_imgs : ArrayList<Uri>, size: String){
+    fun addTrash(context: Context, pos: GeoPoint, chosen_imgs : ArrayList<Uri>, size: String, trashTypes: ArrayList<String>){
         var addedTrashId = ""
         val user_login_report = context.getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "")
 
         val funSend = "addTrash"
         var dataToSend = "'${pos.toDoubleString()}', '${user_login_report}', '${TrashSize.valueOf(size.uppercase()).intValue}'"
+        dataToSend += "|${trashTypes.joinToString(",")}"
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = service.getJson(dataToSend, funSend)
