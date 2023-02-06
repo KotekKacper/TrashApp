@@ -17,6 +17,7 @@ import com.example.trashapp.DBUtils
 import com.example.trashapp.DatabaseHelper
 import com.example.trashapp.MainActivity
 import com.example.trashapp.databinding.FragmentDetailTrashBinding
+import com.example.trashapp.watchers.ListWatcher
 import org.osmdroid.util.GeoPoint
 
 
@@ -58,6 +59,8 @@ class DetailTrashFragment : Fragment() {
                 it, androidx.transition.R.layout.support_simple_spinner_dropdown_item, sizes)
         }
 
+        binding.editTextTrashTrashType.addTextChangedListener(ListWatcher(binding.editTextTrashTrashType))
+
         binding.buttonLoadImg.setOnClickListener {
             chosen_imgs.clear()
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -71,8 +74,8 @@ class DetailTrashFragment : Fragment() {
                     it1,
                     GeoPoint(givenPosition[0].toDouble(), givenPosition[1].toDouble()),
                     chosen_imgs,
-                    binding.dropdownSize.selectedItem.toString()
-
+                    binding.dropdownSize.selectedItem.toString(),
+                    ArrayList(binding.editTextTrashTrashType.text.split(","))
                 )
             }
         }
