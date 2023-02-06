@@ -14,4 +14,11 @@
         android:text="Username"
         android:textSize="20sp" />
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Email address"
+        android:textSize="15sp" />
+
 </LinearLayout>
