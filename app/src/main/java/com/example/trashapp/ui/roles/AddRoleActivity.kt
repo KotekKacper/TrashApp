@@ -52,7 +52,7 @@ class AddRoleActivity : AppCompatActivity() {
             if (roleNameEditText.text.isNotEmpty() && roleNameEditText.error == null){
                 DBUtils.addRole(this, adding,
                     Role(
-                        roleNameEditText.text.toString()
+                        roleNameEditText.text.toString().uppercase()
                     ), roleName
                 )
             } else{

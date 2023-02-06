@@ -1058,45 +1058,37 @@ object DBUtils {
 
     fun addRole(context: Context, adding: Boolean, role: Role, name: String = ""){
         var funSend: String
-//        if(adding) {
-//            funSend = "addWorker"}
-//        else funSend = "updateWorker"
-//        val elements = ArrayList<String>()
-//        elements.add("${Tab.WORKER}.fullname");elements.add("${Tab.WORKER}.birthdate")
-//        elements.add("${Tab.WORKER}.job_start_time");elements.add("${Tab.WORKER}.job_end_time")
-//        elements.add("${Tab.WORKER}.company_nip");elements.add("${Tab.WORKER}.vehicle_id")
-//        var dataToSend = elements.joinToString(separator = ",")
-//        dataToSend = dataToSend.plus("|")
-//        dataToSend = dataToSend.plus("${worker.fullname}`${worker.birthDate}`" +
-//                "${worker.jobStartTime}`${worker.jobEndTime}`${worker.cleaningCompanyNIP}`" +
-//                "${worker.vehicleId}")
-//        if (!adding){
-//            dataToSend = dataToSend.plus("|${fullname}")
-//            dataToSend = dataToSend.plus("|${birthDate}")
-//        }
-//        CoroutineScope(Dispatchers.IO).launch {
-//            try {
-//                val response = service.getJson(dataToSend, funSend)
-//                withContext(Dispatchers.Main) {
-//                    val json = response.body()?.string()
-//                    Log.i("ServerSQL", json.toString())
-//                    if (checkForError(context, json.toString())) {
-//                        return@withContext
-//                    }
-//                    (context as Activity).finish()
-//                    if (adding){
-//                        Toast.makeText(context, "Worker added successfully!", Toast.LENGTH_SHORT).show()
-//                    } else{
-//                        Toast.makeText(context, "Worker updated successfully!", Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-//            } catch (e: Exception) {
-//                withContext(Dispatchers.Main) {
-//                    Log.e("ServerSQL", e.toString())
-//                }
-//
-//            }
-//        }
+        if(adding) {
+            funSend = "addRole"}
+        else funSend = "updateRole"
+        val elements = ArrayList<String>()
+        elements.add("${Tab.ROLE}.role_name")
+        var dataToSend = elements.joinToString(separator = ",")
+        dataToSend = dataToSend.plus("|${role.name}")
+        dataToSend = dataToSend.plus("|${name}")
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
+                    (context as Activity).finish()
+                    if (adding){
+                        Toast.makeText(context, "Role added successfully!", Toast.LENGTH_SHORT).show()
+                    } else{
+                        Toast.makeText(context, "Role updated successfully!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+
+            }
+        }
     }
 
 
