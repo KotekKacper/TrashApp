@@ -17,6 +17,7 @@ import com.example.trashapp.ConvertResponse.convertCollectionPoints
 import com.example.trashapp.ConvertResponse.convertCompanies
 import com.example.trashapp.ConvertResponse.convertFromSize
 import com.example.trashapp.ConvertResponse.convertGroups
+import com.example.trashapp.ConvertResponse.convertRoles
 import com.example.trashapp.ConvertResponse.convertUserReports
 import com.example.trashapp.ConvertResponse.convertVehicles
 import com.example.trashapp.ConvertResponse.convertWorkers
@@ -27,6 +28,7 @@ import com.example.trashapp.ui.collectingpoints.AddPointActivity
 import com.example.trashapp.ui.companies.AddCompanyActivity
 import com.example.trashapp.ui.groups.AddGroupActivity
 import com.example.trashapp.ui.reports.AddReportActivity
+import com.example.trashapp.ui.roles.AddRoleActivity
 import com.example.trashapp.ui.users.AddUserActivity
 import com.example.trashapp.ui.vehicles.AddVehicleActivity
 import com.example.trashapp.ui.workers.AddWorkerActivity
@@ -497,6 +499,45 @@ object DBUtils {
                             context.startActivity(intent)
                         }})
                     recyclerView.adapter = workersAdapter
+
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+
+    }
+
+
+    var rolesAdapter = RoleItemAdapter(arrayListOf(), object: OnItemClickListener{
+        override fun onItemClick(position: Int) {}})
+    fun getRoles(context: Context, recyclerView: RecyclerView){
+        val funSend = "getRoles"
+
+        var elements = ArrayList<String>()
+        elements.add("role_name");
+        val dataToSend = elements.joinToString(separator = ", ")
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())){
+                        return@withContext
+                    }
+
+                    val rolesArray = json?.let { convertRoles(json.toString()) }
+                    rolesAdapter = RoleItemAdapter(rolesArray, object : OnItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            val intent = Intent(context, AddRoleActivity::class.java)
+                            intent.putExtra("roleName", rolesArray?.get(position)?.name)
+                            context.startActivity(intent)
+                        }})
+                    recyclerView.adapter = rolesAdapter
 
                 }
             } catch (e: Exception) {
@@ -1015,6 +1056,49 @@ object DBUtils {
         }
     }
 
+    fun addRole(context: Context, adding: Boolean, role: Role, name: String = ""){
+        var funSend: String
+//        if(adding) {
+//            funSend = "addWorker"}
+//        else funSend = "updateWorker"
+//        val elements = ArrayList<String>()
+//        elements.add("${Tab.WORKER}.fullname");elements.add("${Tab.WORKER}.birthdate")
+//        elements.add("${Tab.WORKER}.job_start_time");elements.add("${Tab.WORKER}.job_end_time")
+//        elements.add("${Tab.WORKER}.company_nip");elements.add("${Tab.WORKER}.vehicle_id")
+//        var dataToSend = elements.joinToString(separator = ",")
+//        dataToSend = dataToSend.plus("|")
+//        dataToSend = dataToSend.plus("${worker.fullname}`${worker.birthDate}`" +
+//                "${worker.jobStartTime}`${worker.jobEndTime}`${worker.cleaningCompanyNIP}`" +
+//                "${worker.vehicleId}")
+//        if (!adding){
+//            dataToSend = dataToSend.plus("|${fullname}")
+//            dataToSend = dataToSend.plus("|${birthDate}")
+//        }
+//        CoroutineScope(Dispatchers.IO).launch {
+//            try {
+//                val response = service.getJson(dataToSend, funSend)
+//                withContext(Dispatchers.Main) {
+//                    val json = response.body()?.string()
+//                    Log.i("ServerSQL", json.toString())
+//                    if (checkForError(context, json.toString())) {
+//                        return@withContext
+//                    }
+//                    (context as Activity).finish()
+//                    if (adding){
+//                        Toast.makeText(context, "Worker added successfully!", Toast.LENGTH_SHORT).show()
+//                    } else{
+//                        Toast.makeText(context, "Worker updated successfully!", Toast.LENGTH_SHORT).show()
+//                    }
+//                }
+//            } catch (e: Exception) {
+//                withContext(Dispatchers.Main) {
+//                    Log.e("ServerSQL", e.toString())
+//                }
+//
+//            }
+//        }
+    }
+
 
     fun deleteReport(context: Context, id: String){
         val funSend = "deleteReport"
@@ -1182,6 +1266,30 @@ object DBUtils {
                 }
             }
         }
+    }
+
+    fun deleteRole(context: Context, name: String){
+        val funSend = "deleteWorker"
+
+//        var dataToSend = "fullname = '${fullname}'"
+//
+//        CoroutineScope(Dispatchers.IO).launch {
+//            try {
+//                val response = service.getJson(dataToSend, funSend)
+//                withContext(Dispatchers.Main) {
+//                    val json = response.body()?.string()
+//                    Log.i("ServerSQL", json.toString())
+//                    if (checkForError(context, json.toString())) {
+//                        return@withContext
+//                    }
+//                    Toast.makeText(context, "Worker ${fullname} was deleted.", Toast.LENGTH_SHORT).show()
+//                }
+//            } catch (e: Exception) {
+//                withContext(Dispatchers.Main) {
+//                    Log.e("ServerSQL", e.toString())
+//                }
+//            }
+//        }
     }
 
 

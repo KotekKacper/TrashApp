@@ -237,4 +237,19 @@ object ConvertResponse {
         }
         return out
     }
+    fun convertRoles(str: String): ArrayList<Role>{
+        val points = str.split("\n")
+        val out: ArrayList<Role> = arrayListOf()
+        for (point in points){
+            if(!point.isEmpty() && point !="\n") {
+                val attributes = point.split(";")
+                out.add(
+                    Role(
+                        name = attributes[0]
+                    )
+                )
+            }
+        }
+        return out
+    }
 }
