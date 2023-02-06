@@ -54,7 +54,7 @@ import kotlin.collections.ArrayList
 object DBUtils {
 
     val retrofit = Retrofit.Builder()
-        .baseUrl("http://10.0.2.2:8888/")
+        .baseUrl("http://192.168.1.11:8888/")
         .build()
     val service = retrofit.create(ServerApiService::class.java)
     val imgService = retrofit.create(ImageUploadApi::class.java)
@@ -324,8 +324,12 @@ object DBUtils {
         elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
         elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.phone");
         elements.add("${Tab.USER}.fullname");elements.add("${Tab.USER}.country");
-        elements.add("${Tab.USER}.city");elements.add("${Tab.USER}.street");
-        elements.add("${Tab.USER}.post_code");elements.add("${Tab.ROLE}.role_name")
+        elements.add("${Tab.USER}.city");elements.add("${Tab.USER}.district");
+        elements.add("${Tab.USER}.street");
+        elements.add("${Tab.USER}.flat_number");
+        elements.add("${Tab.USER}.post_code");
+        elements.add("${Tab.USER}.house_number");
+        elements.add("${Tab.ROLE}.role_name")
 
         val dataToSend = elements.joinToString(separator = ", ")
 
@@ -795,13 +799,13 @@ object DBUtils {
         elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
         elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.phone");elements.add("${Tab.USER}.fullname");
         elements.add("${Tab.USER}.country");elements.add("${Tab.USER}.city");elements.add("${Tab.USER}.district");
-        elements.add("${Tab.USER}.street");elements.add("${Tab.USER}.flat_number");elements.add("${Tab.USER}.post_code");
+        elements.add("${Tab.USER}.street");elements.add("${Tab.USER}.flat_number");elements.add("${Tab.USER}.post_code");elements.add("${Tab.USER}.house_number");
         dataToSend = elements.joinToString(separator = ", ")
         dataToSend = dataToSend.plus("|")
         if (adding)
-            dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}', '${user.phone}', '${user.fullname}', '${user.country}', '${user.city}', '${user.district}', '${user.street}', '${user.flatNumber}', '${user.postCode}'")
+            dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}', '${user.phone}', '${user.fullname}', '${user.country}', '${user.city}', '${user.district}', '${user.street}', '${user.flatNumber}', '${user.postCode}', '${user.houseNumber}'")
         else
-            dataToSend = dataToSend.plus("${user.login}`${user.password}`${user.email}`${user.phone}`${user.fullname}`${user.country}`${user.city}`${user.district}`${user.street}`${user.flatNumber}`${user.postCode}")
+            dataToSend = dataToSend.plus("${user.login}`${user.password}`${user.email}`${user.phone}`${user.fullname}`${user.country}`${user.city}`${user.district}`${user.street}`${user.flatNumber}`${user.postCode}`${user.houseNumber}")
 
         if (!adding){
             dataToSend = dataToSend.plus("|${login}")

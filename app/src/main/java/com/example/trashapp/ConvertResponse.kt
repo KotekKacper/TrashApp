@@ -64,9 +64,12 @@ object ConvertResponse {
                         fullname = attributes[4],
                         country = attributes[5],
                         city = attributes[6],
-                        street = attributes[7],
-                        postCode = attributes[8],
-                        roles = arrayListOf(attributes[9])
+                        district = attributes[7],
+                        street = attributes[8],
+                        flatNumber = attributes[9],
+                        postCode = attributes[10],
+                        houseNumber = attributes[11],
+                        roles = arrayListOf(attributes[12])
                     )
                 )
             }
