@@ -12,7 +12,7 @@ class RepeatEmailWatcher(private val repeatEmailEditText: EditText,
         val check = editable.toString()
         if (check.count { it == '@' } != 1) {
             //show an error message
-            emailEditText.error = "Email must contain exactly one @ sign"
+            repeatEmailEditText.error = "Email must contain exactly one @ sign"
         } else if (check.contains(";") ||
             check.contains("\n") ||
             check.contains("\"") ||
