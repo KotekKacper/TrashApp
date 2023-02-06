@@ -1,5 +1,6 @@
 package com.example.trashapp.ui.companies
 
+import android.app.AlertDialog
 import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -11,11 +12,13 @@ import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.DBUtils
+import com.example.trashapp.MainActivity
 import com.example.trashapp.R
+import com.example.trashapp.SortButtonCallback
 import com.example.trashapp.databinding.FragmentCompaniesBinding
 import com.example.trashapp.ui.collectingpoints.AddPointActivity
 
-class CompaniesFragment : Fragment() {
+class CompaniesFragment : Fragment(), SortButtonCallback {
 
     private var _binding: FragmentCompaniesBinding? = null
 
@@ -33,6 +36,11 @@ class CompaniesFragment : Fragment() {
 
         _binding = FragmentCompaniesBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        (activity as MainActivity).let {
+            it.sortButton.visibility = View.VISIBLE
+            it.sortButton.setOnClickListener { onSortButtonClicked() }
+        }
 
         val addButton = binding.root.findViewById<Button>(R.id.buttonCompaniesAdd)
         addButton.setOnClickListener {
@@ -59,6 +67,26 @@ class CompaniesFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onSortButtonClicked() {
+        val sortOptions = arrayOf("Email (A-Z)","Email (Z-A)",
+            "NIP (ascending)", "NIP (descending)",
+            "Phone number (ascending)", "Phone number (descending)")
+        val builder = AlertDialog.Builder(context)
+        val adapter = DBUtils.companiesAdapter
+        builder.setTitle("Sort by")
+            .setItems(sortOptions) { _, which ->
+                when (which) {
+                    0 -> adapter.sortByEmailAscending(context!!)
+                    1 -> adapter.sortByEmailDescending(context!!)
+                    2 -> adapter.sortByNIPAscending(context!!)
+                    3 -> adapter.sortByNIPDescending(context!!)
+                    4 -> adapter.sortByPhoneAscending(context!!)
+                    5 -> adapter.sortByPhoneDescending(context!!)
+                }
+            }
+            .show()
     }
 
 }
