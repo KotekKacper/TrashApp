@@ -509,8 +509,9 @@ object DBUtils {
     }
 
 
-    fun addTrash(context: Context, pos: GeoPoint, chosen_imgs : ArrayList<Uri>, size: String, user_login_report: String? = null, vehicle_id: Int? = null, user_login: String? = null, crew_id:Int? = null){
+    fun addTrash(context: Context, pos: GeoPoint, chosen_imgs : ArrayList<Uri>, size: String){
         var addedTrashId = ""
+        val user_login_report = context.getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "")
 
         val funSend = "addTrash"
         var dataToSend = "'${pos.toDoubleString()}', '${user_login_report}', '${TrashSize.valueOf(size.uppercase()).intValue}'"
