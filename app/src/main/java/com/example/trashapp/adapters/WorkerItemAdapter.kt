@@ -1,5 +1,6 @@
 package com.example.trashapp.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +16,7 @@ class WorkerItemAdapter(private val mData: ArrayList<Worker>?,
     RecyclerView.Adapter<WorkerItemAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_vehicle, parent, false)
+            .inflate(R.layout.item_worker, parent, false)
         return ViewHolder(view)
     }
 
@@ -30,6 +31,26 @@ class WorkerItemAdapter(private val mData: ArrayList<Worker>?,
 
     override fun getItemCount(): Int {
         return mData!!.size
+    }
+
+    fun sortByNameAscending(context: Context) {
+        mData?.sortWith(compareBy { it.fullname.uppercase() })
+        notifyDataSetChanged()
+    }
+
+    fun sortByNameDescending(context: Context) {
+        mData?.sortWith(compareByDescending { it.fullname.uppercase() })
+        notifyDataSetChanged()
+    }
+
+    fun sortByBirthDateAscending(context: Context) {
+        mData?.sortWith(compareBy { it.birthDate })
+        notifyDataSetChanged()
+    }
+
+    fun sortByBirthDateDescending(context: Context) {
+        mData?.sortWith(compareByDescending { it.birthDate })
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
