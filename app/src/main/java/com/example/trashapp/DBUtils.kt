@@ -631,7 +631,7 @@ object DBUtils {
         dataToSend = dataToSend.plus("|")
         dataToSend = dataToSend.plus(
             "${trash.userLoginReport}`${trash.localization}`${trash.creationDate}`" +
-            "${convertFromSize(trash.trashSize!!)}`${trash.trashType?.uppercase()?.trimEnd(',')}")
+            "${convertFromSize(trash.trashSize!!)}`${trash.trashType?.uppercase()?.trimStart(',')?.trimEnd(',')}")
 
         if (trash.userLogin!!.isNotEmpty()){
             dataToSend = dataToSend.plus("`${trash.userLogin}")
@@ -722,7 +722,7 @@ object DBUtils {
         elements.add("${Tab.CLEAN_CREW}.meeting_localization")
         var dataToSend = elements.joinToString(separator = ",")
         dataToSend = dataToSend.plus("|${group.name}`${group.meetingDate}`${group.meetingLoc}")
-        dataToSend = dataToSend.plus("|${group.users}")
+        dataToSend = dataToSend.plus("|${group.users?.trimStart(',')?.trimEnd(',')}")
         dataToSend = dataToSend.plus("|${id}")
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -763,7 +763,7 @@ object DBUtils {
         dataToSend = dataToSend.plus("|")
         dataToSend = dataToSend.plus("${point.localization}`${if (point.busEmpty == true) "1" else "0"}`${point.processingType}")
         dataToSend = dataToSend.plus("|${localization}")
-        dataToSend = dataToSend.plus("|${point.trashType?.joinToString(",")?.uppercase()?.trimEnd(',')}")
+        dataToSend = dataToSend.plus("|${point.trashType?.joinToString(",")?.uppercase()?.trimStart(',')?.trimEnd(',')}")
         dataToSend = dataToSend.plus("|${point.trashId?.joinToString(",")}")
         Log.i("DataToSend", dataToSend)
         CoroutineScope(Dispatchers.IO).launch {

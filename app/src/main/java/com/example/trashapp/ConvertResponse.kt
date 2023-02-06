@@ -92,7 +92,7 @@ object ConvertResponse {
                                 busEmpty = attributes[1] == "1",
                                 processingType = attributes[2],
                                 trashId = attributes[3].split("-"),
-                                trashType = ArrayList(attributes[4].split(","))
+                                trashType = ArrayList(attributes[4].trimStart(',').trimEnd(',').split(","))
                     )
                 )
             }
@@ -111,7 +111,7 @@ object ConvertResponse {
                         name = attributes[1],
                         meetingDate = attributes[2],
                         meetingLoc = attributes[3],
-                        users = attributes[4]
+                        users = attributes[4].trimStart(',').trimEnd(',')
                     )
                 )
             }
@@ -194,7 +194,7 @@ object ConvertResponse {
                         vehicleId = attributes[7],
                         cleaningCrewId = attributes[8],
                         collectingPoint = attributes[9],
-                        trashType = attributes[10],
+                        trashType = attributes[10].trimStart(',').trimEnd(','),
                         images = if (attributes[11].isNotEmpty()) ArrayList(attributes[11].split(",")) else arrayListOf<String>()
                     )
                 )
