@@ -5,7 +5,7 @@ USE TrashApp;
 CREATE TABLE cleaningcompany (
      nip        CHAR(10) PRIMARY KEY,
      email      VARCHAR(50) NOT NULL,
-     phone      INT NOT NULL,
+     phone      VARCHAR(50) NOT NULL,
      country     VARCHAR(50),
      city        VARCHAR(50),
      district    VARCHAR(50),
@@ -20,7 +20,7 @@ CREATE TABLE cleaningcompany (
      password   VARCHAR(50) NOT NULL,
      email      VARCHAR(50) NOT NULL,
      phone      VARCHAR(50),
-     fullname   VARCHAR(50),
+     fullname   VARCHAR(50) NOT NULL,
      country     VARCHAR(50),
      city        VARCHAR(50),
      district    VARCHAR(50),
