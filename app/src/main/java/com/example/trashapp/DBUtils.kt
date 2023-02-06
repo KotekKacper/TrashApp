@@ -1205,6 +1205,8 @@ object DBUtils {
                         val editor = preferences.edit()
 
                         editor.putString("role", json.toString().trimEnd(','))
+                        editor.putString("login", username)
+                        editor.putString("password", Encryption.decrypt(password))
                         editor.apply()
                         context.startActivity(Intent(context, MainActivity::class.java))
                         (context as Activity).finish()
