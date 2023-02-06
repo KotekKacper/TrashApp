@@ -99,7 +99,8 @@ class AddGroupActivity : AppCompatActivity() {
         val applyButton = findViewById<Button>(R.id.buttonGroupConfirm)
         applyButton.setOnClickListener{
             if (crewNameEditText.error == null && crewNameEditText.text.toString() != "" &&
-                latitudeEditText.error == null && longitudeEditText.error == null){
+                latitudeEditText.error == null && longitudeEditText.error == null &&
+                membersEditText.text.toString() != "" && membersEditText.error == null){
                 var meetTime: String? = null
                 if (checkbox.isChecked){
                     meetTime = ZonedDateTime.of(meetDatePicker.year,
