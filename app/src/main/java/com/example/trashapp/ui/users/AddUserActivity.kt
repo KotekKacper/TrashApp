@@ -47,6 +47,12 @@ class AddUserActivity : AppCompatActivity() {
             s3.length-1, s3.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         tx3.text = s3
 
+        val tx4 = this.findViewById<TextView>(R.id.textUserAccountFullname)
+        val s4 = SpannableString(tx4.text.toString()+" *")
+        s4.setSpan(
+            ForegroundColorSpan(Color.RED),
+            s4.length-1, s4.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        tx4.text = s4
 
 
 
@@ -208,7 +214,7 @@ class AddUserActivity : AppCompatActivity() {
             if (loginEditText.error == null && loginEditText.text.toString() != "" &&
                 passwordEditText.error == null && passwordEditText.text.toString() != "" &&
                 emailEditText.error == null && emailEditText.text.toString() != "" &&
-                fullnameEditText.error == null &&
+                fullnameEditText.error == null && fullnameEditText.text.toString() != "" &&
                 phoneEditText.error == null && countryEditText.error == null &&
                 cityEditText.error == null && districtEditText.error == null &&
                 streetEditText.error == null && houseNumberEditText.error == null &&
