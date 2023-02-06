@@ -38,38 +38,37 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?,
 
         // loading first image associated with the report
         CoroutineScope(Dispatchers.IO).launch {
-        try {
-                try{
-                    delay((10+(5*position)).toLong())
-                    val response = DBUtils.imgDownService.getImages(item?.id!!, "0")
-                    val imageBytes = response.execute().body()?.bytes()
-                    if (imageBytes!!.size > 1){
-                        val bitmap = imageBytes.let { BitmapFactory.decodeByteArray(imageBytes, 0, it.size) }
-                        withContext(Dispatchers.Main){
-                            val image = BitmapDrawable(holder.itemView.context.resources, bitmap)
-                            holder.imageView.setImageDrawable(image)
-                        }
-                    }
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        Log.e("ServerSQL-Image", e.toString())
-                    }
+            try {
+                delay((10+(5*position)).toLong())
+                val response = DBUtils.imgDownService.getImages(item?.id.toString(), "0")
+                val imageBytes = response.execute().body()?.bytes()
+                var image = holder.itemView.context.resources.getDrawable(R.drawable.image_placeholder)
+                if (imageBytes!!.size > 1){
+                    Log.i("ImageID", item?.id.toString())
+                    val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                     image = BitmapDrawable(holder.itemView.context.resources, bitmap)
+                }
+                withContext(Dispatchers.Main){
+                    holder.imageView.setImageDrawable(image)
                 }
             } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                Log.e("ServerSQL-Image", e.toString())
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL-Image", e.toString())
+                }
             }
         }
-        }
+
 
         holder.itemView.setOnClickListener {
             listener.onItemClick(position)
         }
 
-        holder.textView1.text = item?.creationDate.toString().subSequence(0,10)
+        holder.textView1.text = "ID: " + item?.id.toString()
+
+        holder.textView2.text = item?.creationDate.toString().subSequence(0,10)
 
         val loc = item?.localization?.split(",")
-        holder.textView2.text = "("+"%.3f".format(loc!![0].toDouble())+","+"%.3f".format(loc!![1].toDouble())+")"
+        holder.textView3.text = "("+"%.3f".format(loc!![0].toDouble())+","+"%.3f".format(loc!![1].toDouble())+")"
         val retrofit = Retrofit.Builder()
             .baseUrl("https://nominatim.openstreetmap.org/")
             .build()
@@ -80,7 +79,7 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?,
                 withContext(Dispatchers.Main) {
                     val json = response.body()?.string()
                     val addrString = LocalizationToAddress.getAddress(json)
-                    holder.textView2.text = addrString
+                    holder.textView3.text = addrString
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -93,12 +92,12 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?,
         item?.collectionDate?.let { Log.i("Date", it) }
 
         if (item?.collectionDate == null || item?.collectionDate == "null"){
-            holder.textView3.text = "Not collected"
-            holder.textView3.setTextColor(Color.RED)
+            holder.textView4.text = "Not collected"
+            holder.textView4.setTextColor(Color.RED)
         }
         else{
-            holder.textView3.text = "Collected"
-            holder.textView3.setTextColor(Color.GREEN)
+            holder.textView4.text = "Collected"
+            holder.textView4.setTextColor(Color.GREEN)
         }
     }
 
@@ -161,12 +160,14 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?,
         var textView1: TextView
         var textView2: TextView
         var textView3: TextView
+        var textView4: TextView
 
         init {
             imageView = itemView.findViewById(R.id.imageView)
             textView1 = itemView.findViewById(R.id.textView1)
             textView2 = itemView.findViewById(R.id.textView2)
             textView3 = itemView.findViewById(R.id.textView3)
+            textView4 = itemView.findViewById(R.id.textView4)
         }
     }
 }

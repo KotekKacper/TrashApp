@@ -188,7 +188,7 @@ object ConvertResponse {
                         cleaningCrewId = attributes[8],
                         collectingPoint = attributes[9],
                         trashType = attributes[10],
-                        images = arrayListOf()
+                        images = if (attributes[11].isNotEmpty()) ArrayList(attributes[11].split(",")) else arrayListOf<String>()
                     )
                 )
             }
