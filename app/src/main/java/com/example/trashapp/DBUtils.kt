@@ -382,7 +382,8 @@ object DBUtils {
 
         var elements = ArrayList<String>()
         elements.add("nip");elements.add("email");elements.add("phone")
-        elements.add("country");elements.add("city");elements.add("street")
+        elements.add("country");elements.add("city");elements.add("district");elements.add("street");
+        elements.add("flat_number");elements.add("post_code");elements.add("house_number")
         val dataToSend = elements.joinToString(separator = ", ")
 
         CoroutineScope(Dispatchers.IO).launch {
