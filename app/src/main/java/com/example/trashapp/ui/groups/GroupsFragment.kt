@@ -1,5 +1,6 @@
 package com.example.trashapp.ui.groups
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,13 +14,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.DBUtils
+import com.example.trashapp.MainActivity
 import com.example.trashapp.R
+import com.example.trashapp.SortButtonCallback
 import com.example.trashapp.adapters.GroupItemAdapter
 import com.example.trashapp.adapters.ReportItemAdapter
 import com.example.trashapp.databinding.FragmentGroupsBinding
 import com.example.trashapp.ui.reports.AddReportActivity
 
-class GroupsFragment : Fragment() {
+class GroupsFragment : Fragment(), SortButtonCallback {
 
     private var _binding: FragmentGroupsBinding? = null
 
@@ -37,6 +40,11 @@ class GroupsFragment : Fragment() {
 
         _binding = FragmentGroupsBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        (activity as MainActivity).let {
+            it.sortButton.visibility = View.VISIBLE
+            it.sortButton.setOnClickListener { onSortButtonClicked() }
+        }
 
         val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewGroups)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -66,5 +74,28 @@ class GroupsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onSortButtonClicked() {
+        val sortOptions = arrayOf("Name (A-Z)","Name (Z-A)",
+            "Latitude (0-90)", "Latitue (90-0)",
+            "Longtitude (0-180)", "Longtitue (180-0)",
+            "Meeting date (ascending)", "Meeting date (descending)")
+        val builder = AlertDialog.Builder(context)
+        val adapter = DBUtils.groupsAdapter
+        builder.setTitle("Sort by")
+            .setItems(sortOptions) { _, which ->
+                when (which) {
+                    0 -> adapter.sortByNameAscending(context!!)
+                    1 -> adapter.sortByNameDescending(context!!)
+                    2 -> adapter.sortByLatAscending(context!!)
+                    3 -> adapter.sortByLatDescending(context!!)
+                    4 -> adapter.sortByLonAscending(context!!)
+                    5 -> adapter.sortByLonDescending(context!!)
+                    6 -> adapter.sortByMeetDateAscending(context!!)
+                    7 -> adapter.sortByMeetDateDescending(context!!)
+                }
+            }
+            .show()
     }
 }

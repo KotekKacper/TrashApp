@@ -1,5 +1,6 @@
 package com.example.trashapp.ui.collectingpoints
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,13 +13,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trashapp.DBUtils
+import com.example.trashapp.MainActivity
 import com.example.trashapp.R
+import com.example.trashapp.SortButtonCallback
 import com.example.trashapp.adapters.CollectingPointItemAdapter
 import com.example.trashapp.adapters.GroupItemAdapter
 import com.example.trashapp.databinding.FragmentCollectingPointsBinding
 import com.example.trashapp.ui.groups.AddGroupActivity
 
-class CollectingPointsFragment : Fragment() {
+class CollectingPointsFragment : Fragment(), SortButtonCallback {
 
     private var _binding: FragmentCollectingPointsBinding? = null
 
@@ -36,6 +39,11 @@ class CollectingPointsFragment : Fragment() {
 
         _binding = FragmentCollectingPointsBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        (activity as MainActivity).let {
+            it.sortButton.visibility = View.VISIBLE
+            it.sortButton.setOnClickListener { onSortButtonClicked() }
+        }
 
         val addButton = binding.root.findViewById<Button>(R.id.buttonCollectingPointsAdd)
         addButton.setOnClickListener {
@@ -62,5 +70,23 @@ class CollectingPointsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onSortButtonClicked() {
+        val sortOptions = arrayOf(
+            "Latitude (0-90)", "Latitue (90-0)",
+            "Longtitude (0-180)", "Longtitue (180-0)")
+        val builder = AlertDialog.Builder(context)
+        val adapter = DBUtils.pointsAdapter
+        builder.setTitle("Sort by")
+            .setItems(sortOptions) { _, which ->
+                when (which) {
+                    0 -> adapter.sortByLatAscending(context!!)
+                    1 -> adapter.sortByLatDescending(context!!)
+                    2 -> adapter.sortByLonAscending(context!!)
+                    3 -> adapter.sortByLonDescending(context!!)
+                }
+            }
+            .show()
     }
 }

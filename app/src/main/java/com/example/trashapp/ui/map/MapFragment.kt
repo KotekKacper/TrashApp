@@ -8,7 +8,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.trashapp.*
@@ -147,12 +149,16 @@ class MapFragment : Fragment() {
         //this will refresh the osmdroid configuration on resuming.
         map.onResume() //needed for compass, my location overlays, v6.0.0 and up
         items = context?.let { DBUtils.getAllActiveTrash(it, map) }!!
+
+        activity?.findViewById<ImageButton>(R.id.sortButton)?.visibility = View.GONE
     }
 
     override fun onPause() {
         super.onPause()
         //this will refresh the osmdroid configuration on resuming.
         map.onPause()  //needed for compass, my location overlays, v6.0.0 and up
+
+        activity?.findViewById<ImageButton>(R.id.sortButton)?.visibility = View.VISIBLE
     }
 
     override fun onDestroyView() {

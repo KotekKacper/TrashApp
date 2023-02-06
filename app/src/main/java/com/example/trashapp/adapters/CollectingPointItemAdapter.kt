@@ -1,5 +1,6 @@
 package com.example.trashapp.adapters
 
+import android.content.Context
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
@@ -56,6 +57,66 @@ class CollectingPointItemAdapter(private val mData: ArrayList<TrashCollectingPoi
                     Log.e("Localization", e.toString())
                 }
             }
+        }
+    }
+
+    fun sortByLatAscending(context: Context) {
+        try{
+            mData?.sortWith(compareBy {
+                if (it.localization.split(",")[0].isEmpty()) {
+                    0.0
+                } else {
+                    it.localization.split(",")[0].toDouble()
+                }
+            })
+            notifyDataSetChanged()
+        } catch (ex: Exception){
+            ex.printStackTrace()
+        }
+    }
+
+    fun sortByLatDescending(context: Context) {
+        try{
+            mData?.sortWith(compareByDescending {
+                if (it.localization.split(",")[0].isEmpty()) {
+                    0.0
+                } else {
+                    it.localization.split(",")[0].toDouble()
+                }
+            })
+            notifyDataSetChanged()
+        } catch (ex: Exception){
+            ex.printStackTrace()
+        }
+    }
+
+    fun sortByLonAscending(context: Context) {
+        try{
+            mData?.sortWith(compareBy {
+                if (it.localization.split(",")[1].isEmpty()) {
+                    0.0
+                } else {
+                    it.localization.split(",")[1].toDouble()
+                }
+            })
+            notifyDataSetChanged()
+        } catch (ex: Exception){
+            ex.printStackTrace()
+        }
+    }
+
+    fun sortByLonDescending(context: Context) {
+        try{
+            mData?.sortWith(compareByDescending {
+                if (it.localization.split(",")[1].isEmpty()) {
+                    0.0
+                } else {
+                    it.localization.split(",")[1].toDouble()
+                }
+            })
+            notifyDataSetChanged()
+        } catch (ex: Exception){
+            ex.printStackTrace()
         }
     }
 
