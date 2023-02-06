@@ -864,9 +864,10 @@ object DBUtils {
 
         val elements = ArrayList<String>()
         elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
-        elements.add("${Tab.USER}.email");dataToSend = elements.joinToString(separator = ", ")
+        elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.fullname");
+        dataToSend = elements.joinToString(separator = ", ")
         dataToSend = dataToSend.plus("|")
-        dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}'")
+        dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}', '${user.fullname}'")
 
 
         CoroutineScope(Dispatchers.IO).launch {

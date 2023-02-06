@@ -9,7 +9,9 @@ class FullnameWatcher (private val fullnameEditText: EditText) : TextWatcher {
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     override fun afterTextChanged(editable: Editable?) {
         val check = editable.toString()
-        if (check.contains(";") ||
+        if (check == ""){
+            fullnameEditText.error = "Field can't be empty"
+        } else if (check.contains(";") ||
             check.contains("\n") ||
             check.contains("\"") ||
             check.contains("`") ||

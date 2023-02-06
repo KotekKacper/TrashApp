@@ -38,19 +38,25 @@ class RegistrationActivity : AppCompatActivity() {
         val repeatEmailWatcher = RepeatEmailWatcher(repeatEmailEditText, emailEditText)
         repeatEmailEditText.addTextChangedListener(repeatEmailWatcher)
 
+        val fullnameEditText = findViewById<EditText>(R.id.editTextTextFullname)
+        val fullnameWatcher = FullnameWatcher(fullnameEditText)
+        fullnameEditText.addTextChangedListener(fullnameWatcher)
+
         val registerButton = findViewById<Button>(R.id.buttonRegister)
         registerButton.setOnClickListener{
 
-            if (loginEditText.error == null &&
-                passwordEditText.error == null &&
-                repeatPasswordEditText.error == null &&
-                emailEditText.error == null &&
-                repeatEmailEditText.error == null) {
+            if (loginEditText.error == null && loginEditText.text.isNotEmpty() &&
+                passwordEditText.error == null && passwordEditText.text.isNotEmpty() &&
+                repeatPasswordEditText.error == null && repeatPasswordEditText.text.isNotEmpty() &&
+                emailEditText.error == null && emailEditText.text.isNotEmpty() &&
+                repeatEmailEditText.error == null && repeatEmailEditText.text.isNotEmpty() &&
+                fullnameEditText.error == null && fullnameEditText.text.isNotEmpty()) {
                 val user = User(
                     login = findViewById<EditText>(R.id.editTextTextLogin).text.toString(),
                     password = findViewById<EditText>(R.id.editTextTextPassword).text.toString(),
                     email = findViewById<EditText>(R.id.editTextTextEmailAddress).text.toString(),
-                            roles = arrayListOf("USER")
+                    roles = arrayListOf("USER"),
+                    fullname = findViewById<EditText>(R.id.editTextTextFullname).text.toString()
                 )
                 DBUtils.addUserRegister(this, true, user)
                 startActivity(Intent(this, LoginActivity::class.java))
