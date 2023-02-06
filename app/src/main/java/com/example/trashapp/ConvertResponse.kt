@@ -98,11 +98,12 @@ object ConvertResponse {
         for (point in points){
             if(!point.isEmpty() && point !="|") {
                 val attributes = point.split(";")
+                val date = if (attributes[2] == "null") null else attributes[2]
                 out.add(
                     Group(
                         id = attributes[0],
                         name = attributes[1],
-                        meetingDate = attributes[2],
+                        meetingDate = date,
                         meetingLoc = attributes[3],
                         users = attributes[4]
                     )

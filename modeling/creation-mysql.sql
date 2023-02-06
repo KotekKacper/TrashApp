@@ -48,7 +48,7 @@ CREATE TABLE cleaningcompany (
  CREATE TABLE cleaningcrew (
          id INT AUTO_INCREMENT PRIMARY KEY,
      crew_name            VARCHAR(50) NOT NULL,
-     meet_date            TIMESTAMP NOT NULL,
+     meet_date            TIMESTAMP,
      meeting_localization VARCHAR(50)
  );
 

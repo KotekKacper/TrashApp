@@ -41,6 +41,12 @@
             android:textAlignment="center"
             android:textSize="20sp"
             android:text="Group Meeting Date" />
+        <CheckBox
+            android:id="@+id/checkboxMeetingDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Include date"
+            />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
