@@ -1261,27 +1261,27 @@ object DBUtils {
     }
 
     fun deleteRole(context: Context, name: String){
-        val funSend = "deleteWorker"
+        val funSend = "deleteRole"
 
-//        var dataToSend = "fullname = '${fullname}'"
-//
-//        CoroutineScope(Dispatchers.IO).launch {
-//            try {
-//                val response = service.getJson(dataToSend, funSend)
-//                withContext(Dispatchers.Main) {
-//                    val json = response.body()?.string()
-//                    Log.i("ServerSQL", json.toString())
-//                    if (checkForError(context, json.toString())) {
-//                        return@withContext
-//                    }
-//                    Toast.makeText(context, "Worker ${fullname} was deleted.", Toast.LENGTH_SHORT).show()
-//                }
-//            } catch (e: Exception) {
-//                withContext(Dispatchers.Main) {
-//                    Log.e("ServerSQL", e.toString())
-//                }
-//            }
-//        }
+        var dataToSend = "role_name = '${name}'"
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())) {
+                        return@withContext
+                    }
+                    Toast.makeText(context, "Worker ${name} was deleted.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
     }
 
 
