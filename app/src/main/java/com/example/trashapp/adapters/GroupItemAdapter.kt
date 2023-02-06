@@ -32,7 +32,7 @@ class GroupItemAdapter(private val mData: ArrayList<Group>?,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mData?.get(position)
-        holder.textView1.text = item!!.name
+        holder.textView1.text = item!!.name + " (ID: ${item.id})"
 
         holder.itemView.setOnClickListener {
             listener.onItemClick(position)
