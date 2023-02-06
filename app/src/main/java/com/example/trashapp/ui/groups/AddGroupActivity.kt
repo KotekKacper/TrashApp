@@ -82,14 +82,16 @@ class AddGroupActivity : AppCompatActivity() {
         }
 
         val crewNameEditText = this.findViewById<EditText>(R.id.editTextGroupCrewName)
-        crewNameEditText.addTextChangedListener(LoginWatcher(crewNameEditText))
-
+        crewNameEditText.addTextChangedListener(CrewNameWatcher(crewNameEditText))
 
         val latitudeEditText = this.findViewById<EditText>(R.id.editTextGroupLatitude)
         latitudeEditText.addTextChangedListener(LatitudeWatcher(latitudeEditText, true))
 
         val longitudeEditText = this.findViewById<EditText>(R.id.editTextGroupLongitude)
         longitudeEditText.addTextChangedListener(LongitudeWatcher(longitudeEditText, true))
+
+        latitudeEditText.addTextChangedListener(BothOrNoneWatcher(latitudeEditText, longitudeEditText))
+        longitudeEditText.addTextChangedListener(BothOrNoneWatcher(latitudeEditText, longitudeEditText))
 
         val membersEditText = this.findViewById<EditText>(R.id.editTextTextGroupMembers)
         membersEditText.addTextChangedListener(LoginListWatcher(membersEditText))
