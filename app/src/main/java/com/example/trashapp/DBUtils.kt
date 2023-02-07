@@ -1322,7 +1322,7 @@ object DBUtils {
 
                         editor.putString("role", json.toString().trimEnd(','))
                         editor.putString("login", username)
-                        editor.putString("password", Encryption.decrypt(password))
+                        editor.putString("password", password)
                         editor.apply()
                         context.startActivity(Intent(context, MainActivity::class.java))
                         (context as Activity).finish()
@@ -1333,6 +1333,7 @@ object DBUtils {
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
+                    e.printStackTrace()
                     Log.e("ServerSQL", e.toString())
                 }
             }
