@@ -304,8 +304,8 @@ object DBUtils {
                             )
                             intent.putExtra("notInUse", pointsArray?.get(position)?.busEmpty)
                             intent.putExtra("processingType", pointsArray?.get(position)?.processingType.toString())
-                            intent.putExtra("trashTypes", pointsArray?.get(position)?.trashType?.joinToString(","))
-                            intent.putExtra("trashIds", pointsArray?.get(position)?.trashId?.joinToString(","))
+                            intent.putExtra("trashTypes", pointsArray?.get(position)?.trashType?.sorted()?.joinToString(","))
+                            intent.putExtra("trashIds", pointsArray?.get(position)?.trashId?.sorted()?.joinToString(","))
                             context.startActivity(intent)
                         }
                     })
