@@ -279,7 +279,24 @@ class AddUserActivity : AppCompatActivity() {
             deleteButton.isVisible = false
         }
 
-
+        val role = getSharedPreferences("credentials", Context.MODE_PRIVATE)
+            ?.getString("role", "")?.split(",")
+        if (role != null) {
+            when {
+                role.contains("ADMIN") -> {
+                    roleEditText.isEnabled = true
+                    deleteButton.text = "Delete user"
+                }
+                role.contains("USER") -> {
+                    roleEditText.isEnabled = false
+                    deleteButton.text = "Delete account"
+                }
+                else -> {
+                    roleEditText.isEnabled = false
+                    deleteButton.text = "Delete account"
+                }
+            }
+        }
 
     }
 }
