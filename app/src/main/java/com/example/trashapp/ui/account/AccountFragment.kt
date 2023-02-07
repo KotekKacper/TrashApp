@@ -8,12 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.trashapp.DBUtils
 import com.example.trashapp.LoginActivity
 import com.example.trashapp.R
 import com.example.trashapp.databinding.FragmentAccountBinding
+import com.example.trashapp.ui.users.AddUserActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,6 +51,24 @@ class AccountFragment : Fragment() {
             editor.apply()
             startActivity(Intent(context, LoginActivity::class.java))
             activity?.finish()
+        }
+            DBUtils.getUser(binding.root.context, binding)
+
+
+        val role = context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)
+            ?.getString("role", "")?.split(",")
+        if (role != null) {
+            when {
+                role.contains("ADMIN") -> {
+                    binding.buttonAccountSettings.isVisible = false
+                }
+                role.contains("USER") -> {
+                    binding.buttonAccountSettings.isVisible = true
+                }
+                else -> {
+                    binding.buttonAccountSettings.isVisible = false
+                }
+            }
         }
 
         context?.let { DBUtils.getActiveTrashCount(it, binding) }

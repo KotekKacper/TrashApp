@@ -392,6 +392,63 @@ object DBUtils {
         }
     }
 
+    fun getUser(context: Context, binding: FragmentAccountBinding){
+        val funSend = "getUser"
+
+        val elements = ArrayList<String>()
+        elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
+        elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.phone");
+        elements.add("${Tab.USER}.fullname");elements.add("${Tab.USER}.country");
+        elements.add("${Tab.USER}.city");elements.add("${Tab.USER}.district");
+        elements.add("${Tab.USER}.street");
+        elements.add("${Tab.USER}.flat_number");
+        elements.add("${Tab.USER}.post_code");
+        elements.add("${Tab.USER}.house_number");
+
+        val login = context.getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "")
+        val dataToSend = elements.joinToString(separator = ", ")+"|${login}"
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = service.getJson(dataToSend, funSend)
+                withContext(Dispatchers.Main) {
+                    val json = response.body()?.string()
+                    Log.i("ServerSQL", json.toString())
+                    if (checkForError(context, json.toString())){
+                        return@withContext
+                    }
+
+                    val userList = json?.let { convertAllUsers(json.toString()) }
+                    binding.buttonAccountSettings.setOnClickListener {
+                        val userData = userList?.get(0)
+                        val intent = Intent(context, AddUserActivity::class.java)
+                        intent.putExtra("login", userData?.login)
+                        intent.putExtra("password", userData?.password)
+                        intent.putExtra("email", userData?.email)
+                        intent.putExtra("fullname", userData?.fullname)
+                        intent.putExtra("phone", userData?.phone)
+                        intent.putExtra("country", userData?.country)
+                        intent.putExtra("city", userData?.city)
+                        intent.putExtra("district", userData?.district)
+                        intent.putExtra("street", userData?.street)
+                        intent.putExtra("houseNumber", userData?.houseNumber)
+                        intent.putExtra("flatNumber", userData?.flatNumber)
+                        intent.putExtra("postCode", userData?.postCode)
+                        intent.putExtra("roles",
+                            userData?.roles?.joinToString(",")
+                        )
+                        context?.startActivity(intent)
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("ServerSQL", e.toString())
+                }
+            }
+        }
+    }
+
+
     var companiesAdapter = CompanyItemAdapter(arrayListOf(), object: OnItemClickListener{
         override fun onItemClick(position: Int) {}})
     fun getCompanies(context: Context, recyclerView: RecyclerView){
