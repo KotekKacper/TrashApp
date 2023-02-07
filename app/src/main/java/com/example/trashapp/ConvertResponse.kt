@@ -73,7 +73,7 @@ object ConvertResponse {
                         flatNumber = attributes[9],
                         postCode = attributes[10],
                         houseNumber = attributes[11],
-                        roles = arrayListOf(attributes[12])
+                        roles = ArrayList(attributes[12].trimEnd(',').split(","))
                     )
                 )
             }

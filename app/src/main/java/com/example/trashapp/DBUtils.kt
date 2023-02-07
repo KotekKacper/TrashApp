@@ -334,7 +334,6 @@ object DBUtils {
         elements.add("${Tab.USER}.flat_number");
         elements.add("${Tab.USER}.post_code");
         elements.add("${Tab.USER}.house_number");
-        elements.add("${Tab.ROLE}.role_name")
 
         val dataToSend = elements.joinToString(separator = ", ")
 
