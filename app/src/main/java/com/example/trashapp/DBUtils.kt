@@ -517,12 +517,13 @@ object DBUtils {
     }
 
 
-    fun addTrash(context: Context, pos: GeoPoint, chosen_imgs : ArrayList<Uri>, size: String){
+    fun addTrash(context: Context, pos: GeoPoint, chosen_imgs : ArrayList<Uri>, size: String, trashTypes: ArrayList<String>){
         var addedTrashId = ""
         val user_login_report = context.getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "")
 
         val funSend = "addTrash"
         var dataToSend = "'${pos.toDoubleString()}', '${user_login_report}', '${TrashSize.valueOf(size.uppercase()).intValue}'"
+        dataToSend += "|${trashTypes.joinToString(",")}"
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = service.getJson(dataToSend, funSend)
@@ -873,9 +874,12 @@ object DBUtils {
 
         val elements = ArrayList<String>()
         elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
-        elements.add("${Tab.USER}.email");dataToSend = elements.joinToString(separator = ", ")
+        elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.fullname");
+        dataToSend = elements.joinToString(separator = ", ")
         dataToSend = dataToSend.plus("|")
+
         dataToSend = dataToSend.plus("${user.login}`${user.password}`${user.email}")
+
 
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -1218,6 +1222,8 @@ object DBUtils {
                         val editor = preferences.edit()
 
                         editor.putString("role", json.toString().trimEnd(','))
+                        editor.putString("login", username)
+                        editor.putString("password", Encryption.decrypt(password))
                         editor.apply()
                         context.startActivity(Intent(context, MainActivity::class.java))
                         (context as Activity).finish()
