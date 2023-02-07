@@ -72,6 +72,16 @@
         android:text="User login" />
 
     <Button
+        android:id="@+id/buttonAccountSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="15dp"
+        android:text="Account info"/>
+
+    <Button
         android:id="@+id/buttonAccountLogOut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
