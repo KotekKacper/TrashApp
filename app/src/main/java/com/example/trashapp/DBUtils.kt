@@ -326,8 +326,12 @@ object DBUtils {
         elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
         elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.phone");
         elements.add("${Tab.USER}.fullname");elements.add("${Tab.USER}.country");
-        elements.add("${Tab.USER}.city");elements.add("${Tab.USER}.street");
-        elements.add("${Tab.USER}.post_code");elements.add("${Tab.ROLE}.role_name")
+        elements.add("${Tab.USER}.city");elements.add("${Tab.USER}.district");
+        elements.add("${Tab.USER}.street");
+        elements.add("${Tab.USER}.flat_number");
+        elements.add("${Tab.USER}.post_code");
+        elements.add("${Tab.USER}.house_number");
+        elements.add("${Tab.ROLE}.role_name")
 
         val dataToSend = elements.joinToString(separator = ", ")
 
@@ -380,7 +384,8 @@ object DBUtils {
 
         var elements = ArrayList<String>()
         elements.add("nip");elements.add("email");elements.add("phone")
-        elements.add("country");elements.add("city");elements.add("street")
+        elements.add("country");elements.add("city");elements.add("district");elements.add("street");
+        elements.add("flat_number");elements.add("post_code");elements.add("house_number")
         val dataToSend = elements.joinToString(separator = ", ")
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -668,7 +673,7 @@ object DBUtils {
         dataToSend = dataToSend.plus("|")
         dataToSend = dataToSend.plus(
             "${trash.userLoginReport}`${trash.localization}`${trash.creationDate}`" +
-            "${convertFromSize(trash.trashSize!!)}`${trash.trashType?.uppercase()?.trimEnd(',')}")
+            "${convertFromSize(trash.trashSize!!)}`${trash.trashType?.uppercase()?.trimStart(',')?.trimEnd(',')}")
 
         if (trash.userLogin!!.isNotEmpty()){
             dataToSend = dataToSend.plus("`${trash.userLogin}")
@@ -759,7 +764,7 @@ object DBUtils {
         elements.add("${Tab.CLEAN_CREW}.meeting_localization")
         var dataToSend = elements.joinToString(separator = ",")
         dataToSend = dataToSend.plus("|${group.name}`${group.meetingDate}`${group.meetingLoc}")
-        dataToSend = dataToSend.plus("|${group.users}")
+        dataToSend = dataToSend.plus("|${group.users?.trimStart(',')?.trimEnd(',')}")
         dataToSend = dataToSend.plus("|${id}")
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -800,7 +805,7 @@ object DBUtils {
         dataToSend = dataToSend.plus("|")
         dataToSend = dataToSend.plus("${point.localization}`${if (point.busEmpty == true) "1" else "0"}`${point.processingType}")
         dataToSend = dataToSend.plus("|${localization}")
-        dataToSend = dataToSend.plus("|${point.trashType?.joinToString(",")?.uppercase()?.trimEnd(',')}")
+        dataToSend = dataToSend.plus("|${point.trashType?.joinToString(",")?.uppercase()?.trimStart(',')?.trimEnd(',')}")
         dataToSend = dataToSend.plus("|${point.trashId?.joinToString(",")}")
         Log.i("DataToSend", dataToSend)
         CoroutineScope(Dispatchers.IO).launch {
@@ -837,13 +842,13 @@ object DBUtils {
         elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
         elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.phone");elements.add("${Tab.USER}.fullname");
         elements.add("${Tab.USER}.country");elements.add("${Tab.USER}.city");elements.add("${Tab.USER}.district");
-        elements.add("${Tab.USER}.street");elements.add("${Tab.USER}.flat_number");elements.add("${Tab.USER}.post_code");
+        elements.add("${Tab.USER}.street");elements.add("${Tab.USER}.flat_number");elements.add("${Tab.USER}.post_code");elements.add("${Tab.USER}.house_number");
         dataToSend = elements.joinToString(separator = ", ")
         dataToSend = dataToSend.plus("|")
         if (adding)
-            dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}', '${user.phone}', '${user.fullname}', '${user.country}', '${user.city}', '${user.district}', '${user.street}', '${user.flatNumber}', '${user.postCode}'")
+            dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}', '${user.phone}', '${user.fullname}', '${user.country}', '${user.city}', '${user.district}', '${user.street}', '${user.flatNumber}', '${user.postCode}', '${user.houseNumber}'")
         else
-            dataToSend = dataToSend.plus("${user.login}`${user.password}`${user.email}`${user.phone}`${user.fullname}`${user.country}`${user.city}`${user.district}`${user.street}`${user.flatNumber}`${user.postCode}")
+            dataToSend = dataToSend.plus("${user.login}`${user.password}`${user.email}`${user.phone}`${user.fullname}`${user.country}`${user.city}`${user.district}`${user.street}`${user.flatNumber}`${user.postCode}`${user.houseNumber}")
         dataToSend = dataToSend.plus("|${user.roles?.joinToString(",")}")
         if (!adding){
             dataToSend = dataToSend.plus("|${login}")
