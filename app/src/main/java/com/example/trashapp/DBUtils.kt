@@ -154,12 +154,20 @@ object DBUtils {
     fun getReports(context: Context, recyclerView: RecyclerView, username: String) {
         val funSend = "getReports"
 
+        var role: String
+        val roles = context.getSharedPreferences("credentials", Context.MODE_PRIVATE)
+            .getString("role", "")?.split(",")
+        when{
+            roles?.contains("ADMIN") == true -> role = "ADMIN"
+            else -> role = "USER"
+        }
+
         var elements = ArrayList<String>()
         elements.add("${Tab.TRASH}.id");elements.add("${Tab.TRASH}.localization");elements.add("${Tab.TRASH}.creation_date")
         elements.add("${Tab.TRASH}.trash_size");elements.add("${Tab.TRASH}.collection_date");elements.add("${Tab.TRASH}.user_login_report")
         elements.add("${Tab.TRASH}.user_login");elements.add("${Tab.TRASH}.vehicle_id");elements.add("${Tab.TRASH}.cleaningcrew_id");
         elements.add("${Tab.TRASH}.collection_localization")
-        val dataToSend = elements.joinToString(separator = ", ").plus("|${username}")
+        val dataToSend = elements.joinToString(separator = ", ").plus("|${username}|${role}")
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -226,14 +234,19 @@ object DBUtils {
     fun getGroups(context: Context, recyclerView: RecyclerView, username: String){
         val funSend = "getGroups"
 
-        val elements = ArrayList<String>()
-        elements.add("${Tab.USER}.login");
+        var role: String
+        val roles = context.getSharedPreferences("credentials", Context.MODE_PRIVATE)
+            .getString("role", "")?.split(",")
+        when{
+            roles?.contains("ADMIN") == true -> role = "ADMIN"
+            else -> role = "USER"
+        }
 
-        val dataToSend = elements.joinToString(separator = ", ")
+        val dataToSend = "${username}|${role}"
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = service.getJson(username, funSend)
+                val response = service.getJson(dataToSend, funSend)
                 withContext(Dispatchers.Main) {
                     val json = response.body()?.string()
                     Log.i("ServerSQL", json.toString())
@@ -304,8 +317,8 @@ object DBUtils {
                             )
                             intent.putExtra("notInUse", pointsArray?.get(position)?.busEmpty)
                             intent.putExtra("processingType", pointsArray?.get(position)?.processingType.toString())
-                            intent.putExtra("trashTypes", pointsArray?.get(position)?.trashType?.joinToString(","))
-                            intent.putExtra("trashIds", pointsArray?.get(position)?.trashId?.joinToString(","))
+                            intent.putExtra("trashTypes", pointsArray?.get(position)?.trashType?.sorted()?.joinToString(","))
+                            intent.putExtra("trashIds", pointsArray?.get(position)?.trashId?.sorted()?.joinToString(","))
                             context.startActivity(intent)
                         }
                     })
@@ -1322,7 +1335,7 @@ object DBUtils {
 
                         editor.putString("role", json.toString().trimEnd(','))
                         editor.putString("login", username)
-                        editor.putString("password", Encryption.decrypt(password))
+                        editor.putString("password", password)
                         editor.apply()
                         context.startActivity(Intent(context, MainActivity::class.java))
                         (context as Activity).finish()
@@ -1333,6 +1346,7 @@ object DBUtils {
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
+                    e.printStackTrace()
                     Log.e("ServerSQL", e.toString())
                 }
             }

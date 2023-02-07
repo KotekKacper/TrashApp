@@ -64,7 +64,7 @@ object ConvertResponse {
                         login = attributes[0],
                         password = attributes[1],
                         email = attributes[2],
-                        phone = attributes[3],
+                        phone = if (attributes[3] == "0") "" else attributes[3],
                         fullname = attributes[4],
                         country = attributes[5],
                         city = attributes[6],
