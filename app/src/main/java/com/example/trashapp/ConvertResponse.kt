@@ -40,13 +40,13 @@ object ConvertResponse {
                         NIP = attributes[0],
                         email = attributes[1],
                         phone = attributes[2],
-                        country = attributes[3],
-                        city = attributes[4],
-                        district = attributes[5],
-                        street = attributes[6],
-                        flatNumber = attributes[7],
-                        postCode = attributes[8],
-                        houseNumber = attributes[9],
+                        country = if (attributes[3] == "null") "" else attributes[3],
+                        city = if (attributes[4] == "null") "" else attributes[4],
+                        district = if (attributes[5] == "null") "" else attributes[5],
+                        street = if (attributes[6] == "null") "" else attributes[6],
+                        flatNumber = if (attributes[7] == "null") "" else attributes[7],
+                        postCode = if (attributes[8] == "null") "" else attributes[8],
+                        houseNumber = if (attributes[9] == "null") "" else attributes[9],
                     )
                 )
             }
@@ -66,13 +66,13 @@ object ConvertResponse {
                         email = attributes[2],
                         phone = if (attributes[3] == "0") "" else attributes[3],
                         fullname = attributes[4],
-                        country = attributes[5],
-                        city = attributes[6],
-                        district = attributes[7],
-                        street = attributes[8],
-                        flatNumber = attributes[9],
-                        postCode = attributes[10],
-                        houseNumber = attributes[11],
+                        country = if (attributes[5] == "null") "" else attributes[5],
+                        city = if (attributes[6] == "null") "" else attributes[6],
+                        district = if (attributes[7] == "null") "" else attributes[7],
+                        street = if (attributes[8] == "null") "" else attributes[8],
+                        flatNumber = if (attributes[9] == "null") "" else attributes[9],
+                        postCode = if (attributes[10] == "null") "" else attributes[10],
+                        houseNumber = if (attributes[11] == "null") "" else attributes[11],
                         roles = ArrayList(attributes[12].trimEnd(',').split(","))
                     )
                 )
