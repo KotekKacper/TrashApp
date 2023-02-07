@@ -15,6 +15,7 @@
     <string name="menu_companies">All cleaning companies</string>
     <string name="menu_vehicles">All cleaning vehicles</string>
     <string name="menu_workers">All workers</string>
+    <string name="menu_roles">All roles</string>
     <string name="menu_account">Account</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>

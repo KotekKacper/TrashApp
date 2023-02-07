@@ -50,39 +50,58 @@ class MainActivity : AppCompatActivity(), SortButtonCallback {
             setOf(
                 R.id.nav_map, R.id.nav_reports, R.id.nav_groups,
                 R.id.nav_collecting_points, R.id.nav_users,
-                R.id.nav_companies, R.id.nav_vehicles, R.id.nav_workers, R.id.nav_account
+                R.id.nav_companies, R.id.nav_vehicles,
+                R.id.nav_workers, R.id.nav_roles, R.id.nav_account
             ), drawerLayout
         )
 
         val role = getSharedPreferences("credentials", Context.MODE_PRIVATE)
-            .getString("role", "")?.split(",")?.sorted()?.get(0)
+            .getString("role", "")?.split(",")
         val menu = navView.menu
-        when (role){
-            "ADMIN" -> {
-                menu.findItem(R.id.nav_map).isVisible = true
-                menu.findItem(R.id.nav_reports).isVisible = true
-                menu.findItem(R.id.nav_reports).title = "All reports"
-                menu.findItem(R.id.nav_groups).isVisible = true
-                menu.findItem(R.id.nav_reports).title = "All reports"
-                menu.findItem(R.id.nav_collecting_points).isVisible = true
-                menu.findItem(R.id.nav_users).isVisible = true
-                menu.findItem(R.id.nav_companies).isVisible = true
-                menu.findItem(R.id.nav_vehicles).isVisible = true
-                menu.findItem(R.id.nav_workers).isVisible = true
-                menu.findItem(R.id.nav_account).isVisible = true
-            }
-            "USER" -> {
-                menu.findItem(R.id.nav_map).isVisible = true
-                menu.findItem(R.id.nav_reports).isVisible = true
-                menu.findItem(R.id.nav_reports).title = "Your reports"
-                menu.findItem(R.id.nav_groups).isVisible = true
-                menu.findItem(R.id.nav_groups).title = "Your groups"
-                menu.findItem(R.id.nav_collecting_points).isVisible = true
-                menu.findItem(R.id.nav_users).isVisible = false
-                menu.findItem(R.id.nav_companies).isVisible = false
-                menu.findItem(R.id.nav_vehicles).isVisible = false
-                menu.findItem(R.id.nav_workers).isVisible = false
-                menu.findItem(R.id.nav_account).isVisible = true
+        if (role != null) {
+            when {
+                role.contains("ADMIN") -> {
+                    menu.findItem(R.id.nav_map).isVisible = true
+                    menu.findItem(R.id.nav_reports).isVisible = true
+                    menu.findItem(R.id.nav_reports).title = "All reports"
+                    menu.findItem(R.id.nav_groups).isVisible = true
+                    menu.findItem(R.id.nav_reports).title = "All reports"
+                    menu.findItem(R.id.nav_collecting_points).isVisible = true
+                    menu.findItem(R.id.nav_users).isVisible = true
+                    menu.findItem(R.id.nav_companies).isVisible = true
+                    menu.findItem(R.id.nav_vehicles).isVisible = true
+                    menu.findItem(R.id.nav_workers).isVisible = true
+                    menu.findItem(R.id.nav_roles).isVisible = true
+                    menu.findItem(R.id.nav_account).isVisible = true
+                }
+                role.contains("USER") -> {
+                    menu.findItem(R.id.nav_map).isVisible = true
+                    menu.findItem(R.id.nav_reports).isVisible = true
+                    menu.findItem(R.id.nav_reports).title = "Your reports"
+                    menu.findItem(R.id.nav_groups).isVisible = true
+                    menu.findItem(R.id.nav_groups).title = "Your groups"
+                    menu.findItem(R.id.nav_collecting_points).isVisible = true
+                    menu.findItem(R.id.nav_users).isVisible = false
+                    menu.findItem(R.id.nav_companies).isVisible = false
+                    menu.findItem(R.id.nav_vehicles).isVisible = false
+                    menu.findItem(R.id.nav_workers).isVisible = false
+                    menu.findItem(R.id.nav_roles).isVisible = false
+                    menu.findItem(R.id.nav_account).isVisible = true
+                }
+                else -> {
+                    menu.findItem(R.id.nav_map).isVisible = true
+                    menu.findItem(R.id.nav_reports).isVisible = true
+                    menu.findItem(R.id.nav_reports).title = "Your reports"
+                    menu.findItem(R.id.nav_groups).isVisible = true
+                    menu.findItem(R.id.nav_groups).title = "Your groups"
+                    menu.findItem(R.id.nav_collecting_points).isVisible = true
+                    menu.findItem(R.id.nav_users).isVisible = false
+                    menu.findItem(R.id.nav_companies).isVisible = false
+                    menu.findItem(R.id.nav_vehicles).isVisible = false
+                    menu.findItem(R.id.nav_workers).isVisible = false
+                    menu.findItem(R.id.nav_roles).isVisible = false
+                    menu.findItem(R.id.nav_account).isVisible = true
+                }
             }
         }
 

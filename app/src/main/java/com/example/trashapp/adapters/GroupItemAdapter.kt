@@ -32,15 +32,15 @@ class GroupItemAdapter(private val mData: ArrayList<Group>?,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mData?.get(position)
-        holder.textView1.text = item!!.name
+        holder.textView1.text = item!!.name + " (ID: ${item.id})"
 
         holder.itemView.setOnClickListener {
             listener.onItemClick(position)
         }
 
-        val loc = item.meetingLoc.split(",")
-        if (loc[0] != "" && loc[1] != ""){
-            holder.textView2.text = "("+"%.3f".format(loc[0].toDouble())+","+"%.3f".format(loc[1].toDouble())+")"
+        val loc = item.meetingLoc?.split(",")
+        if ((loc?.get(0) ?: "") != "" && (loc?.get(1) ?: "") != ""){
+            holder.textView2.text = "("+"%.3f".format(loc?.get(0)!!.toDouble())+","+"%.3f".format(loc[1].toDouble())+")"
         } else{
             holder.textView2.text = "No meeting address"
         }
@@ -51,7 +51,7 @@ class GroupItemAdapter(private val mData: ArrayList<Group>?,
         val service = retrofit.create(NominatimApiService::class.java)
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = service.getReverseJson(loc[0], loc[1], "json")
+                val response = service.getReverseJson(loc!![0], loc[1], "json")
                 withContext(Dispatchers.Main) {
                     val json = response.body()?.string()
                     val addrString = LocalizationToAddress.getAddress(json)
@@ -65,7 +65,12 @@ class GroupItemAdapter(private val mData: ArrayList<Group>?,
             }
         }
 
-        holder.textView3.text = item.meetingDate.toString().subSequence(0, 10)
+        if (item.meetingDate != null){
+            holder.textView3.text = item.meetingDate.toString().subSequence(0, 10)
+        } else {
+            holder.textView3.text = "Date not specified"
+        }
+
     }
 
     fun sortByNameAscending(context: Context) {
@@ -81,7 +86,7 @@ class GroupItemAdapter(private val mData: ArrayList<Group>?,
     fun sortByLatAscending(context: Context) {
         try{
             mData?.sortWith(compareBy {
-                if (it.meetingLoc.split(",")[0].isEmpty()) {
+                if (it.meetingLoc!!.split(",")[0].isEmpty()) {
                     0.0
                 } else {
                     it.meetingLoc.split(",")[0].toDouble()
@@ -96,7 +101,7 @@ class GroupItemAdapter(private val mData: ArrayList<Group>?,
     fun sortByLatDescending(context: Context) {
         try{
             mData?.sortWith(compareByDescending {
-                if (it.meetingLoc.split(",")[0].isEmpty()) {
+                if (it.meetingLoc!!.split(",")[0].isEmpty()) {
                     0.0
                 } else {
                     it.meetingLoc.split(",")[0].toDouble()
@@ -111,7 +116,7 @@ class GroupItemAdapter(private val mData: ArrayList<Group>?,
     fun sortByLonAscending(context: Context) {
         try{
             mData?.sortWith(compareBy {
-                if (it.meetingLoc.split(",")[1].isEmpty()) {
+                if (it.meetingLoc!!.split(",")[1].isEmpty()) {
                     0.0
                 } else {
                     it.meetingLoc.split(",")[1].toDouble()
@@ -126,7 +131,7 @@ class GroupItemAdapter(private val mData: ArrayList<Group>?,
     fun sortByLonDescending(context: Context) {
         try{
             mData?.sortWith(compareByDescending {
-                if (it.meetingLoc.split(",")[1].isEmpty()) {
+                if (it.meetingLoc!!.split(",")[1].isEmpty()) {
                     0.0
                 } else {
                     it.meetingLoc.split(",")[1].toDouble()

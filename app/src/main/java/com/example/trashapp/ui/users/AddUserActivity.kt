@@ -54,6 +54,13 @@ class AddUserActivity : AppCompatActivity() {
             s4.length-1, s4.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         tx4.text = s4
 
+        val tx5 = this.findViewById<TextView>(R.id.textUserAccountRole)
+        val s5 = SpannableString(tx5.text.toString()+" *")
+        s5.setSpan(
+            ForegroundColorSpan(Color.RED),
+            s5.length-1, s5.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        tx5.text = s5
+
 
 
         val extras = intent.extras;
@@ -179,7 +186,7 @@ class AddUserActivity : AppCompatActivity() {
         postCodeEditText.addTextChangedListener(postCodeWatcher)
 
         val roleEditText = findViewById<EditText>(R.id.editTextUserAccountRole)
-        roleEditText.addTextChangedListener(RoleWatcher(roleEditText, setOf("USER", "ADMIN")))
+        roleEditText.addTextChangedListener(ListWatcher(roleEditText))
 
         val anyChangeWatcher = AnyChangeWatcher(arrayListOf(
             loginEditText,
@@ -218,7 +225,8 @@ class AddUserActivity : AppCompatActivity() {
                 phoneEditText.error == null && countryEditText.error == null &&
                 cityEditText.error == null && districtEditText.error == null &&
                 streetEditText.error == null && houseNumberEditText.error == null &&
-                flatNumberEditText.error == null && postCodeEditText.error == null){
+                flatNumberEditText.error == null && postCodeEditText.error == null &&
+                roleEditText.error == null && roleEditText.text.toString() != ""){
                 DBUtils.addUser(this, adding,
                     User(login = findViewById<EditText>(R.id.editTextUserAccountLogin).text.toString(),
                         password = findViewById<EditText>(R.id.editTextUserAccountPassword).text.toString(),
