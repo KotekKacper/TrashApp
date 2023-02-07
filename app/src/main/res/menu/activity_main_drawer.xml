@@ -37,6 +37,10 @@
             android:icon="@drawable/ic_menu_group"
             android:title="@string/menu_workers" />
         <item
+            android:id="@+id/nav_roles"
+            android:icon="@drawable/ic_roles"
+            android:title="@string/menu_roles" />
+        <item
             android:id="@+id/nav_account"
             android:icon="@drawable/ic_menu_manage_account"
             android:title="@string/menu_account" />

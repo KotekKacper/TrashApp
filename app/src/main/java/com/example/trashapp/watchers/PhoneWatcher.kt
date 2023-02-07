@@ -5,7 +5,7 @@ import android.text.TextWatcher
 import android.widget.EditText
 import java.util.regex.Pattern
 
-class PhoneWatcher(private val phoneEditText: EditText) : TextWatcher {
+class PhoneWatcher(private val phoneEditText: EditText, private val mandatory: Boolean = false) : TextWatcher {
 
     private val phoneNumberPattern = "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*\$"
 
@@ -18,7 +18,9 @@ class PhoneWatcher(private val phoneEditText: EditText) : TextWatcher {
         val phoneNumber = editable.toString()
         val pattern = Pattern.compile(phoneNumberPattern)
         val matcher = pattern.matcher(phoneNumber)
-        if (!matcher.matches()) {
+        if (check.isEmpty() && !mandatory) {
+            phoneEditText.error = null
+        } else if (!matcher.matches()) {
             phoneEditText.error = "Invalid phone number"
         } else if (check.length > 40) {
             // show an error message

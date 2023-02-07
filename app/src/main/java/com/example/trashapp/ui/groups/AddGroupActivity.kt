@@ -37,6 +37,18 @@ class AddGroupActivity : AppCompatActivity() {
         tx1.text = s1
 
 
+        val meetDatePicker = findViewById<DatePicker>(R.id.datePickerGroupMeetDate)
+        val meetTimePicker = findViewById<TimePicker>(R.id.timePickerGroupMeetDate)
+        meetTimePicker.setIs24HourView(true)
+        val checkbox= findViewById<CheckBox>(R.id.checkboxMeetingDate)
+        checkbox.setOnCheckedChangeListener { _, isChecked -> run {
+            meetDatePicker.isEnabled = isChecked
+            meetTimePicker.isEnabled = isChecked
+        }
+        }
+        checkbox.isChecked = false
+        meetDatePicker.isEnabled = checkbox.isChecked
+        meetTimePicker.isEnabled = checkbox.isChecked
 
         val extras = intent.extras;
         if (extras != null) {
@@ -53,6 +65,7 @@ class AddGroupActivity : AppCompatActivity() {
                     val creationTimePicker = this.findViewById<TimePicker>(R.id.timePickerGroupMeetDate)
                     creationTimePicker.hour = curDate.hour
                     creationTimePicker.minute = curDate.minute
+                    checkbox.isChecked = true
                 } catch (e: Exception) {
                     Log.e("IntentExtras", e.toString())
                 }
@@ -69,13 +82,7 @@ class AddGroupActivity : AppCompatActivity() {
         }
 
         val crewNameEditText = this.findViewById<EditText>(R.id.editTextGroupCrewName)
-        crewNameEditText.addTextChangedListener(LoginWatcher(crewNameEditText))
-
-//        val meetingDateEditText = this.findViewById<EditText>(R.id.editTextGroupMeetingDate)
-//        meetingDateEditText.addTextChangedListener(DateWatcher(meetingDateEditText))
-        val meetDatePicker = findViewById<DatePicker>(R.id.datePickerGroupMeetDate)
-        val meetTimePicker = findViewById<TimePicker>(R.id.timePickerGroupMeetDate)
-        meetTimePicker.setIs24HourView(true)
+        crewNameEditText.addTextChangedListener(CrewNameWatcher(crewNameEditText))
 
         val latitudeEditText = this.findViewById<EditText>(R.id.editTextGroupLatitude)
         latitudeEditText.addTextChangedListener(LatitudeWatcher(latitudeEditText, true))
@@ -83,23 +90,30 @@ class AddGroupActivity : AppCompatActivity() {
         val longitudeEditText = this.findViewById<EditText>(R.id.editTextGroupLongitude)
         longitudeEditText.addTextChangedListener(LongitudeWatcher(longitudeEditText, true))
 
+        latitudeEditText.addTextChangedListener(BothOrNoneWatcher(latitudeEditText, longitudeEditText))
+        longitudeEditText.addTextChangedListener(BothOrNoneWatcher(latitudeEditText, longitudeEditText))
+
         val membersEditText = this.findViewById<EditText>(R.id.editTextTextGroupMembers)
         membersEditText.addTextChangedListener(LoginListWatcher(membersEditText))
 
         val applyButton = findViewById<Button>(R.id.buttonGroupConfirm)
         applyButton.setOnClickListener{
             if (crewNameEditText.error == null && crewNameEditText.text.toString() != "" &&
-                latitudeEditText.error == null && longitudeEditText.error == null){
-                val meetTime = ZonedDateTime.of(meetDatePicker.year,
-                    meetDatePicker.month+1,
-                    meetDatePicker.dayOfMonth,
-                    meetTimePicker.hour,
-                    meetTimePicker.minute,
-                    0, 0, zoneId)
+                latitudeEditText.error == null && longitudeEditText.error == null &&
+                membersEditText.text.toString() != "" && membersEditText.error == null){
+                var meetTime: String? = null
+                if (checkbox.isChecked){
+                    meetTime = ZonedDateTime.of(meetDatePicker.year,
+                        meetDatePicker.month+1,
+                        meetDatePicker.dayOfMonth,
+                        meetTimePicker.hour,
+                        meetTimePicker.minute,
+                        0, 0, zoneId).format(formatter)
+                }
                 DBUtils.addGroup(this, adding,
                     Group(
                         id = "-1", name = crewNameEditText.text.toString(),
-                        meetingDate = meetTime.format(formatter),
+                        meetingDate = meetTime,
                         meetingLoc = arrayListOf(
                             latitudeEditText.text.toString(), longitudeEditText.text.toString()).joinToString(","),
                         users = membersEditText.text.toString().trimEnd(',')

@@ -61,6 +61,20 @@ class AddReportActivity : AppCompatActivity() {
             s3.length-1, s3.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         tx3.text = s3
 
+        val tx4 = this.findViewById<TextView>(R.id.textReportTrashSize)
+        val s4 = SpannableString(tx4.text.toString()+" *")
+        s4.setSpan(
+            ForegroundColorSpan(Color.RED),
+            s4.length-1, s4.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        tx4.text = s4
+
+        val tx5 = this.findViewById<TextView>(R.id.textReportTrashType)
+        val s5 = SpannableString(tx5.text.toString()+" *")
+        s5.setSpan(
+            ForegroundColorSpan(Color.RED),
+            s5.length-1, s5.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        tx5.text = s5
+
 
 
         val extras = intent.extras;
@@ -157,7 +171,7 @@ class AddReportActivity : AppCompatActivity() {
         val trashSizeSpinner = this.findViewById<Spinner>(R.id.spinnerReportTrashSize)
 
         val trashTypeEditText = this.findViewById<EditText>(R.id.editTextTextReportTrashType)
-        val trashTypeWatcher = ListWatcher(trashTypeEditText)
+        val trashTypeWatcher = TypesWatcher(trashTypeEditText)
         trashTypeEditText.addTextChangedListener(trashTypeWatcher)
 
         val collectionDatePicker = findViewById<DatePicker>(R.id.datePickerReportCollectionDate)

@@ -73,7 +73,7 @@ object ConvertResponse {
                         flatNumber = attributes[9],
                         postCode = attributes[10],
                         houseNumber = attributes[11],
-                        roles = arrayListOf(attributes[12])
+                        roles = ArrayList(attributes[12].trimEnd(',').split(","))
                     )
                 )
             }
@@ -105,11 +105,12 @@ object ConvertResponse {
         for (point in points){
             if(!point.isEmpty() && point !="|") {
                 val attributes = point.split(";")
+                val date = if (attributes[2] == "null") null else attributes[2]
                 out.add(
                     Group(
                         id = attributes[0],
                         name = attributes[1],
-                        meetingDate = attributes[2],
+                        meetingDate = date,
                         meetingLoc = attributes[3],
                         users = attributes[4].trimStart(',').trimEnd(',')
                     )
@@ -238,6 +239,21 @@ object ConvertResponse {
                         jobEndTime = attributes[3],
                         cleaningCompanyNIP = attributes[4],
                         vehicleId = attributes[5]
+                    )
+                )
+            }
+        }
+        return out
+    }
+    fun convertRoles(str: String): ArrayList<Role>{
+        val points = str.split("\n")
+        val out: ArrayList<Role> = arrayListOf()
+        for (point in points){
+            if(!point.isEmpty() && point !="\n") {
+                val attributes = point.split(";")
+                out.add(
+                    Role(
+                        name = attributes[0]
                     )
                 )
             }

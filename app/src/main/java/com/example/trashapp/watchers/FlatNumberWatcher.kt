@@ -18,7 +18,9 @@ class FlatNumberWatcher(private val flatNumberEditText: EditText) : TextWatcher 
         val phoneNumber = editable.toString()
         val pattern = Pattern.compile(flatNumberPattern)
         val matcher = pattern.matcher(phoneNumber)
-        if (!matcher.matches()) {
+        if (check.isEmpty()) {
+            flatNumberEditText.error = null
+        } else if (!matcher.matches()) {
             flatNumberEditText.error = "Invalid flat number"
         } else if (check.length > 40) {
             // show an error message
