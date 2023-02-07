@@ -1,5 +1,8 @@
 package com.example.trashapp.ui.users
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.example.trashapp.DBUtils
+import com.example.trashapp.LoginActivity
 import com.example.trashapp.R
 import com.example.trashapp.classes.Group
 import com.example.trashapp.classes.User
@@ -246,7 +250,7 @@ class AddUserActivity : AppCompatActivity() {
                         houseNumber = findViewById<EditText>(R.id.editTextUserAccountHouse).text.toString(),
                         flatNumber = findViewById<EditText>(R.id.editTextUserAccountFlat).text.toString(),
                         postCode = findViewById<EditText>(R.id.editTextUserAccountPostCode).text.toString(),
-                        roles = ArrayList(findViewById<EditText>(R.id.editTextUserAccountRole).text.toString().split(","))
+                        roles = ArrayList(findViewById<EditText>(R.id.editTextUserAccountRole).text.toString().uppercase().split(","))
                     ), login
                 )
             } else{
@@ -262,6 +266,13 @@ class AddUserActivity : AppCompatActivity() {
         if (extras != null) {
             deleteButton.setOnClickListener {
                 DBUtils.deleteUser(this, login)
+                if (login == getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "")){
+                    val editor = getSharedPreferences("credentials", Context.MODE_PRIVATE)!!.edit()
+                    editor.putString("login", "")
+                    editor.putString("password", "")
+                    editor.apply()
+                    startActivity(Intent(this, LoginActivity::class.java))
+                }
                 finish()
             }
         }else{

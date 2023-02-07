@@ -59,8 +59,6 @@ class RegistrationActivity : AppCompatActivity() {
                     fullname = findViewById<EditText>(R.id.editTextTextFullname).text.toString()
                 )
                 DBUtils.addUserRegister(this, true, user)
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
             } else {
                 Toast.makeText(this, "Invalid registration data", Toast.LENGTH_SHORT).show()
             }

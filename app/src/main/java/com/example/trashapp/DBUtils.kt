@@ -59,7 +59,7 @@ import kotlin.collections.ArrayList
 object DBUtils {
 
     val retrofit = Retrofit.Builder()
-        .baseUrl("http://192.168.1.11:8888/")
+        .baseUrl("http://10.0.2.2:8888/")
         .build()
     val service = retrofit.create(ServerApiService::class.java)
     val imgService = retrofit.create(ImageUploadApi::class.java)
@@ -945,6 +945,8 @@ object DBUtils {
                         return@withContext
                     }
                     Toast.makeText(context, "Registration was successful!", Toast.LENGTH_SHORT).show()
+                    context.startActivity(Intent(context, LoginActivity::class.java))
+                    (context as Activity).finish()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
