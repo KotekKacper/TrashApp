@@ -246,7 +246,7 @@ class AddUserActivity : AppCompatActivity() {
                         houseNumber = findViewById<EditText>(R.id.editTextUserAccountHouse).text.toString(),
                         flatNumber = findViewById<EditText>(R.id.editTextUserAccountFlat).text.toString(),
                         postCode = findViewById<EditText>(R.id.editTextUserAccountPostCode).text.toString(),
-                        roles = ArrayList(findViewById<EditText>(R.id.editTextUserAccountRole).text.toString().split(","))
+                        roles = ArrayList(findViewById<EditText>(R.id.editTextUserAccountRole).text.toString().uppercase().split(","))
                     ), login
                 )
             } else{
@@ -262,7 +262,6 @@ class AddUserActivity : AppCompatActivity() {
         if (extras != null) {
             deleteButton.setOnClickListener {
                 DBUtils.deleteUser(this, login)
-                finish()
             }
         }else{
             deleteButton.isVisible = false
