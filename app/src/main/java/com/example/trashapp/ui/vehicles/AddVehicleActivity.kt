@@ -14,6 +14,7 @@ import com.example.trashapp.DBUtils
 import com.example.trashapp.R
 import com.example.trashapp.classes.TrashCollectingPoint
 import com.example.trashapp.classes.Vehicle
+import com.example.trashapp.watchers.BothOrNoneWatcher
 import com.example.trashapp.watchers.LatitudeWatcher
 import com.example.trashapp.watchers.LongitudeWatcher
 import com.example.trashapp.watchers.PercentWatcher
@@ -55,11 +56,14 @@ class AddVehicleActivity : AppCompatActivity() {
             }
         }
 
-        val longitudeEditText = this.findViewById<EditText>(R.id.editTextVehicleLongitude)
-        longitudeEditText.addTextChangedListener(LongitudeWatcher(longitudeEditText))
-
         val latitudeEditText = this.findViewById<EditText>(R.id.editTextVehicleLatitude)
-        latitudeEditText.addTextChangedListener(LatitudeWatcher(latitudeEditText))
+        latitudeEditText.addTextChangedListener(LatitudeWatcher(latitudeEditText, optional = true))
+
+        val longitudeEditText = this.findViewById<EditText>(R.id.editTextVehicleLongitude)
+        longitudeEditText.addTextChangedListener(LongitudeWatcher(longitudeEditText, optional = true))
+
+        latitudeEditText.addTextChangedListener(BothOrNoneWatcher(longitudeEditText, latitudeEditText))
+        longitudeEditText.addTextChangedListener(BothOrNoneWatcher(longitudeEditText, latitudeEditText))
 
         val fillingEditText = this.findViewById<EditText>(R.id.editTextVehicleFilling)
         fillingEditText.addTextChangedListener(PercentWatcher(fillingEditText))
