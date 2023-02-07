@@ -70,8 +70,7 @@ class RolesFragment : Fragment(), SortButtonCallback {
 
 
     override fun onSortButtonClicked() {
-        val sortOptions = arrayOf("Name (A-Z)","Name (Z-A)",
-            "Birth date (ascending)", "Birth date (descending)")
+        val sortOptions = arrayOf("Name (A-Z)","Name (Z-A)")
         val builder = AlertDialog.Builder(context)
         val adapter = DBUtils.rolesAdapter
         builder.setTitle("Sort by")

@@ -143,6 +143,16 @@ class GroupItemAdapter(private val mData: ArrayList<Group>?,
         }
     }
 
+    fun sortByIDAscending(context: Context) {
+        mData?.sortWith(compareBy({ it.id.toLong() }))
+        notifyDataSetChanged()
+    }
+
+    fun sortByIDDescending(context: Context) {
+        mData?.sortWith(compareByDescending({ it.id.toLong() }))
+        notifyDataSetChanged()
+    }
+
     fun sortByMeetDateAscending(context: Context) {
         mData?.sortWith(compareBy { it.meetingDate })
         notifyDataSetChanged()

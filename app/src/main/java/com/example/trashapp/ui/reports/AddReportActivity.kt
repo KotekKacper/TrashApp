@@ -1,6 +1,7 @@
 package com.example.trashapp.ui.reports
 
 import android.content.ClipData
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -223,6 +224,44 @@ class AddReportActivity : AppCompatActivity() {
         }
 
 
+        val role = getSharedPreferences("credentials", Context.MODE_PRIVATE)
+            .getString("role", "")?.split(",")
+        if (role != null) {
+            when {
+                role.contains("ADMIN") -> {
+                    collectionDatePicker.isEnabled = true
+                    collectionTimePicker.isEnabled = true
+                    firstEditText.isEnabled = true
+                    secondEditText.isEnabled = true
+                    thirdEditText.isEnabled = true
+                    pointLatEditText.isEnabled = true
+                    pointLonEditText.isEnabled = true
+                }
+                role.contains("USER") -> {
+                    collectionDatePicker.isEnabled = false
+                    collectionTimePicker.isEnabled = false
+                    firstEditText.isEnabled = false
+                    secondEditText.isEnabled = false
+                    thirdEditText.isEnabled = false
+                    pointLatEditText.isEnabled = false
+                    pointLonEditText.isEnabled = false
+                }
+                else -> {
+                    collectionDatePicker.isEnabled = false
+                    collectionTimePicker.isEnabled = false
+                    firstEditText.isEnabled = false
+                    secondEditText.isEnabled = false
+                    thirdEditText.isEnabled = false
+                    pointLatEditText.isEnabled = false
+                    pointLonEditText.isEnabled = false
+                }
+            }
+        }
+
+
+        setInitialFieldStates(firstEditText, secondEditText, thirdEditText)
+
+
         val applyButton = findViewById<Button>(R.id.buttonReportConfirm)
         applyButton.setOnClickListener{
             if (loginReportedEditText.error == null && loginReportedEditText.text.toString() != "" &&
@@ -278,6 +317,27 @@ class AddReportActivity : AppCompatActivity() {
             }
         }else{
             deleteButton.isVisible = false
+        }
+    }
+
+    fun setInitialFieldStates(
+        firstEditText: EditText,
+        secondEditText: EditText,
+        thirdEditText: EditText
+    ) {
+        if (firstEditText.text.isNotEmpty()) {
+            secondEditText.isEnabled = false
+            thirdEditText.isEnabled = false
+        } else if (secondEditText.text.isNotEmpty()) {
+            firstEditText.isEnabled = false
+            thirdEditText.isEnabled = false
+        } else if (thirdEditText.text.isNotEmpty()) {
+            firstEditText.isEnabled = false
+            secondEditText.isEnabled = false
+        } else {
+            firstEditText.isEnabled = true
+            secondEditText.isEnabled = true
+            thirdEditText.isEnabled = true
         }
     }
 
