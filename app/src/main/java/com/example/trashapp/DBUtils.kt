@@ -1211,10 +1211,6 @@ object DBUtils {
                         return@withContext
                     }
                     Toast.makeText(context, "User ${login} was deleted.", Toast.LENGTH_SHORT).show()
-                    if (login == context.getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "")){
-                        context.startActivity(Intent(context, LoginActivity::class.java))
-                    }
-                    (context as Activity).finish()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
