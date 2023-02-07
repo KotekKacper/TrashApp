@@ -18,7 +18,9 @@ class HouseNumberWatcher(private val houseNumberEditText: EditText) : TextWatche
         val phoneNumber = editable.toString()
         val pattern = Pattern.compile(houseNumberPattern)
         val matcher = pattern.matcher(phoneNumber)
-        if (!matcher.matches()) {
+        if (check.isEmpty()) {
+            houseNumberEditText.error = null
+        } else if (!matcher.matches()) {
             houseNumberEditText.error = "Invalid house number"
         } else if (check.length > 40) {
             // show an error message

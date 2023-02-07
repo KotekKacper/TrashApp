@@ -18,7 +18,9 @@ class PostCodeWatcher(private val postCodeEditText: EditText) : TextWatcher {
         val phoneNumber = editable.toString()
         val pattern = Pattern.compile(postCodePattern)
         val matcher = pattern.matcher(phoneNumber)
-        if (!matcher.matches()) {
+        if (check.isEmpty()) {
+            postCodeEditText.error = null
+        } else if (!matcher.matches()) {
             postCodeEditText.error = "Invalid post code"
         } else if (check.length > 40) {
             // show an error message

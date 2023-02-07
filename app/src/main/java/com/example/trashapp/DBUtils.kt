@@ -844,7 +844,7 @@ object DBUtils {
             dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}', '${user.phone}', '${user.fullname}', '${user.country}', '${user.city}', '${user.district}', '${user.street}', '${user.flatNumber}', '${user.postCode}'")
         else
             dataToSend = dataToSend.plus("${user.login}`${user.password}`${user.email}`${user.phone}`${user.fullname}`${user.country}`${user.city}`${user.district}`${user.street}`${user.flatNumber}`${user.postCode}")
-
+        dataToSend = dataToSend.plus("|${user.roles?.joinToString(",")}")
         if (!adding){
             dataToSend = dataToSend.plus("|${login}")
         }
