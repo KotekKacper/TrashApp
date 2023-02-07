@@ -33,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
         loginButton.setOnClickListener{
             val login = findViewById<EditText>(R.id.editTextTextLoginLogIn).text.toString()
             val password = findViewById<EditText>(R.id.editTextTextPasswordLogIn).text.toString()
-            val encryptedPassword = Encryption.encrypt(password)
+            val encryptedPassword = (password)
 
             if (loginEditText.error == null && loginEditText.text.toString() != "" &&
                 passwordEditText.error == null && passwordEditText.text.toString() != "") {

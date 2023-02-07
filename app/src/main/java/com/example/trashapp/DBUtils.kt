@@ -816,9 +816,6 @@ object DBUtils {
         elements.add("${Tab.USER}.street");elements.add("${Tab.USER}.flat_number");elements.add("${Tab.USER}.post_code");elements.add("${Tab.USER}.house_number");
         dataToSend = elements.joinToString(separator = ", ")
         dataToSend = dataToSend.plus("|")
-        if (adding)
-            dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}', '${user.phone}', '${user.fullname}', '${user.country}', '${user.city}', '${user.district}', '${user.street}', '${user.flatNumber}', '${user.postCode}', '${user.houseNumber}'")
-        else
             dataToSend = dataToSend.plus("${user.login}`${user.password}`${user.email}`${user.phone}`${user.fullname}`${user.country}`${user.city}`${user.district}`${user.street}`${user.flatNumber}`${user.postCode}`${user.houseNumber}")
 
         if (!adding){
@@ -870,7 +867,7 @@ object DBUtils {
     }
 
     fun addUserRegister(context: Context, adding: Boolean, user: User, login: String = "") {
-        var funSend = "addUserRegister"
+        var funSend = "addUser"
         var dataToSend = ""
 
 
@@ -878,7 +875,7 @@ object DBUtils {
         elements.add("${Tab.USER}.login");elements.add("${Tab.USER}.password")
         elements.add("${Tab.USER}.email");dataToSend = elements.joinToString(separator = ", ")
         dataToSend = dataToSend.plus("|")
-        dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}'")
+        dataToSend = dataToSend.plus("${user.login}`${user.password}`${user.email}")
 
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -1204,7 +1201,7 @@ object DBUtils {
     fun checkLogin(context: Context, username: String, password: String): Boolean {
         val funSend = "checkUserForLogin"
         var userExists = false
-        var dataToSend = "${username}, ${Encryption.decrypt(password)}"
+        var dataToSend = "${username}, ${password}"
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
