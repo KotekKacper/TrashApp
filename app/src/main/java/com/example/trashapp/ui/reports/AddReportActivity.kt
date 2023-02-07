@@ -1,6 +1,7 @@
 package com.example.trashapp.ui.reports
 
 import android.content.ClipData
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -220,6 +221,41 @@ class AddReportActivity : AppCompatActivity() {
             recyclerView.layoutManager = LinearLayoutManager(this)
             val adapter = ImageItemAdapter(imageIDs)
             recyclerView.adapter = adapter
+        }
+
+
+        val role = getSharedPreferences("credentials", Context.MODE_PRIVATE)
+            .getString("role", "")?.split(",")
+        if (role != null) {
+            when {
+                role.contains("ADMIN") -> {
+                    collectionDatePicker.isEnabled = true
+                    collectionTimePicker.isEnabled = true
+                    firstEditText.isEnabled = true
+                    secondEditText.isEnabled = true
+                    thirdEditText.isEnabled = true
+                    pointLatEditText.isEnabled = true
+                    pointLonEditText.isEnabled = true
+                }
+                role.contains("USER") -> {
+                    collectionDatePicker.isEnabled = false
+                    collectionTimePicker.isEnabled = false
+                    firstEditText.isEnabled = false
+                    secondEditText.isEnabled = false
+                    thirdEditText.isEnabled = false
+                    pointLatEditText.isEnabled = false
+                    pointLonEditText.isEnabled = false
+                }
+                else -> {
+                    collectionDatePicker.isEnabled = false
+                    collectionTimePicker.isEnabled = false
+                    firstEditText.isEnabled = false
+                    secondEditText.isEnabled = false
+                    thirdEditText.isEnabled = false
+                    pointLatEditText.isEnabled = false
+                    pointLonEditText.isEnabled = false
+                }
+            }
         }
 
 

@@ -75,7 +75,7 @@ class DetailTrashFragment : Fragment() {
                     GeoPoint(givenPosition[0].toDouble(), givenPosition[1].toDouble()),
                     chosen_imgs,
                     binding.dropdownSize.selectedItem.toString(),
-                    ArrayList(binding.editTextTrashTrashType.text.split(","))
+                    ArrayList(binding.editTextTrashTrashType.text.toString().uppercase().split(","))
                 )
             }
         }

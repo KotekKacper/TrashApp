@@ -1,5 +1,6 @@
 package com.example.trashapp.ui.collectingpoints
 
+import android.content.Context
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -106,6 +107,9 @@ class AddPointActivity : AppCompatActivity() {
         trashHereEditText.isEnabled = false
 //        trashHereEditText.addTextChangedListener(ListWatcher(trashHereEditText))
 
+        val checkbox = this.findViewById<CheckBox>(R.id.checkboxPointNotInUse)
+
+
         val applyButton = findViewById<Button>(R.id.buttonPointConfirm)
         applyButton.setOnClickListener{
             if (latitudeEditText.error == null && latitudeEditText.text.toString() != "" &&
@@ -141,6 +145,46 @@ class AddPointActivity : AppCompatActivity() {
         }else{
             deleteButton.isVisible = false
         }
+
+
+
+        val role = getSharedPreferences("credentials", Context.MODE_PRIVATE)
+            .getString("role", "")?.split(",")
+        if (role != null) {
+            when {
+                role.contains("ADMIN") -> {
+                    latitudeEditText.isEnabled = true
+                    longitudeEditText.isEnabled = true
+                    checkbox.isEnabled = true
+                    processingTypeEditText.isEnabled = true
+                    trashTypesEditText.isEnabled = true
+                    applyButton.isVisible = true
+                    cancelButton.isVisible = true
+                    deleteButton.isVisible = true
+                }
+                role.contains("USER") -> {
+                    latitudeEditText.isEnabled = false
+                    longitudeEditText.isEnabled = false
+                    checkbox.isEnabled = false
+                    processingTypeEditText.isEnabled = false
+                    trashTypesEditText.isEnabled = false
+                    applyButton.isVisible = false
+                    cancelButton.isVisible = false
+                    deleteButton.isVisible = false
+                }
+                else -> {
+                    latitudeEditText.isEnabled = false
+                    longitudeEditText.isEnabled = false
+                    checkbox.isEnabled = false
+                    processingTypeEditText.isEnabled = false
+                    trashTypesEditText.isEnabled = false
+                    applyButton.isVisible = false
+                    cancelButton.isVisible = false
+                    deleteButton.isVisible = false
+                }
+            }
+        }
+
 
     }
 }

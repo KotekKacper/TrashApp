@@ -96,6 +96,28 @@ class AddGroupActivity : AppCompatActivity() {
         val membersEditText = this.findViewById<EditText>(R.id.editTextTextGroupMembers)
         membersEditText.addTextChangedListener(LoginListWatcher(membersEditText))
 
+
+        val role = getSharedPreferences("credentials", Context.MODE_PRIVATE)
+            .getString("role", "")?.split(",")
+        if (role != null) {
+            when {
+                role.contains("ADMIN") -> {
+                    membersEditText.isEnabled = true
+                }
+                role.contains("USER") -> {
+                    membersEditText.isEnabled = false
+                    if (adding){
+                        membersEditText.text = SpannableStringBuilder(getSharedPreferences("credentials",
+                            Context.MODE_PRIVATE).getString("login", ""))
+                    }
+                }
+                else -> {
+                    membersEditText.isEnabled = false
+                }
+            }
+        }
+
+
         val applyButton = findViewById<Button>(R.id.buttonGroupConfirm)
         applyButton.setOnClickListener{
             if (crewNameEditText.error == null && crewNameEditText.text.toString() != "" &&
