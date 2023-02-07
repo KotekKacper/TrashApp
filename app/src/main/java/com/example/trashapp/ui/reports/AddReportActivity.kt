@@ -259,6 +259,9 @@ class AddReportActivity : AppCompatActivity() {
         }
 
 
+        setInitialFieldStates(firstEditText, secondEditText, thirdEditText)
+
+
         val applyButton = findViewById<Button>(R.id.buttonReportConfirm)
         applyButton.setOnClickListener{
             if (loginReportedEditText.error == null && loginReportedEditText.text.toString() != "" &&
@@ -314,6 +317,27 @@ class AddReportActivity : AppCompatActivity() {
             }
         }else{
             deleteButton.isVisible = false
+        }
+    }
+
+    fun setInitialFieldStates(
+        firstEditText: EditText,
+        secondEditText: EditText,
+        thirdEditText: EditText
+    ) {
+        if (firstEditText.text.isNotEmpty()) {
+            secondEditText.isEnabled = false
+            thirdEditText.isEnabled = false
+        } else if (secondEditText.text.isNotEmpty()) {
+            firstEditText.isEnabled = false
+            thirdEditText.isEnabled = false
+        } else if (thirdEditText.text.isNotEmpty()) {
+            firstEditText.isEnabled = false
+            secondEditText.isEnabled = false
+        } else {
+            firstEditText.isEnabled = true
+            secondEditText.isEnabled = true
+            thirdEditText.isEnabled = true
         }
     }
 
