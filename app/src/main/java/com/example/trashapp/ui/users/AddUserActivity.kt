@@ -188,6 +188,12 @@ class AddUserActivity : AppCompatActivity() {
         val roleEditText = findViewById<EditText>(R.id.editTextUserAccountRole)
         roleEditText.addTextChangedListener(ListWatcher(roleEditText))
 
+        if (loginEditText.text.toString() == "admin"){
+            loginEditText.isEnabled = false
+            roleEditText.isEnabled = false
+            findViewById<Button>(R.id.buttonUserDelete).isVisible = false
+        }
+
         val anyChangeWatcher = AnyChangeWatcher(arrayListOf(
             loginEditText,
             passwordEditText,
