@@ -50,6 +50,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import java.io.ByteArrayOutputStream
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -622,9 +625,19 @@ object DBUtils {
 
     fun collectTrash(context: Context, item: OverlayItem){
         val funSend = "updateTrash"
+        val user_login = context.getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "")
+        var date = Date()
+        var timestamp = Timestamp(date.time)
+        var stringCollectDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timestamp)
+        //var dataToSend = "collection_date = NOW() | ${Tab.TRASH}.localization = '${item.point.toString()}'"
 
-        var dataToSend = "collection_date = NOW() | ${Tab.TRASH}.localization = '${item.point.toString()}'"
+        val elements = ArrayList<String>()
+        elements.add("${Tab.TRASH}.user_login");elements.add("${Tab.TRASH}.collection_date");elements.add("${Tab.TRASH}.localization")
 
+        var dataToSend = elements.joinToString(separator = ",")
+        dataToSend = dataToSend.plus("|")
+        dataToSend = dataToSend.plus("${user_login}`${stringCollectDate}`${item.point.toString()}")
+        dataToSend = dataToSend.plus("|'${item.point.toString()}'")
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = service.getJson(dataToSend, funSend)
@@ -845,9 +858,6 @@ object DBUtils {
         elements.add("${Tab.USER}.street");elements.add("${Tab.USER}.flat_number");elements.add("${Tab.USER}.post_code");elements.add("${Tab.USER}.house_number");
         dataToSend = elements.joinToString(separator = ", ")
         dataToSend = dataToSend.plus("|")
-        if (adding)
-            dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}', '${user.phone}', '${user.fullname}', '${user.country}', '${user.city}', '${user.district}', '${user.street}', '${user.flatNumber}', '${user.postCode}', '${user.houseNumber}'")
-        else
             dataToSend = dataToSend.plus("${user.login}`${user.password}`${user.email}`${user.phone}`${user.fullname}`${user.country}`${user.city}`${user.district}`${user.street}`${user.flatNumber}`${user.postCode}`${user.houseNumber}")
         dataToSend = dataToSend.plus("|${user.roles?.joinToString(",")}")
         if (!adding){
@@ -899,7 +909,7 @@ object DBUtils {
     }
 
     fun addUserRegister(context: Context, adding: Boolean, user: User, login: String = "") {
-        var funSend = "addUserRegister"
+        var funSend = "addUser"
         var dataToSend = ""
 
 
@@ -908,7 +918,9 @@ object DBUtils {
         elements.add("${Tab.USER}.email");elements.add("${Tab.USER}.fullname");
         dataToSend = elements.joinToString(separator = ", ")
         dataToSend = dataToSend.plus("|")
-        dataToSend = dataToSend.plus("'${user.login}', '${user.password}', '${user.email}', '${user.fullname}'")
+
+        dataToSend = dataToSend.plus("${user.login}`${user.password}`${user.email}")
+
 
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -1293,7 +1305,7 @@ object DBUtils {
     fun checkLogin(context: Context, username: String, password: String): Boolean {
         val funSend = "checkUserForLogin"
         var userExists = false
-        var dataToSend = "${username}, ${Encryption.decrypt(password)}"
+        var dataToSend = "${username}, ${password}"
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
