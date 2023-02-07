@@ -154,12 +154,20 @@ object DBUtils {
     fun getReports(context: Context, recyclerView: RecyclerView, username: String) {
         val funSend = "getReports"
 
+        var role: String
+        val roles = context.getSharedPreferences("credentials", Context.MODE_PRIVATE)
+            .getString("role", "")?.split(",")
+        when{
+            roles?.contains("ADMIN") == true -> role = "ADMIN"
+            else -> role = "USER"
+        }
+
         var elements = ArrayList<String>()
         elements.add("${Tab.TRASH}.id");elements.add("${Tab.TRASH}.localization");elements.add("${Tab.TRASH}.creation_date")
         elements.add("${Tab.TRASH}.trash_size");elements.add("${Tab.TRASH}.collection_date");elements.add("${Tab.TRASH}.user_login_report")
         elements.add("${Tab.TRASH}.user_login");elements.add("${Tab.TRASH}.vehicle_id");elements.add("${Tab.TRASH}.cleaningcrew_id");
         elements.add("${Tab.TRASH}.collection_localization")
-        val dataToSend = elements.joinToString(separator = ", ").plus("|${username}")
+        val dataToSend = elements.joinToString(separator = ", ").plus("|${username}|${role}")
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -226,14 +234,19 @@ object DBUtils {
     fun getGroups(context: Context, recyclerView: RecyclerView, username: String){
         val funSend = "getGroups"
 
-        val elements = ArrayList<String>()
-        elements.add("${Tab.USER}.login");
+        var role: String
+        val roles = context.getSharedPreferences("credentials", Context.MODE_PRIVATE)
+            .getString("role", "")?.split(",")
+        when{
+            roles?.contains("ADMIN") == true -> role = "ADMIN"
+            else -> role = "USER"
+        }
 
-        val dataToSend = elements.joinToString(separator = ", ")
+        val dataToSend = "${username}|${role}"
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = service.getJson(username, funSend)
+                val response = service.getJson(dataToSend, funSend)
                 withContext(Dispatchers.Main) {
                     val json = response.body()?.string()
                     Log.i("ServerSQL", json.toString())
