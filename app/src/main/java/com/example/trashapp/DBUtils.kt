@@ -921,7 +921,7 @@ object DBUtils {
     }
 
     fun addUserRegister(context: Context, adding: Boolean, user: User, login: String = "") {
-        var funSend = "addUser"
+        var funSend = "addUserRegister"
         var dataToSend = ""
 
 
@@ -931,7 +931,7 @@ object DBUtils {
         dataToSend = elements.joinToString(separator = ", ")
         dataToSend = dataToSend.plus("|")
 
-        dataToSend = dataToSend.plus("${user.login}`${user.password}`${user.email}")
+        dataToSend = dataToSend.plus("${user.login}`${user.password}`${user.email}`${user.fullname}")
 
 
 
@@ -944,6 +944,7 @@ object DBUtils {
                     if (checkForError(context, json.toString())) {
                         return@withContext
                     }
+                    Toast.makeText(context, "Registration was successful!", Toast.LENGTH_SHORT).show()
                     context.startActivity(Intent(context, LoginActivity::class.java))
                     (context as Activity).finish()
                 }
