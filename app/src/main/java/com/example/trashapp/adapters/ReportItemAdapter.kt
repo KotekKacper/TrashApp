@@ -105,6 +105,16 @@ class ReportItemAdapter(private val mData: ArrayList<Trash>?,
         return mData!!.size
     }
 
+    fun sortByIDAscending(context: Context) {
+        mData?.sortWith(compareBy({ it.id?.toLong() }))
+        notifyDataSetChanged()
+    }
+
+    fun sortByIDDescending(context: Context) {
+        mData?.sortWith(compareByDescending({ it.id?.toLong() }))
+        notifyDataSetChanged()
+    }
+
     fun sortByCreationDateAscending(context: Context) {
         mData?.sortWith(compareBy({ it.creationDate }))
         notifyDataSetChanged()

@@ -77,7 +77,8 @@ class GroupsFragment : Fragment(), SortButtonCallback {
     }
 
     override fun onSortButtonClicked() {
-        val sortOptions = arrayOf("Name (A-Z)","Name (Z-A)",
+        val sortOptions = arrayOf("ID (ascending)","ID (descending)",
+            "Name (A-Z)","Name (Z-A)",
             "Latitude (0-90)", "Latitue (90-0)",
             "Longtitude (0-180)", "Longtitue (180-0)",
             "Meeting date (ascending)", "Meeting date (descending)")
@@ -86,14 +87,16 @@ class GroupsFragment : Fragment(), SortButtonCallback {
         builder.setTitle("Sort by")
             .setItems(sortOptions) { _, which ->
                 when (which) {
-                    0 -> adapter.sortByNameAscending(context!!)
-                    1 -> adapter.sortByNameDescending(context!!)
-                    2 -> adapter.sortByLatAscending(context!!)
-                    3 -> adapter.sortByLatDescending(context!!)
-                    4 -> adapter.sortByLonAscending(context!!)
-                    5 -> adapter.sortByLonDescending(context!!)
-                    6 -> adapter.sortByMeetDateAscending(context!!)
-                    7 -> adapter.sortByMeetDateDescending(context!!)
+                    0 -> adapter.sortByIDAscending(context!!)
+                    1 -> adapter.sortByIDDescending(context!!)
+                    2 -> adapter.sortByNameAscending(context!!)
+                    3 -> adapter.sortByNameDescending(context!!)
+                    4 -> adapter.sortByLatAscending(context!!)
+                    5 -> adapter.sortByLatDescending(context!!)
+                    6 -> adapter.sortByLonAscending(context!!)
+                    7 -> adapter.sortByLonDescending(context!!)
+                    8 -> adapter.sortByMeetDateAscending(context!!)
+                    9 -> adapter.sortByMeetDateDescending(context!!)
                 }
             }
             .show()
