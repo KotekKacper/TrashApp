@@ -25,18 +25,6 @@
             android:icon="@drawable/ic_menu_group"
             android:title="@string/menu_users" />
         <item
-            android:id="@+id/nav_companies"
-            android:icon="@drawable/ic_menu_business"
-            android:title="@string/menu_companies" />
-        <item
-            android:id="@+id/nav_vehicles"
-            android:icon="@drawable/ic_menu_vehicle"
-            android:title="@string/menu_vehicles" />
-        <item
-            android:id="@+id/nav_workers"
-            android:icon="@drawable/ic_menu_group"
-            android:title="@string/menu_workers" />
-        <item
             android:id="@+id/nav_roles"
             android:icon="@drawable/ic_roles"
             android:title="@string/menu_roles" />

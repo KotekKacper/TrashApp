@@ -29,7 +29,7 @@ class AddPointActivity : AppCompatActivity() {
         val tx1 = this.findViewById<TextView>(R.id.textPointLocalization)
         val s1 = SpannableString(tx1.text.toString()+" *")
         s1.setSpan(ForegroundColorSpan(Color.RED),
-              s1.length-1, s1.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            s1.length-1, s1.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         tx1.text = s1
 
         val tx2 = this.findViewById<TextView>(R.id.textPointProcessingType)
@@ -53,8 +53,8 @@ class AddPointActivity : AppCompatActivity() {
                 this.findViewById<EditText>(R.id.editTextPointLongitude).text =
                     SpannableStringBuilder(extras.getString("longitude"))
                 loc = arrayListOf(extras.getString("latitude"),
-                                    extras.getString("longitude"))
-                                    .joinToString(",")
+                    extras.getString("longitude"))
+                    .joinToString(",")
                 try {
                     if (extras.getBoolean("notInUse")){
                         this.findViewById<CheckBox>(R.id.checkboxPointNotInUse).isChecked = true
@@ -114,13 +114,13 @@ class AddPointActivity : AppCompatActivity() {
         applyButton.setOnClickListener{
             if (latitudeEditText.error == null && latitudeEditText.text.toString() != "" &&
                 longitudeEditText.error == null && longitudeEditText.text.toString() != "" &&
-                    processingTypeEditText.error == null && processingTypeEditText.text.toString() != "" &&
+                processingTypeEditText.error == null && processingTypeEditText.text.toString() != "" &&
                 trashTypesEditText.error == null && trashTypesEditText.text.toString() != "" &&
-                    trashHereEditText.error == null){
+                trashHereEditText.error == null){
                 DBUtils.addCollectingPoint(this, adding,
                     TrashCollectingPoint(localization = arrayListOf(
-                            latitudeEditText.text.toString(), longitudeEditText.text.toString())
-                            .joinToString(","),
+                        latitudeEditText.text.toString(), longitudeEditText.text.toString())
+                        .joinToString(","),
                         busEmpty = this.findViewById<CheckBox>(R.id.checkboxPointNotInUse).isChecked,
                         processingType = processingTypeEditText.text.toString(),
                         trashType = ArrayList(trashTypesEditText.text.toString().split(",")),

@@ -36,24 +36,6 @@
         tools:layout="@layout/fragment_users" />
 
     <fragment
-        android:id="@+id/nav_companies"
-        android:name="com.example.trashapp.ui.companies.CompaniesFragment"
-        android:label="@string/menu_companies"
-        tools:layout="@layout/fragment_companies" />
-
-    <fragment
-        android:id="@+id/nav_vehicles"
-        android:name="com.example.trashapp.ui.vehicles.VehicleFragment"
-        android:label="@string/menu_vehicles"
-        tools:layout="@layout/fragment_vehicles" />
-
-    <fragment
-        android:id="@+id/nav_workers"
-        android:name="com.example.trashapp.ui.workers.WorkersFragment"
-        android:label="@string/menu_workers"
-        tools:layout="@layout/fragment_workers" />
-
-    <fragment
         android:id="@+id/nav_roles"
         android:name="com.example.trashapp.ui.roles.RolesFragment"
         android:label="@string/menu_roles"
