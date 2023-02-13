@@ -127,12 +127,6 @@ class AddReportActivity : AppCompatActivity() {
                         if (extras.getString("loginCollected") != "null"){
                             this.findViewById<EditText>(R.id.editTextTextReportLoginCollected).text =
                                 SpannableStringBuilder(extras.getString("loginCollected"))
-                        } else if (extras.getString("vehicleIdCollected") != "null"){
-                            this.findViewById<EditText>(R.id.editTextTextReportVehicleCollected).text =
-                                SpannableStringBuilder(extras.getString("vehicleIdCollected"))
-                        } else if (extras.getString("crewIdCollected") != "null"){
-                            this.findViewById<EditText>(R.id.editTextTextReportCrewCollected).text =
-                                SpannableStringBuilder(extras.getString("crewIdCollected"))
                         }
                         this.findViewById<EditText>(R.id.editTextTextReportPointLat).text =
                             SpannableStringBuilder(extras.getString("pointLatitude"))
@@ -182,14 +176,6 @@ class AddReportActivity : AppCompatActivity() {
 
         val firstEditText = findViewById<EditText>(R.id.editTextTextReportLoginCollected)
         firstEditText.addTextChangedListener(LoginWatcher(firstEditText, obligatory = false))
-        val secondEditText = findViewById<EditText>(R.id.editTextTextReportVehicleCollected)
-        secondEditText.addTextChangedListener(IdOptionalWatcher(secondEditText))
-        val thirdEditText = findViewById<EditText>(R.id.editTextTextReportCrewCollected)
-        thirdEditText.addTextChangedListener(IdOptionalWatcher(thirdEditText))
-
-        firstEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
-        secondEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
-        thirdEditText.addTextChangedListener(OneOfThreeWatcher(firstEditText, secondEditText, thirdEditText))
 
         val pointLatEditText = findViewById<EditText>(R.id.editTextTextReportPointLat)
         pointLatEditText.addTextChangedListener(LatitudeWatcher(pointLatEditText, true))
@@ -197,15 +183,11 @@ class AddReportActivity : AppCompatActivity() {
         pointLonEditText.addTextChangedListener(LongitudeWatcher(pointLonEditText, true))
 
         pointLatEditText.addTextChangedListener(OptioncalCPWatcher(firstEditText,
-            secondEditText, thirdEditText, pointLatEditText, pointLonEditText))
+            pointLatEditText, pointLonEditText))
         pointLonEditText.addTextChangedListener(OptioncalCPWatcher(firstEditText,
-            secondEditText, thirdEditText, pointLatEditText, pointLonEditText))
+            pointLatEditText, pointLonEditText))
         firstEditText.addTextChangedListener(OptioncalCPWatcher(firstEditText,
-            secondEditText, thirdEditText, pointLatEditText, pointLonEditText))
-        secondEditText.addTextChangedListener(OptioncalCPWatcher(firstEditText,
-            secondEditText, thirdEditText, pointLatEditText, pointLonEditText))
-        thirdEditText.addTextChangedListener(OptioncalCPWatcher(firstEditText,
-            secondEditText, thirdEditText, pointLatEditText, pointLonEditText))
+            pointLatEditText, pointLonEditText))
 
 
         findViewById<Button>(R.id.buttonReportLoadImg).setOnClickListener {
@@ -232,8 +214,6 @@ class AddReportActivity : AppCompatActivity() {
                     collectionDatePicker.isEnabled = true
                     collectionTimePicker.isEnabled = true
                     firstEditText.isEnabled = true
-                    secondEditText.isEnabled = true
-                    thirdEditText.isEnabled = true
                     pointLatEditText.isEnabled = true
                     pointLonEditText.isEnabled = true
                 }
@@ -241,8 +221,6 @@ class AddReportActivity : AppCompatActivity() {
                     collectionDatePicker.isEnabled = false
                     collectionTimePicker.isEnabled = false
                     firstEditText.isEnabled = false
-                    secondEditText.isEnabled = false
-                    thirdEditText.isEnabled = false
                     pointLatEditText.isEnabled = false
                     pointLonEditText.isEnabled = false
                 }
@@ -250,27 +228,18 @@ class AddReportActivity : AppCompatActivity() {
                     collectionDatePicker.isEnabled = false
                     collectionTimePicker.isEnabled = false
                     firstEditText.isEnabled = false
-                    secondEditText.isEnabled = false
-                    thirdEditText.isEnabled = false
                     pointLatEditText.isEnabled = false
                     pointLonEditText.isEnabled = false
                 }
             }
         }
 
-
-        setInitialFieldStates(firstEditText, secondEditText, thirdEditText)
-
-
         val applyButton = findViewById<Button>(R.id.buttonReportConfirm)
         applyButton.setOnClickListener{
             if (loginReportedEditText.error == null && loginReportedEditText.text.toString() != "" &&
                     latitudeEditText.error == null && latitudeEditText.text.toString() != "" &&
                     longitudeEditText.error == null && longitudeEditText.text.toString() != "" &&
-//                        creationDateEditText.error == null && creationDateEditText.text.toString() != "" &&
-//                    trashSizeEditText.error == null && trashTypeEditText.error == null &&
-//                        collectionDateEditText.error == null && firstEditText.error == null &&
-                    secondEditText.error == null && thirdEditText.error == null){
+                    firstEditText.error == null){
                 val crTime = ZonedDateTime.of(creationDatePicker.year,
                                                      creationDatePicker.month+1,
                                                      creationDatePicker.dayOfMonth,
@@ -293,8 +262,6 @@ class AddReportActivity : AppCompatActivity() {
                         trashSize = trashSizeSpinner.selectedItem.toString(),
                         trashType = trashTypeEditText.text.toString(),
                         userLogin = firstEditText.text.toString(),
-                        vehicleId = secondEditText.text.toString(),
-                        cleaningCrewId = thirdEditText.text.toString(),
                         collectionDate = colTime.format(formatter),
                         collectingPoint = arrayListOf(
                             pointLatEditText.text.toString(), pointLonEditText.text.toString())
@@ -317,27 +284,6 @@ class AddReportActivity : AppCompatActivity() {
             }
         }else{
             deleteButton.isVisible = false
-        }
-    }
-
-    fun setInitialFieldStates(
-        firstEditText: EditText,
-        secondEditText: EditText,
-        thirdEditText: EditText
-    ) {
-        if (firstEditText.text.isNotEmpty()) {
-            secondEditText.isEnabled = false
-            thirdEditText.isEnabled = false
-        } else if (secondEditText.text.isNotEmpty()) {
-            firstEditText.isEnabled = false
-            thirdEditText.isEnabled = false
-        } else if (thirdEditText.text.isNotEmpty()) {
-            firstEditText.isEnabled = false
-            secondEditText.isEnabled = false
-        } else {
-            firstEditText.isEnabled = true
-            secondEditText.isEnabled = true
-            thirdEditText.isEnabled = true
         }
     }
 

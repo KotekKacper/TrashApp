@@ -4,11 +4,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 
-class OptioncalCPWatcher (private val editTextA: EditText, private val editTextB: EditText,
-                          private val editTextC: EditText, private val Lat: EditText, private val Lon: EditText) :
+class OptioncalCPWatcher (private val editTextA: EditText, private val Lat: EditText, private val Lon: EditText) :
     TextWatcher {
     override fun afterTextChanged(s: Editable?) {
-        val areEmpty = arrayListOf(editTextA.text.isNotEmpty(), editTextB.text.isNotEmpty(), editTextC.text.isNotEmpty())
+        val areEmpty = arrayListOf(editTextA.text.isNotEmpty())
         if (areEmpty.filter { it == true }.count() != 1) {
             Lat.isEnabled = false
             Lon.isEnabled = false

@@ -169,22 +169,6 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:hint="user login" />
-        <EditText
-            android:id="@+id/editTextTextReportVehicleCollected"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="numberDecimal"
-            android:hint="vehicle id" />
-        <EditText
-            android:id="@+id/editTextTextReportCrewCollected"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="numberDecimal"
-            android:hint="crew id" />
 
         <TextView
             android:id="@+id/textReportCollectingPoint"
